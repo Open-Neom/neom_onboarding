@@ -91,7 +91,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
     }
 
-
   }
 
   void setLocale(AppLocale locale) {
@@ -109,7 +108,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingProfile]);
 
     switch(profileType) {
-      case(ProfileType.musician):
+      case(ProfileType.instrumentist):
         Get.toNamed(AppRouteConstants.introInstruments);
         break;
       case(ProfileType.facilitator):
@@ -198,7 +197,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     update([AppPageIdConstants.onBoardingGenres]);
 
-    if(userController.newProfile.type == ProfileType.musician) {
+    if(userController.newProfile.type == ProfileType.instrumentist) {
       Get.toNamed(AppRouteConstants.introReason);
     } else {
       Get.toNamed(AppRouteConstants.introAddImage);

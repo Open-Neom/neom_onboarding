@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neom_commons/core/ui/widgets/appbar_child.dart';
 
 import 'package:neom_commons/core/ui/widgets/header_intro.dart';
 import 'package:neom_commons/core/utils/app_theme.dart';
@@ -17,18 +18,20 @@ class OnBoardingInstrumentsPage extends StatelessWidget {
       id: AppPageIdConstants.onBoardingInstruments,
       init: OnBoardingController(),
       builder: (_) => Scaffold(
-          body: Container(
-            decoration: AppTheme.appBoxDecoration,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
+        extendBodyBehindAppBar: true,
+        appBar: AppBarChild(color: Colors.transparent),
+        body: Container(
+          decoration: AppTheme.appBoxDecoration,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
                 AppTheme.heightSpace100,
                 HeaderIntro(subtitle: AppTranslationConstants.introInstruments.tr),
                 const Expanded(child: OnBoardingInstrumentList(),),
-                ]
-              ),
-            ),
-      floatingActionButton: _.instrumentController.favInstruments.values.isEmpty ? Container()
+              ]
+          ),
+        ),
+        floatingActionButton: _.instrumentController.favInstruments.values.isEmpty ? Container()
           : FloatingActionButton(
               tooltip: AppTranslationConstants.next.tr,
               elevation: AppTheme.elevationFAB,

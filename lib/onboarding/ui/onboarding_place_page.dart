@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neom_commons/core/ui/widgets/appbar_child.dart';
 
 import 'package:neom_commons/core/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/core/ui/widgets/header_intro.dart';
@@ -20,6 +21,8 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
         id: AppPageIdConstants.onBoardingProfile,
         init: OnBoardingController(),
         builder: (_) => Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
           body: Container(
             decoration: AppTheme.appBoxDecoration,

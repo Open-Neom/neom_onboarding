@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neom_commons/core/app_flavour.dart';
+import 'package:neom_commons/core/ui/widgets/appbar_child.dart';
 
 import 'package:neom_commons/core/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/core/utils/app_color.dart';
 import 'package:neom_commons/core/utils/app_theme.dart';
 import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/core/utils/constants/url_constants.dart';
 import 'package:neom_commons/core/utils/core_utilities.dart';
 import 'package:neom_commons/core/utils/enums/app_file_from.dart';
 import 'onboarding_controller.dart';
@@ -19,13 +20,14 @@ import 'widgets/onboarding_widgets.dart';
 class OnBoardingAddImagePage extends StatelessWidget {
   const OnBoardingAddImagePage({Key? key}) : super(key: key);
 
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoardingAddImage,
       init: OnBoardingController(),
       builder: (_) => Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBarChild(color: Colors.transparent),
         body: Container(
           decoration: AppTheme.appBoxDecoration,
           child: Stack(
@@ -118,7 +120,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               style: const TextStyle(fontSize: 12),
                             ),
                             onPressed: () async {
-                              CoreUtilities.launchURL(UrlConstants.termsOfService);
+                              CoreUtilities.launchURL(AppFlavour.getTermsOfServiceUrl());
                             }
                           ),
                         ],

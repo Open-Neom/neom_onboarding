@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:neom_commons/core/ui/widgets/appbar_child.dart';
 
 import 'package:neom_commons/core/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/core/ui/widgets/header_intro.dart';
@@ -19,6 +20,8 @@ class OnBoardingProfileTypePage extends StatelessWidget {
         id: AppPageIdConstants.onBoardingProfile,
         init: OnBoardingController(),
         builder: (_) => Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
           body: SingleChildScrollView(
             child: Container(
@@ -34,7 +37,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      buildActionChip(appEnum: ProfileType.musician,
+                      buildActionChip(appEnum: ProfileType.instrumentist,
                           controllerFunction: _.setProfileType),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: ProfileType.facilitator,

@@ -261,7 +261,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     String validateMsg = "";
 
-    validateMsg = Validator().validateUsername(controllerUsername.text);
+    validateMsg = Validator.validateUsername(controllerUsername.text);
 
     if(!await ProfileFirestore().isAvailableName(controllerUsername.text)) {
       validateMsg = MessageTranslationConstants.profileNameUsed;
@@ -361,7 +361,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     String validateMsg = "";
 
-    validateMsg = Validator().validateUsername(controllerUsername.text);
+    validateMsg = Validator.validateUsername(controllerUsername.text);
 
     if(!await ProfileFirestore().isAvailableName(controllerUsername.text)) {
       validateMsg = MessageTranslationConstants.profileNameUsed;

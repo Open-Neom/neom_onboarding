@@ -33,6 +33,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  AppTheme.heightSpace50,
                   HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
                   AppTheme.heightSpace50,
                   Column(

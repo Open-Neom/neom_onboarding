@@ -39,7 +39,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                   ),
                 child: Column(
                   children: <Widget>[
-                    AppTheme.heightSpace20,
+                    AppTheme.heightSpace50,
                     Obx(()=> Container(
                       width: double.infinity,
                         margin: const EdgeInsets.only(left: 20, right: 20,top: 10, bottom: 10),

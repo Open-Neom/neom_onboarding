@@ -13,13 +13,17 @@ dependencies:
     sdk: flutter
 
   neom_commons:
-    path: ../neom_commons
-  neom_profile:
-    path: ../neom_profile
-  neom_instruments:
-    path: ../neom_instruments
+    git:
+      url: https://github.com/Cyberneom/neom_commons.git
   neom_posts:
-    path: ../neom_posts
+    git:
+      url: https://github.com/Cyberneom/neom_posts.git
+  neom_profile:
+    git:
+      url: https://github.com/Cyberneom/neom_profile.git
+  neom_instruments:
+    git:
+      url: https://github.com/Cyberneom/neom_instruments.git
 
   flutter_datetime_picker: ^1.5.1
 

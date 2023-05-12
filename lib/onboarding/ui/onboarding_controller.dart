@@ -268,7 +268,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
-      if (controllerPhone.text.isNotEmpty &&
+      if (controllerPhone.text.isEmpty &&
           (controllerPhone.text.length < phoneCountry.minLength
               || controllerPhone.text.length > phoneCountry.maxLength)
       ) {

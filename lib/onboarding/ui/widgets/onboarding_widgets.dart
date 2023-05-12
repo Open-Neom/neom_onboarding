@@ -1,7 +1,7 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as dtp;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
@@ -62,11 +62,11 @@ Widget buildEntryDateField(DateTime dateOfBirth,
     ),
     child: TextButton(
       onPressed: () {
-        DatePicker.showDatePicker(context,
+        dtp.DatePicker.showDatePicker(context,
           showTitleActions: false,
           minTime: DateTime(AppConstants.firstYearDOB, 1, 1),
           maxTime: DateTime(AppConstants.lastYearDOB, 12, 31),
-          theme: DatePickerTheme(
+          theme: dtp.DatePickerTheme(
             itemHeight: 50,
             backgroundColor: AppColor.main50,
             itemStyle: const TextStyle(color: Colors.white),
@@ -75,7 +75,7 @@ Widget buildEntryDateField(DateTime dateOfBirth,
             dateFunction(date);
           },
           currentTime: DateTime.now(),
-          locale: EnumToString.fromString(LocaleType.values, Get.locale!.languageCode.substring(0,2)),
+          locale: EnumToString.fromString(dtp.LocaleType.values, Get.locale!.languageCode.substring(0,2)),
         );
       },
       child: Text(

@@ -23,37 +23,31 @@ class OnBoardingProfileTypePage extends StatelessWidget {
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
-          body: SingleChildScrollView(
-            child: Container(
-              decoration: AppTheme.appBoxDecoration,
-              width: AppTheme.fullWidth(context),
-              height: AppTheme.fullHeight(context),
-              child: Center(
+          body: Container(
+            decoration: AppTheme.appBoxDecoration,
+            width: AppTheme.fullWidth(context),
+            height: AppTheme.fullHeight(context),
+            child: Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
-                  AppTheme.heightSpace50,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buildActionChip(appEnum: ProfileType.instrumentist,
-                          controllerFunction: _.setProfileType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: ProfileType.facilitator,
-                          controllerFunction: _.setProfileType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: ProfileType.host,
-                          controllerFunction: _.setProfileType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: ProfileType.fan,
-                          controllerFunction: _.setProfileType),
-                    ]
-                  ),
+                  AppTheme.heightSpace30,
+                  buildActionChip(appEnum: ProfileType.instrumentist,
+                      controllerFunction: _.setProfileType),
+                  AppTheme.heightSpace10,
+                  buildActionChip(appEnum: ProfileType.facilitator,
+                      controllerFunction: _.setProfileType),
+                  AppTheme.heightSpace10,
+                  buildActionChip(appEnum: ProfileType.host,
+                      controllerFunction: _.setProfileType),
+                  AppTheme.heightSpace10,
+                  buildActionChip(appEnum: ProfileType.fan,
+                      controllerFunction: _.setProfileType),
                 ],
               ),
             ),
-          ),
+
         ),
       ),
     );

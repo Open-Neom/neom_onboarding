@@ -12,7 +12,6 @@ import 'package:neom_commons/core/utils/app_theme.dart';
 import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
 import 'package:neom_commons/core/utils/core_utilities.dart';
-import 'package:neom_commons/core/utils/enums/app_file_from.dart';
 import 'onboarding_controller.dart';
 import 'widgets/onboarding_widgets.dart';
 
@@ -70,7 +69,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               right: 0,
                               child: (_.postUploadController.imageFile.path.isEmpty) ? FloatingActionButton(
                                 child: const Icon(Icons.camera_alt),
-                                onPressed: ()=> _.handleImage(AppFileFrom.gallery)
+                                onPressed: ()=> _.handleImage()
                               )
                               : FloatingActionButton (
                                   child: const Icon(Icons.close),

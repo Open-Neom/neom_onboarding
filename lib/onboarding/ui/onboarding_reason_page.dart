@@ -22,11 +22,11 @@ class OnBoardingReasonPage extends StatelessWidget {
         builder: (_) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
-          body: SingleChildScrollView(
-            child: Container(
-              decoration: AppTheme.appBoxDecoration,
-              width: AppTheme.fullWidth(context),
-              height: AppTheme.fullHeight(context),
+          body: Container(
+            decoration: AppTheme.appBoxDecoration,
+            width: AppTheme.fullWidth(context),
+            height: AppTheme.fullHeight(context),
+            child: SingleChildScrollView(
               child: Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

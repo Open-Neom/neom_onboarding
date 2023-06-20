@@ -25,13 +25,17 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
           body: Container(
+            width: AppTheme.fullWidth(context),
+            height: AppTheme.fullHeight(context),
             decoration: AppTheme.appBoxDecoration,
-            child: Center(
-              child: Column(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                AppTheme.heightSpace30,
                 HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
-                AppTheme.heightSpace50,
+                AppTheme.heightSpace30,
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -61,7 +65,7 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          ),),
         ),
       ),
     );

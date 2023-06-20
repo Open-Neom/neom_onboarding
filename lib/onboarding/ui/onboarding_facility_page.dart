@@ -27,15 +27,17 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
           body: Container(
+            width: AppTheme.fullWidth(context),
+            height: AppTheme.fullHeight(context),
             decoration: AppTheme.appBoxDecoration,
             child: SingleChildScrollView(
               child: Center(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  AppTheme.heightSpace50,
+                  AppTheme.heightSpace30,
                   HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
-                  AppTheme.heightSpace50,
+                  AppTheme.heightSpace30,
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -75,11 +77,13 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
                       ],) : Container(),
-                      buildActionChip(appEnum: FacilityType.designer,
-                          controllerFunction: _.setFacilityType),
+                      AppFlavour.appInUse != AppInUse.cyberneom
+                          ? buildActionChip(appEnum: FacilityType.designer,
+                          controllerFunction: _.setFacilityType) : Container(),
                       AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.photographer,
-                          controllerFunction: _.setFacilityType),
+                      AppFlavour.appInUse != AppInUse.cyberneom
+                          ? buildActionChip(appEnum: FacilityType.photographer,
+                          controllerFunction: _.setFacilityType) : Container(),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: FacilityType.podcaster,
                           controllerFunction: _.setFacilityType),

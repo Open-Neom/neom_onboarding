@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
 import 'package:neom_commons/core/data/firestore/profile_firestore.dart';
 import 'package:neom_commons/core/data/firestore/user_firestore.dart';
@@ -21,7 +22,7 @@ import 'package:neom_commons/core/utils/constants/app_route_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
 import 'package:neom_commons/core/utils/constants/message_translation_constants.dart';
 import 'package:neom_commons/core/utils/enums/app_currency.dart';
-import 'package:neom_commons/core/utils/enums/app_file_from.dart';
+import 'package:neom_commons/core/utils/enums/app_in_use.dart';
 import 'package:neom_commons/core/utils/enums/app_locale.dart';
 import 'package:neom_commons/core/utils/enums/coupon_type.dart';
 import 'package:neom_commons/core/utils/enums/facilitator_type.dart';
@@ -107,23 +108,28 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     update([AppPageIdConstants.onBoardingProfile]);
 
-    switch(profileType) {
-      case(ProfileType.instrumentist):
-        Get.toNamed(AppRouteConstants.introInstruments);
-        break;
-      case(ProfileType.facilitator):
-        Get.toNamed(AppRouteConstants.introFacility);
-        break;
-      case(ProfileType.host):
-        Get.toNamed(AppRouteConstants.introPlace);
-        break;
-      case(ProfileType.fan):
-        Get.toNamed(AppRouteConstants.introGenres);
-        break;
-      case(ProfileType.band):
-        Get.toNamed(AppRouteConstants.introInstruments);
-        break;
+    if(AppFlavour.appInUse == AppInUse.cyberneom) {
+      Get.toNamed(AppRouteConstants.introAddImage);
+    } else {
+      switch(profileType) {
+        case(ProfileType.instrumentist):
+          Get.toNamed(AppRouteConstants.introInstruments);
+          break;
+        case(ProfileType.facilitator):
+          Get.toNamed(AppRouteConstants.introFacility);
+          break;
+        case(ProfileType.host):
+          Get.toNamed(AppRouteConstants.introPlace);
+          break;
+        case(ProfileType.fan):
+          Get.toNamed(AppRouteConstants.introGenres);
+          break;
+        case(ProfileType.band):
+          Get.toNamed(AppRouteConstants.introInstruments);
+          break;
+      }
     }
+
 
   }
 
@@ -153,7 +159,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingInstruments]);
   }
 
-
+  @override
   Future<void>  addGenreIntro(int index) async {
     logger.d("Adding instrument to new account");
     String genreKey = genresController.genres.keys.elementAt(index);
@@ -189,20 +195,14 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   }
 
   @override
-  void addGenresToProfile(){
+  void addGenresToProfile() {
     logger.d("Adding ${genresController.favGenres.length} Genres to Profile");
 
     userController.newProfile.genres = genresController.favGenres
         .map((name, genre) => MapEntry<String,Genre>(name,genre));
 
+    Get.toNamed(AppRouteConstants.introAddImage);
     update([AppPageIdConstants.onBoardingGenres]);
-
-    if(userController.newProfile.type == ProfileType.instrumentist) {
-      Get.toNamed(AppRouteConstants.introReason);
-    } else {
-      Get.toNamed(AppRouteConstants.introAddImage);
-    }
-
   }
 
 
@@ -218,8 +218,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
 
   @override
-  void handleImage(AppFileFrom fileFrom) async {
-    await postUploadController.handleImage(fileFrom, isProfilePicture: true);
+  void handleImage() async {
+    await postUploadController.handleImage(uploadImageType: UploadImageType.profile);
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 

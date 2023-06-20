@@ -1,7 +1,5 @@
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart' as dtp;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
@@ -61,22 +59,20 @@ Widget buildEntryDateField(DateTime dateOfBirth,
       borderRadius: BorderRadius.circular(40),
     ),
     child: TextButton(
-      onPressed: () {
-        dtp.DatePicker.showDatePicker(context,
-          showTitleActions: false,
-          minTime: DateTime(AppConstants.firstYearDOB, 1, 1),
-          maxTime: DateTime(AppConstants.lastYearDOB, 12, 31),
-          theme: dtp.DatePickerTheme(
-            itemHeight: 50,
-            backgroundColor: AppColor.main50,
-            itemStyle: const TextStyle(color: Colors.white),
-          ),
-          onChanged: (date) {
-            dateFunction(date);
-          },
-          currentTime: DateTime.now(),
-          locale: EnumToString.fromString(dtp.LocaleType.values, Get.locale!.languageCode.substring(0,2)),
+      onPressed: () async {
+        DateTime? selectedDate = await showDatePicker(
+          context: context,
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+          initialDate: DateTime(AppConstants.lastYearDOB, 12, 31),
+          firstDate: DateTime(AppConstants.firstYearDOB, 1, 1),
+          lastDate: DateTime(AppConstants.lastYearDOB, 12, 31),
+          currentDate: dateOfBirth,
         );
+
+        if(selectedDate != null) {
+          dateFunction(selectedDate);
+        }
+
       },
       child: Text(
         dateOfBirth == DateTime(AppConstants.lastYearDOB) ? '${AppTranslationConstants.enterDOB.tr} (${AppTranslationConstants.optional.tr})'

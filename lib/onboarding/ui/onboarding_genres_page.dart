@@ -31,15 +31,14 @@ class OnBoardingGenresPage extends StatelessWidget {
                 ]
               ),
             ),
-      floatingActionButton: _.genresController.favGenres.values.isEmpty ? Container()
-          : FloatingActionButton(
-              tooltip: AppTranslationConstants.next.tr,
-              elevation: AppTheme.elevationFAB,
-              child: const Icon(Icons.navigate_next),
-              onPressed: ()=>{
-                _.addGenresToProfile()
-            },
-          ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: AppTranslationConstants.next.tr,
+        elevation: AppTheme.elevationFAB,
+        child: const Icon(Icons.navigate_next),
+        onPressed: ()=>{
+          _.addGenresToProfile()
+        },
+      ),
       ),
     );
   }

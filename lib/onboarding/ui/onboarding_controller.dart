@@ -94,8 +94,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   }
 
-  void setLocale(AppLocale locale) {
-    Get.find<SharedPreferenceController>().updateLocale(locale);
+  void setLocale(AppLocale locale) async {
+    await Get.find<SharedPreferenceController>().updateLocale(locale);
     update([AppPageIdConstants.onBoardingProfile]);
     Get.toNamed(AppRouteConstants.introProfile);
   }
@@ -120,6 +120,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           break;
         case(ProfileType.host):
           Get.toNamed(AppRouteConstants.introPlace);
+          break;
+        case(ProfileType.researcher):
+          Get.toNamed(AppRouteConstants.introGenres);
           break;
         case(ProfileType.fan):
           Get.toNamed(AppRouteConstants.introGenres);

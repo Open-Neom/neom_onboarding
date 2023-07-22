@@ -35,7 +35,7 @@ class OnBoardingLocalePage extends StatelessWidget {
                 HeaderIntro(subtitle: AppTranslationConstants.introLocale.tr),
                 AppTheme.heightSpace30,
                 buildActionChip(appEnum: AppLocale.english,
-                    controllerFunction: _.setLocale, isActive: AppFlavour.appInUse != AppInUse.emxi),
+                    controllerFunction: _.setLocale, isActive: AppFlavour.appInUse == AppInUse.gigmeout),
                 AppTheme.heightSpace10,
                 buildActionChip(appEnum: AppLocale.spanish,
                     controllerFunction: _.setLocale),

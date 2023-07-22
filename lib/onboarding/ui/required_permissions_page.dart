@@ -67,8 +67,6 @@ class RequiredPermissionsPage extends StatelessWidget {
                         MessageTranslationConstants.userCurrentLocationErrorMsg.tr,
                         snackPosition: SnackPosition.bottom,);
                     }
-
-
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(

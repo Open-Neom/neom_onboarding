@@ -28,15 +28,16 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
             width: AppTheme.fullWidth(context),
             height: AppTheme.fullHeight(context),
             decoration: AppTheme.appBoxDecoration,
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
+            child: Center(
+              child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                AppTheme.heightSpace30,
                 HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
                 AppTheme.heightSpace30,
-                Column(
+              SizedBox(
+                height: AppTheme.fullHeight(context)/2,
+                child: SingleChildScrollView(
+                  child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     buildActionChip(appEnum: PlaceType.academy,
@@ -61,12 +62,11 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
                     AppTheme.heightSpace10,
                     buildActionChip(appEnum: PlaceType.restaurant,
                         controllerFunction: _.setPlaceType),
-                  ]
+                  ]),
                 ),
-              ],
+              ),],
             ),
           ),),
-        ),
       ),
     );
   }

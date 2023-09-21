@@ -30,73 +30,75 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
             width: AppTheme.fullWidth(context),
             height: AppTheme.fullHeight(context),
             decoration: AppTheme.appBoxDecoration,
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  AppTheme.heightSpace30,
-                  HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
-                  AppTheme.heightSpace30,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      AppFlavour.appInUse == AppInUse.gigmeout
-                          ? Column(children: [
-                        buildActionChip(appEnum: FacilityType.recordStudio,
+            child: Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
+                AppTheme.heightSpace30,
+                SizedBox(
+                  height: AppTheme.fullHeight(context)/2,
+                  child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        AppFlavour.appInUse == AppInUse.gigmeout
+                            ? Column(children: [
+                          buildActionChip(appEnum: FacilityType.recordStudio,
+                              controllerFunction: _.setFacilityType),
+                          AppTheme.heightSpace10,
+                        ],) : Container(),
+                        buildActionChip(appEnum: FacilityType.producer,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
-                      ],) : Container(),
-                      buildActionChip(appEnum: FacilityType.producer,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.publisher,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.printing,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.teacher,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.workshop,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.store,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      AppFlavour.appInUse == AppInUse.gigmeout
-                          ? Column(children: [
-                        buildActionChip(appEnum: FacilityType.equipmentRental,
+                        buildActionChip(appEnum: FacilityType.publisher,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
-                      ],) : Container(),
-                      AppFlavour.appInUse == AppInUse.gigmeout
-                          ? Column(children: [
-                        buildActionChip(appEnum: FacilityType.rehearsalRoom,
+                        buildActionChip(appEnum: FacilityType.printing,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
-                      ],) : Container(),
-                      AppFlavour.appInUse != AppInUse.cyberneom
-                          ? buildActionChip(appEnum: FacilityType.designer,
-                          controllerFunction: _.setFacilityType) : Container(),
-                      AppTheme.heightSpace10,
-                      AppFlavour.appInUse != AppInUse.cyberneom
-                          ? buildActionChip(appEnum: FacilityType.photographer,
-                          controllerFunction: _.setFacilityType) : Container(),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.podcaster,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: FacilityType.radio,
-                          controllerFunction: _.setFacilityType),
-                      AppTheme.heightSpace10,
-                    ]
+                        buildActionChip(appEnum: FacilityType.teacher,
+                            controllerFunction: _.setFacilityType),
+                        AppTheme.heightSpace10,
+                        buildActionChip(appEnum: FacilityType.workshop,
+                            controllerFunction: _.setFacilityType),
+                        AppTheme.heightSpace10,
+                        buildActionChip(appEnum: FacilityType.store,
+                            controllerFunction: _.setFacilityType),
+                        AppTheme.heightSpace10,
+                        AppFlavour.appInUse == AppInUse.gigmeout
+                            ? Column(children: [
+                          buildActionChip(appEnum: FacilityType.equipmentRental,
+                              controllerFunction: _.setFacilityType),
+                          AppTheme.heightSpace10,
+                        ],) : Container(),
+                        AppFlavour.appInUse == AppInUse.gigmeout
+                            ? Column(children: [
+                          buildActionChip(appEnum: FacilityType.rehearsalRoom,
+                              controllerFunction: _.setFacilityType),
+                          AppTheme.heightSpace10,
+                        ],) : Container(),
+                        AppFlavour.appInUse != AppInUse.cyberneom
+                            ? buildActionChip(appEnum: FacilityType.designer,
+                            controllerFunction: _.setFacilityType) : Container(),
+                        AppTheme.heightSpace10,
+                        AppFlavour.appInUse != AppInUse.cyberneom
+                            ? buildActionChip(appEnum: FacilityType.photographer,
+                            controllerFunction: _.setFacilityType) : Container(),
+                        AppTheme.heightSpace10,
+                        buildActionChip(appEnum: FacilityType.podcaster,
+                            controllerFunction: _.setFacilityType),
+                        AppTheme.heightSpace10,
+                        buildActionChip(appEnum: FacilityType.radio,
+                            controllerFunction: _.setFacilityType),
+                        AppTheme.heightSpace30,
+                      ]
                   ),
-                ],
-              ),
+                  ),
+                ),
+              ],
             ),
-          ),
+            ),
         ),
       ),
     );

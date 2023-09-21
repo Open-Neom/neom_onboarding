@@ -113,7 +113,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     } else {
       switch(profileType) {
         case(ProfileType.instrumentist):
-          Get.toNamed(AppRouteConstants.introInstruments);
+          Get.toNamed(AppRouteConstants.introReason);
           break;
         case(ProfileType.facilitator):
           Get.toNamed(AppRouteConstants.introFacility);
@@ -128,7 +128,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           Get.toNamed(AppRouteConstants.introGenres);
           break;
         case(ProfileType.band):
-          Get.toNamed(AppRouteConstants.introInstruments);
+          Get.toNamed(AppRouteConstants.introReason);
           break;
       }
     }
@@ -214,9 +214,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setReason(UsageReason reason) {
     logger.d("ProfileType registered Reason as ${reason.name}");
     userController.newProfile.reason = reason;
-
+    Get.toNamed(AppRouteConstants.introInstruments);
     update([AppPageIdConstants.onBoardingReason]);
-    Get.toNamed(AppRouteConstants.introAddImage, arguments: [AppRouteConstants.introReason]);
   }
 
 
@@ -270,19 +269,24 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       validateMsg = MessageTranslationConstants.profileNameUsed;
     }
 
+    bool optionalPhoneNumber = true;
+
     if(validateMsg.isEmpty) {
-      if (controllerPhone.text.isEmpty &&
-          (controllerPhone.text.length < phoneCountry.minLength
-              || controllerPhone.text.length > phoneCountry.maxLength)
-      ) {
+      if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.minLength
+              || controllerPhone.text.length > phoneCountry.maxLength)) {
         validateMsg = MessageTranslationConstants.pleaseEnterPhone;
-        phoneNumber = "";
+        phoneNumber = '';
       } else if (phoneCountry.code.isEmpty) {
         validateMsg = MessageTranslationConstants.pleaseEnterCountryCode;
-        phoneNumber = "";
+        phoneNumber = '';
       } else {
         phoneNumber = controllerPhone.text;
       }
+
+      if(validateMsg.isNotEmpty && optionalPhoneNumber) {
+        validateMsg = '';
+      }
+
     }
 
     if(phoneNumber.isNotEmpty && validateMsg.isEmpty) {
@@ -294,14 +298,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
+
       if(dateOfBirth.compareTo(DateTime(AppConstants.lastYearDOB)) >= 0) {
         ///Validation removed by Apple's Guidelines
         //validateMsg = MessageTranslationConstants.pleaseEnterDOB;
         dateOfBirth = DateTime.now();
       }
-    }
 
-    if(validateMsg.isEmpty) {
       if(postUploadController.imageFile.path.isNotEmpty) {
         userController.user!.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
       }
@@ -348,10 +351,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
             arguments: [AppRouteConstants.introAddImage]);
       }
     } else {
-      Get.snackbar(
-          MessageTranslationConstants.finishingAccount.tr,
-          validateMsg.tr,
-          snackPosition: SnackPosition.bottom);
+      AppUtilities.logger.w(validateMsg.tr);
+      Get.snackbar(MessageTranslationConstants.finishingAccount.tr,
+          validateMsg.tr, snackPosition: SnackPosition.bottom);
     }
     isLoading = false;
     update([AppPageIdConstants.onBoardingAddImage]);

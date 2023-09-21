@@ -4,6 +4,7 @@ import 'package:neom_commons/core/ui/widgets/appbar_child.dart';
 
 import 'package:neom_commons/core/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/core/ui/widgets/header_intro.dart';
+import 'package:neom_commons/core/utils/app_color.dart';
 import 'package:neom_commons/core/utils/app_theme.dart';
 import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
@@ -22,18 +23,21 @@ class OnBoardingReasonPage extends StatelessWidget {
         builder: (_) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
+          backgroundColor: AppColor.main50,
           body: Container(
             decoration: AppTheme.appBoxDecoration,
             width: AppTheme.fullWidth(context),
             height: AppTheme.fullHeight(context),
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
+            child: Center(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   HeaderIntro(subtitle: AppTranslationConstants.introReason.tr),
-                  AppTheme.heightSpace50,
-                  Column(
+                  AppTheme.heightSpace30,
+              SizedBox(
+                height: AppTheme.fullHeight(context)/3,
+                child: SingleChildScrollView(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       AppTheme.heightSpace10,
@@ -43,6 +47,9 @@ class OnBoardingReasonPage extends StatelessWidget {
                       buildActionChip(appEnum: UsageReason.professional,
                           controllerFunction: _.setReason),
                       AppTheme.heightSpace10,
+                      buildActionChip(appEnum: UsageReason.job,
+                          controllerFunction: _.setReason),
+                      AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.composition,
                           controllerFunction: _.setReason),
                       AppTheme.heightSpace10,
@@ -50,8 +57,8 @@ class OnBoardingReasonPage extends StatelessWidget {
                           controllerFunction: _.setReason),
                     ]
                   ),
-                ],
-              ),
+                ),
+              ),],
             ),
           ),
         ),

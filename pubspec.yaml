@@ -1,6 +1,6 @@
 name: neom_onboarding
 description: OnBoarding processes for Cyberneom.
-version: 1.0.5
+version: 1.1.0
 homepage: https://github.com/Cyberneom/neom_onboarding
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -28,7 +28,8 @@ dependency_overrides:
     path: ../neom_commons
   neom_posts:
     path: ../neom_posts
-  intl: 0.18.1
+  http: 1.1.0
+  uuid: 4.1.0
 
 # The following section is specific to Flutter packages.
 flutter:

@@ -29,20 +29,19 @@ class OnBoardingAddImagePage extends StatelessWidget {
         appBar: AppBarChild(color: Colors.transparent),
         backgroundColor: AppColor.main50,
         body: Container(
+          width: AppTheme.fullWidth(context),
+          height: AppTheme.fullHeight(context),
           decoration: AppTheme.appBoxDecoration,
           child: Stack(
             children: <Widget>[
               SingleChildScrollView(
-                padding: const EdgeInsets.only(
-                      left: AppTheme.padding20,
-                      right: AppTheme.padding20
-                  ),
+                padding: const EdgeInsets.symmetric(horizontal: AppTheme.padding20),
                 child: Column(
                   children: <Widget>[
                     AppTheme.heightSpace50,
+                    AppTheme.heightSpace20,
                     Obx(()=> Container(
-                      width: double.infinity,
-                        margin: const EdgeInsets.only(left: 20, right: 20,top: 10, bottom: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Center(
                         child: Stack(
                           children: <Widget>[
@@ -80,29 +79,30 @@ class OnBoardingAddImagePage extends StatelessWidget {
                           ]),
                         ),
                       ),),
-                      buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userController.user!.name.split(" ").first}",
+                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userController.user!.name.split(" ").first}",
                         _.userController.user!.photoUrl.isEmpty
                           ? AppTranslationConstants.addProfileImgMsg.tr
                           : _.userController.profile.id.isEmpty
                             ? AppTranslationConstants.addLastProfileInfoMsg.tr
                             : AppTranslationConstants.addNewProfileInfoMsg.tr
-                      ),
-                      buildContainerTextField(AppTranslationConstants.username.tr,
+                    ),
+                    buildContainerTextField(AppTranslationConstants.username.tr,
                         controller: _.controllerUsername),
-                      buildContainerTextField("${AppTranslationConstants.tellAboutYou.tr} (${AppTranslationConstants.optional.tr})",
+                    buildContainerTextField("${AppTranslationConstants.tellAboutYou.tr} (${AppTranslationConstants.optional.tr})",
                         controller: _.controllerAboutMe, maxLines: 20),
-                      AppTheme.heightSpace10,
+                    AppTheme.heightSpace20,
                     Column(
                       children: [
-                          buildEntryDateField(_.dateOfBirth,
-                              context: context, dateFunction: _.setDateOfBirth),
-                          AppTheme.heightSpace10,
-                          buildPhoneField(onBoardingController: _),
-                          // buildContainerTextField("${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
-                          //     controller: _.controllerCouponCode),
+                        buildEntryDateField(_.dateOfBirth,
+                            context: context, dateFunction: _.setDateOfBirth),
+                        AppTheme.heightSpace10,
+                        buildPhoneField(onBoardingController: _),
+                          ///WAITING FOR GIGCOIN TO WORK
+                          /// buildContainerTextField("${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
+                          ///     controller: _.controllerCouponCode),
                       ],
                     ),
-                      AppTheme.heightSpace5,
+                    AppTheme.heightSpace5,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -125,9 +125,9 @@ class OnBoardingAddImagePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      !_.agreeTerms ? Container() :
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width/2,
+                      if(_.agreeTerms) Container(
+                        width: MediaQuery.of(context).size.width*0.66,
+                        margin: const EdgeInsets.symmetric(vertical: 10),
                         child: TextButton(
                           onPressed: () async => {
                             if(_.userController.user?.currentProfileId.isEmpty ?? true) {
@@ -137,8 +137,8 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             }
                           },
                           style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                            backgroundColor: AppColor.bondiBlue25,
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                            backgroundColor: AppColor.bondiBlue,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),),
                           child: Text((_.userController.user?.currentProfileId.isEmpty ?? true)
                               ? AppTranslationConstants.finishAccount.tr
@@ -153,15 +153,12 @@ class OnBoardingAddImagePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                Positioned(
-                  child: _.isLoading ?
-                  Container(
-                    color: Colors.black.withOpacity(0.8),
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColor.dodgetBlue)),
-                    ),
-                  ) : Container(),
+                if(_.isLoading) Container(
+                  color: Colors.black87,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColor.dodgetBlue)),
+                  ),
                 ),
             ],
           ),

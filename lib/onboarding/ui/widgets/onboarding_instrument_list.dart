@@ -21,7 +21,7 @@ class OnBoardingInstrumentList extends StatelessWidget{
             return GestureDetector(
               child: ListTile(
                 tileColor: instrument.isFavorite ? AppColor.getMain() : Colors.transparent,
-                title: Text(instrument.name.tr.capitalize!,
+                title: Text(instrument.name.tr.capitalize,
                   style: TextStyle(fontWeight: instrument.isFavorite ? FontWeight.bold : FontWeight.normal),),
                 trailing: IconButton(
                   icon:  Icon(

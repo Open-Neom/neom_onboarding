@@ -35,7 +35,7 @@ class OnBoardingReasonPage extends StatelessWidget {
                   HeaderIntro(subtitle: AppTranslationConstants.introReason.tr),
                   AppTheme.heightSpace30,
               SizedBox(
-                height: AppTheme.fullHeight(context)/3,
+                height: AppTheme.fullHeight(context)*0.4,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

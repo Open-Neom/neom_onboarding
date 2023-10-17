@@ -20,7 +20,7 @@ Widget buildPhoneField({required OnBoardingController onBoardingController}) {
         bottom: AppTheme.padding5,
     ),
     decoration: BoxDecoration(
-      color: AppColor.bondiBlue25,
+      color: AppColor.bondiBlue,
       borderRadius: BorderRadius.circular(40),
     ),
     child: IntlPhoneField(
@@ -55,7 +55,7 @@ Widget buildEntryDateField(DateTime dateOfBirth,
     width: AppTheme.fullWidth(context),
     padding: const EdgeInsets.only(left: AppTheme.padding20, right: AppTheme.padding20),
     decoration: BoxDecoration(
-      color: AppColor.bondiBlue25,
+      color: AppColor.bondiBlue,
       borderRadius: BorderRadius.circular(40),
     ),
     child: TextButton(

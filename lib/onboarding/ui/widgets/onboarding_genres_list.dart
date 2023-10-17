@@ -21,7 +21,7 @@ class OnBoardingGenresList extends StatelessWidget{
             return GestureDetector(
               child: ListTile(
                 tileColor: genre.isFavorite ? AppColor.getMain() : Colors.transparent,
-                title: Text(genre.name.tr.capitalizeFirst!,
+                title: Text(genre.name.tr.capitalizeFirst,
                   style: TextStyle(fontWeight: genre.isFavorite ? FontWeight.bold : FontWeight.normal),),
                 trailing: IconButton(
                   icon:  Icon(

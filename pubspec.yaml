@@ -17,6 +17,9 @@ dependencies:
   neom_profile:
     git:
       url: https://github.com/Cyberneom/neom_profile.git
+  neom_posts:
+    git:
+      url: https://github.com/Cyberneom/neom_posts.git
 
 dev_dependencies:
   flutter_test:
@@ -26,10 +29,16 @@ dev_dependencies:
 dependency_overrides:
   neom_commons:
     path: ../neom_commons
+  neom_profile:
+    path: ../neom_profile
   neom_posts:
     path: ../neom_posts
+  neom_music_player:
+    path: ../neom_music_player
   http: 1.1.0
   uuid: 4.1.0
+  logger: 2.0.2+1
+  google_api_headers: 2.0.3
 
 # The following section is specific to Flutter packages.
 flutter:

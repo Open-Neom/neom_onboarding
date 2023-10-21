@@ -45,20 +45,20 @@ class OnBoardingAddImagePage extends StatelessWidget {
                       child: Center(
                         child: Stack(
                           children: <Widget>[
-                            (_.postUploadController.imageFile.value.path.isEmpty &&
+                            (_.postUploadController.mediaFile.value.path.isEmpty &&
                             _.userController.user!.photoUrl.isEmpty) ?
                             const Icon(Icons.account_circle, size: 150.0, color: Colors.grey) :
                             Container(
                               width: 140.0,
                               height: 140.0,
                               decoration: BoxDecoration(
-                                image: _.postUploadController.imageFile.value.path.isEmpty ?
+                                image: _.postUploadController.mediaFile.value.path.isEmpty ?
                                 DecorationImage(
                                   image: CachedNetworkImageProvider(_.userController.user!.photoUrl),
                                   fit: BoxFit.cover,
                                 ) :
                                 DecorationImage(
-                                  image: FileImage(File(_.postUploadController.imageFile.value.path)),
+                                  image: FileImage(File(_.postUploadController.mediaFile.value.path)),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: const BorderRadius.all(Radius.circular(75.0)),
@@ -67,13 +67,13 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             Positioned(
                               bottom: 0,
                               right: 0,
-                              child: (_.postUploadController.imageFile.value.path.isEmpty) ? FloatingActionButton(
+                              child: (_.postUploadController.mediaFile.value.path.isEmpty) ? FloatingActionButton(
                                 child: const Icon(Icons.camera_alt),
                                 onPressed: ()=> _.handleImage()
                               )
                               : FloatingActionButton (
                                   child: const Icon(Icons.close),
-                                  onPressed: () => _.postUploadController.clearImage()
+                                  onPressed: () => _.postUploadController.clearMedia()
                               ),
                             ),
                           ]),

@@ -305,7 +305,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         dateOfBirth = DateTime.now();
       }
 
-      if(postUploadController.imageFile.value.path.isNotEmpty) {
+      if(postUploadController.mediaFile.value.path.isNotEmpty) {
         userController.user!.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
       }
       if(phoneNumber.isNotEmpty) {
@@ -373,7 +373,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
-      if(postUploadController.imageFile.value.path.isNotEmpty) {
+      if(postUploadController.mediaFile.value.path.isNotEmpty) {
         userController.newProfile.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
       }
 

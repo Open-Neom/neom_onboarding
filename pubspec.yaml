@@ -35,6 +35,8 @@ dependency_overrides:
     path: ../neom_posts
   neom_music_player:
     path: ../neom_music_player
+  neom_instruments:
+    path: ../neom_instruments
   http: 1.1.0
   uuid: 4.1.0
   logger: 2.0.2+1

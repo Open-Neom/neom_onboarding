@@ -43,7 +43,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                   AppTheme.heightSpace10,
                   buildActionChip(appEnum: ProfileType.host,
                       controllerFunction: _.setProfileType),
-                  AppFlavour.appInUse == AppInUse.cyberneom ? Column(
+                  AppFlavour.appInUse == AppInUse.c ? Column(
                     children: [
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: ProfileType.researcher,

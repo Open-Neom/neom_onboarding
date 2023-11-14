@@ -42,7 +42,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        AppFlavour.appInUse == AppInUse.gigmeout
+                        AppFlavour.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.recordStudio,
                               controllerFunction: _.setFacilityType),
@@ -66,23 +66,23 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                         buildActionChip(appEnum: FacilityType.store,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
-                        AppFlavour.appInUse == AppInUse.gigmeout
+                        AppFlavour.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.equipmentRental,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : Container(),
-                        AppFlavour.appInUse == AppInUse.gigmeout
+                        AppFlavour.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.rehearsalRoom,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : Container(),
-                        AppFlavour.appInUse != AppInUse.cyberneom
+                        AppFlavour.appInUse != AppInUse.c
                             ? buildActionChip(appEnum: FacilityType.designer,
                             controllerFunction: _.setFacilityType) : Container(),
                         AppTheme.heightSpace10,
-                        AppFlavour.appInUse != AppInUse.cyberneom
+                        AppFlavour.appInUse != AppInUse.c
                             ? buildActionChip(appEnum: FacilityType.photographer,
                             controllerFunction: _.setFacilityType) : Container(),
                         AppTheme.heightSpace10,

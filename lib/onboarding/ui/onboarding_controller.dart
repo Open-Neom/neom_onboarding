@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:neom_commons/core/app_flavour.dart';
@@ -44,31 +45,17 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   final genresController = Get.put(GenresController());
   final postUploadController = Get.put(PostUploadController());
 
-  final Rxn<AppUser> _user = Rxn<AppUser>();
-  AppUser? get user => _user.value;
-  set user(AppUser? user) => _user.value = user;
-
-  final RxBool _isLoading = false.obs;
-  bool get isLoading => _isLoading.value;
-  set isLoading(bool isLoading) => _isLoading.value = isLoading;
-
-  final RxBool _agreeTerms = false.obs;
-  bool get agreeTerms => _agreeTerms.value;
-  set agreeTerms(bool agreeTerms) => _agreeTerms.value = agreeTerms;
-
-  final Rx<DateTime> _dateOfBirth = DateTime(AppConstants.lastYearDOB).obs;
-  DateTime get dateOfBirth => _dateOfBirth.value;
-  set dateOfBirth(DateTime dateOfBirth) => _dateOfBirth.value = dateOfBirth;
-
   TextEditingController controllerFullName = TextEditingController();
   TextEditingController controllerUsername = TextEditingController();
   TextEditingController controllerAboutMe = TextEditingController();
   TextEditingController controllerCouponCode = TextEditingController();
   TextEditingController controllerPhone = TextEditingController();
 
-  final Rx<Country> _phoneCountry = countries[0].obs;
-  Country get phoneCountry => _phoneCountry.value;
-  set phoneCountry(Country country) => _phoneCountry.value = country;
+  final Rxn<AppUser> user = Rxn<AppUser>();
+  final RxBool isLoading = false.obs;
+  final RxBool agreeTerms = false.obs;
+  final Rx<DateTime> dateOfBirth = DateTime(AppConstants.lastYearDOB).obs;
+  final Rx<Country> phoneCountry = countries[0].obs;
 
   String countryCode = '';
   String phoneNumber = '';
@@ -79,16 +66,16 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   @override
   void onInit() async {
     super.onInit();
-    user = userController.user;
-    controllerFullName.text = user?.name ?? "";
-    controllerUsername.text = user?.name ?? "";
+    user.value = userController.user;
+    controllerFullName.text = user.value?.name ?? "";
+    controllerUsername.text = user.value?.name ?? "";
 
     genresController.favGenres.clear();
     instrumentController.favInstruments.clear();
 
     for (var country in countries) {
       if(Get.locale!.countryCode == country.code){
-        phoneCountry = country; //Mexico
+        phoneCountry.value = country; //Mexico
       }
     }
 
@@ -108,7 +95,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     update([AppPageIdConstants.onBoardingProfile]);
 
-    if(AppFlavour.appInUse == AppInUse.cyberneom) {
+    if(AppFlavour.appInUse == AppInUse.c) {
       Get.toNamed(AppRouteConstants.introAddImage);
     } else {
       switch(profileType) {
@@ -136,7 +123,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   }
 
-
   @override
   Future<void>  addInstrumentIntro(int index) async {
     logger.d("Adding instrument to new account");
@@ -147,7 +133,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     update([AppPageIdConstants.onBoardingInstruments]);
   }
-
 
   @override
   Future<void> removeInstrumentIntro(int index) async {
@@ -162,29 +147,30 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingInstruments]);
   }
 
-  @override
-  Future<void>  addGenreIntro(int index) async {
-    logger.d("Adding instrument to new account");
-    String genreKey = genresController.genres.keys.elementAt(index);
-    Genre genre = genresController.genres[genreKey]!;
-    genresController.genres[genreKey]!.isFavorite = true;
-    genresController.favGenres[genreKey] = genre;
-
-    update([AppPageIdConstants.onBoardingGenres]);
-  }
-
-  @override
-  Future<void> removeGenreIntro(int index) async {
-    logger.d("Removing genre from new account");
-
-    String genreKey = genresController.genres.keys.elementAt(index);
-    Genre genre = genresController.genres[genreKey]!;
-    genresController.genres[genreKey]!.isFavorite = false;
-    logger.d("Removing genre ${genre.name}");
-    genresController.favGenres.remove(genreKey);
-
-    update([AppPageIdConstants.onBoardingGenres]);
-  }
+  ///DEPRECATED
+  // @override
+  // Future<void>  addGenreIntro(int index) async {
+  //   logger.d("Adding instrument to new account");
+  //   String genreKey = genresController.genres.keys.elementAt(index);
+  //   Genre genre = genresController.genres[genreKey]!;
+  //   genresController.genres[genreKey]!.isFavorite = true;
+  //   genresController.favGenres[genreKey] = genre;
+  //
+  //   update([AppPageIdConstants.onBoardingGenres]);
+  // }
+  //
+  // @override
+  // Future<void> removeGenreIntro(int index) async {
+  //   logger.d("Removing genre from new account");
+  //
+  //   String genreKey = genresController.genres.keys.elementAt(index);
+  //   Genre genre = genresController.genres[genreKey]!;
+  //   genresController.genres[genreKey]!.isFavorite = false;
+  //   logger.d("Removing genre ${genre.name}");
+  //   genresController.favGenres.remove(genreKey);
+  //
+  //   update([AppPageIdConstants.onBoardingGenres]);
+  // }
 
   @override
   void addInstrumentToProfile(){
@@ -199,10 +185,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void addGenresToProfile() {
-    logger.d("Adding ${genresController.favGenres.length} Genres to Profile");
+    logger.d("Adding ${genresController.selectedGenres.length} Genres to Profile");
 
-    userController.newProfile.genres = genresController.favGenres
-        .map((name, genre) => MapEntry<String,Genre>(name,genre));
+    userController.newProfile.genres = Map<String, Genre>.fromEntries(
+      genresController.selectedGenres.value
+          .map((genre) => MapEntry<String, Genre>(genre.name, genre)),
+    );
+
 
     Get.toNamed(AppRouteConstants.introAddImage);
     update([AppPageIdConstants.onBoardingGenres]);
@@ -231,9 +220,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     logger.d("");
     try {
       if (pickedDate != null
-          && pickedDate.compareTo(dateOfBirth) != 0
+          && pickedDate.compareTo(dateOfBirth.value) != 0
           && pickedDate.compareTo(DateTime.now()) < 0) {
-        dateOfBirth = pickedDate;
+        dateOfBirth.value = pickedDate;
       }
     } catch (e) {
       logger.e(e.toString());
@@ -247,7 +236,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setTermsAgreement(bool agree) {
     logger.d("");
     try {
-      agreeTerms = agree;
+      agreeTerms.value = agree;
     } catch (e) {
       logger.e(e.toString());
     }
@@ -272,11 +261,11 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     bool optionalPhoneNumber = true;
 
     if(validateMsg.isEmpty) {
-      if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.minLength
-              || controllerPhone.text.length > phoneCountry.maxLength)) {
+      if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.value.minLength
+              || controllerPhone.text.length > phoneCountry.value.maxLength)) {
         validateMsg = MessageTranslationConstants.pleaseEnterPhone;
         phoneNumber = '';
-      } else if (phoneCountry.code.isEmpty) {
+      } else if (phoneCountry.value.code.isEmpty) {
         validateMsg = MessageTranslationConstants.pleaseEnterCountryCode;
         phoneNumber = '';
       } else {
@@ -299,10 +288,10 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     if(validateMsg.isEmpty) {
 
-      if(dateOfBirth.compareTo(DateTime(AppConstants.lastYearDOB)) >= 0) {
+      if(dateOfBirth.value.compareTo(DateTime(AppConstants.lastYearDOB)) >= 0) {
         ///Validation removed by Apple's Guidelines
         //validateMsg = MessageTranslationConstants.pleaseEnterDOB;
-        dateOfBirth = DateTime.now();
+        dateOfBirth.value = DateTime.now();
       }
 
       if(postUploadController.mediaFile.value.path.isNotEmpty) {
@@ -310,7 +299,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
       if(phoneNumber.isNotEmpty) {
         userController.user!.phoneNumber = phoneNumber;
-        userController.user!.countryCode = phoneCountry.dialCode;
+        userController.user!.countryCode = phoneCountry.value.dialCode;
       }
       userController.user!.referralCode = controllerCouponCode.text.toLowerCase().trim();
       userController.newProfile.aboutMe = controllerAboutMe.text.trim();
@@ -322,7 +311,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
       if(userController.user!.referralCode.isNotEmpty) {
         coupon = await CouponFirestore()
-            .getCouponByCode(user!.referralCode);
+            .getCouponByCode(user.value!.referralCode);
 
         if(coupon.id.isNotEmpty) {
           if(coupon.type == CouponType.coinAddition
@@ -355,7 +344,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       Get.snackbar(MessageTranslationConstants.finishingAccount.tr,
           validateMsg.tr, snackPosition: SnackPosition.bottom);
     }
-    isLoading = false;
+    isLoading.value = false;
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 
@@ -389,7 +378,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           validateMsg.tr,
           snackPosition: SnackPosition.bottom);
     }
-    isLoading = false;
+    isLoading.value = false;
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 
@@ -422,6 +411,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingProfile]);
 
   }
+
 
 
 }

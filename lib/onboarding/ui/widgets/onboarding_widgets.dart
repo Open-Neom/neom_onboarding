@@ -40,7 +40,7 @@ Widget buildPhoneField({required OnBoardingController onBoardingController}) {
         onBoardingController.controllerPhone.text = phone.number;
       },
       onCountryChanged: (country) {
-        onBoardingController.phoneCountry = country;
+        onBoardingController.phoneCountry.value = country;
       },
         //TODO Verify if invalidNumberMessage is needed
       invalidNumberMessage: ""

@@ -8,7 +8,6 @@ import 'package:neom_commons/core/utils/app_theme.dart';
 import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
 import 'onboarding_controller.dart';
-import 'widgets/onboarding_genres_list.dart';
 
 class OnBoardingGenresPage extends StatelessWidget {
   const OnBoardingGenresPage({Key? key}) : super(key: key);
@@ -29,7 +28,16 @@ class OnBoardingGenresPage extends StatelessWidget {
                 children: <Widget>[
                 AppTheme.heightSpace100,
                 HeaderIntro(subtitle: AppTranslationConstants.introGenres.tr),
-                const Expanded(child: OnBoardingGenresList()),
+                ///DEPRECATED const Expanded(child: OnBoardingGenresList()),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Obx(() => Wrap(
+                          alignment: WrapAlignment.center,
+                          children: _.genresController.genreChips.toList()
+                      ),),
+                    ),
+                  ),
                 ]
               ),
             ),
@@ -37,9 +45,7 @@ class OnBoardingGenresPage extends StatelessWidget {
         tooltip: AppTranslationConstants.next.tr,
         elevation: AppTheme.elevationFAB,
         child: const Icon(Icons.navigate_next),
-        onPressed: ()=>{
-          _.addGenresToProfile()
-        },
+        onPressed: () => _.addGenresToProfile(),
       ),
       ),
     );

@@ -93,7 +93,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                     AppTheme.heightSpace20,
                     Column(
                       children: [
-                        buildEntryDateField(_.dateOfBirth,
+                        buildEntryDateField(_.dateOfBirth.value,
                             context: context, dateFunction: _.setDateOfBirth),
                         AppTheme.heightSpace10,
                         buildPhoneField(onBoardingController: _),
@@ -107,7 +107,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
-                            value: _.agreeTerms,
+                            value: _.agreeTerms.value,
                             onChanged: (value) {
                               _.setTermsAgreement(value ?? false);
                             },
@@ -125,7 +125,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                           ),
                         ],
                       ),
-                      if(_.agreeTerms) Container(
+                      if(_.agreeTerms.value) Container(
                         width: MediaQuery.of(context).size.width*0.66,
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: TextButton(
@@ -153,7 +153,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                if(_.isLoading) Container(
+                if(_.isLoading.value) Container(
                   color: Colors.black87,
                   child: const Center(
                     child: CircularProgressIndicator(

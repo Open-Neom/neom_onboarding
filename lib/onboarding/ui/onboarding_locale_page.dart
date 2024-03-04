@@ -40,9 +40,9 @@ class OnBoardingLocalePage extends StatelessWidget {
                 buildActionChip(appEnum: AppLocale.spanish,
                     controllerFunction: _.setLocale),
                 //TODO Add French and Deutsch Translations
-                // AppTheme.heightSpace10,
-                // buildActionChip(appEnum: AppLocale.french,
-                //     controllerFunction: _.setLocale, isActive: false),
+                AppTheme.heightSpace10,
+                buildActionChip(appEnum: AppLocale.french,
+                    controllerFunction: _.setLocale, isActive: AppFlavour.appInUse == AppInUse.g),
                 // AppTheme.heightSpace10,
                 // buildActionChip(appEnum: AppLocale.deutsch,
                 //     controllerFunction: _.setLocale, isActive: false),

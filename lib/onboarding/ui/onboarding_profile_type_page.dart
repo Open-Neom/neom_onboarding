@@ -14,7 +14,7 @@ import 'package:neom_commons/core/utils/enums/profile_type.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingProfileTypePage extends StatelessWidget {
-  const OnBoardingProfileTypePage({Key? key}) : super(key: key);
+  const OnBoardingProfileTypePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                 children: <Widget>[
                   HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
                   AppTheme.heightSpace30,
-                  buildActionChip(appEnum: ProfileType.instrumentist,
+                  buildActionChip(appEnum: ProfileType.artist,
                       controllerFunction: _.setProfileType),
                   AppTheme.heightSpace10,
                   buildActionChip(appEnum: ProfileType.facilitator,
@@ -49,9 +49,9 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                       buildActionChip(appEnum: ProfileType.researcher,
                           controllerFunction: _.setProfileType),
                     ],
-                  ) : Container(),
+                  ) : const SizedBox.shrink(),
                   AppTheme.heightSpace10,
-                  buildActionChip(appEnum: ProfileType.fan,
+                  buildActionChip(appEnum: ProfileType.casual,
                       controllerFunction: _.setProfileType),
                 ],
               ),

@@ -17,7 +17,7 @@ import 'widgets/onboarding_widgets.dart';
 
 
 class OnBoardingAddImagePage extends StatelessWidget {
-  const OnBoardingAddImagePage({Key? key}) : super(key: key);
+  const OnBoardingAddImagePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         child: Stack(
                           children: <Widget>[
                             (_.postUploadController.mediaFile.value.path.isEmpty &&
-                            _.userController.user!.photoUrl.isEmpty) ?
+                            _.userController.user.photoUrl.isEmpty) ?
                             const Icon(Icons.account_circle, size: 150.0, color: Colors.grey) :
                             Container(
                               width: 140.0,
@@ -54,7 +54,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 image: _.postUploadController.mediaFile.value.path.isEmpty ?
                                 DecorationImage(
-                                  image: CachedNetworkImageProvider(_.userController.user!.photoUrl),
+                                  image: CachedNetworkImageProvider(_.userController.user.photoUrl),
                                   fit: BoxFit.cover,
                                 ) :
                                 DecorationImage(
@@ -79,8 +79,8 @@ class OnBoardingAddImagePage extends StatelessWidget {
                           ]),
                         ),
                       ),),
-                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userController.user!.name.split(" ").first}",
-                        _.userController.user!.photoUrl.isEmpty
+                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userController.user.name.split(" ").first}",
+                        _.userController.user.photoUrl.isEmpty
                           ? AppTranslationConstants.addProfileImgMsg.tr
                           : _.userController.profile.id.isEmpty
                             ? AppTranslationConstants.addLastProfileInfoMsg.tr
@@ -97,13 +97,22 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             context: context, dateFunction: _.setDateOfBirth),
                         AppTheme.heightSpace10,
                         buildPhoneField(onBoardingController: _),
+                        if(!_.isVerifiedPhone) TextButton(
+                            onPressed: () => _.verifyPhone(),
+                            child: Text(!_.smsSent ? AppTranslationConstants.verifyPhone.tr : AppTranslationConstants.sendCodeAgain.tr,
+                              style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
+                            )
+                        ),
+                        if(_.smsSent && !_.isVerifiedPhone) _.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: _)
                           ///WAITING FOR GIGCOIN TO WORK
                           /// buildContainerTextField("${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
                           ///     controller: _.controllerCouponCode),
                       ],
                     ),
                     AppTheme.heightSpace5,
-                      Row(
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
@@ -113,24 +122,24 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             },
                           ),
                           Text(AppTranslationConstants.iHaveReadAndAccept.tr,
-                            style: const TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 14),
                           ),
                           TextButton(
                             child: Text(AppTranslationConstants.termsAndConditions.tr,
-                              style: const TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 14),
                             ),
                             onPressed: () async {
                               CoreUtilities.launchURL(AppFlavour.getTermsOfServiceUrl());
                             }
                           ),
-                        ],
+                        ],),
                       ),
                       if(_.agreeTerms.value) Container(
                         width: MediaQuery.of(context).size.width*0.66,
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: TextButton(
                           onPressed: () async => {
-                            if(_.userController.user?.currentProfileId.isEmpty ?? true) {
+                            if(_.userController.user.currentProfileId.isEmpty) {
                               await _.finishAccount()
                             } else {
                               await _.createAdditionalProfile()
@@ -140,7 +149,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                             backgroundColor: AppColor.bondiBlue,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),),
-                          child: Text((_.userController.user?.currentProfileId.isEmpty ?? true)
+                          child: Text((_.userController.user.currentProfileId.isEmpty)
                               ? AppTranslationConstants.finishAccount.tr
                               : AppTranslationConstants.finishProfile.tr,
                             style: const TextStyle(

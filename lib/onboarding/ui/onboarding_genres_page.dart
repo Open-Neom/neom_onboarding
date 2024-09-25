@@ -10,7 +10,7 @@ import 'package:neom_commons/core/utils/constants/app_translation_constants.dart
 import 'onboarding_controller.dart';
 
 class OnBoardingGenresPage extends StatelessWidget {
-  const OnBoardingGenresPage({Key? key}) : super(key: key);
+  const OnBoardingGenresPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,7 @@ import 'package:neom_commons/core/utils/enums/usage_reason.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingReasonPage extends StatelessWidget {
-  const OnBoardingReasonPage({Key? key}) : super(key: key);
+  const OnBoardingReasonPage({super.key});
 
 
   @override
@@ -41,17 +41,18 @@ class OnBoardingReasonPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       AppTheme.heightSpace10,
-                      buildActionChip(appEnum: UsageReason.fun,
+                      buildActionChip(appEnum: UsageReason.casual,
                           controllerFunction: _.setReason),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.professional,
                           controllerFunction: _.setReason),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: UsageReason.job,
-                          controllerFunction: _.setReason),
-                      AppTheme.heightSpace10,
-                      buildActionChip(appEnum: UsageReason.composition,
-                          controllerFunction: _.setReason),
+                      ///DEPRECATED
+                      // AppTheme.heightSpace10,
+                      // buildActionChip(appEnum: UsageReason.job,
+                      //     controllerFunction: _.setReason),
+                      // AppTheme.heightSpace10,
+                      // buildActionChip(appEnum: UsageReason.composition,
+                      //     controllerFunction: _.setReason),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.any,
                           controllerFunction: _.setReason),

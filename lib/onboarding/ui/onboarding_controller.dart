@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:neom_commons/auth/ui/login/login_controller.dart';
 import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
 import 'package:neom_commons/core/data/firestore/profile_firestore.dart';
@@ -21,6 +22,7 @@ import 'package:neom_commons/core/utils/constants/app_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_route_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
+import 'package:neom_commons/core/utils/constants/intl_countries_list.dart';
 import 'package:neom_commons/core/utils/constants/message_translation_constants.dart';
 import 'package:neom_commons/core/utils/enums/app_currency.dart';
 import 'package:neom_commons/core/utils/enums/app_in_use.dart';
@@ -38,8 +40,6 @@ import 'package:neom_posts/posts/ui/add/post_upload_controller.dart';
 
 class OnBoardingController extends GetxController implements OnBoardingService {
 
-  var logger = AppUtilities.logger;
-
   final userController = Get.find<UserController>();
   final instrumentController = Get.put(InstrumentController());
   final genresController = Get.put(GenresController());
@@ -55,7 +55,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   final RxBool isLoading = false.obs;
   final RxBool agreeTerms = false.obs;
   final Rx<DateTime> dateOfBirth = DateTime(AppConstants.lastYearDOB).obs;
-  final Rx<Country> phoneCountry = countries[0].obs;
+  final Rx<Country> phoneCountry = IntlPhoneConstants.availableCountries[0].obs;
 
   String countryCode = '';
   String phoneNumber = '';
@@ -90,7 +90,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setProfileType(ProfileType profileType) {
-    logger.d("ProfileType registered as ${profileType.name}");
+    AppUtilities.logger.d("ProfileType registered as ${profileType.name}");
     userController.newProfile.type = profileType;
 
     update([AppPageIdConstants.onBoardingProfile]);
@@ -99,7 +99,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       Get.toNamed(AppRouteConstants.introAddImage);
     } else {
       switch(profileType) {
-        case(ProfileType.instrumentist):
+        case(ProfileType.artist):
+        case(ProfileType.band):
           Get.toNamed(AppRouteConstants.introReason);
           break;
         case(ProfileType.facilitator):
@@ -108,15 +109,12 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         case(ProfileType.host):
           Get.toNamed(AppRouteConstants.introPlace);
           break;
+        case ProfileType.broadcaster:
         case(ProfileType.researcher):
+        case(ProfileType.casual):
           Get.toNamed(AppRouteConstants.introGenres);
           break;
-        case(ProfileType.fan):
-          Get.toNamed(AppRouteConstants.introGenres);
-          break;
-        case(ProfileType.band):
-          Get.toNamed(AppRouteConstants.introReason);
-          break;
+          // TODO: Handle this case.
       }
     }
 
@@ -125,7 +123,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void>  addInstrumentIntro(int index) async {
-    logger.d("Adding instrument to new account");
+    AppUtilities.logger.d("Adding instrument to new account");
     String instrumentKey = instrumentController.instruments.keys.elementAt(index);
     Instrument instrument = instrumentController.instruments[instrumentKey]!;
     instrumentController.instruments[instrumentKey]!.isFavorite = true;
@@ -136,45 +134,20 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> removeInstrumentIntro(int index) async {
-    logger.d("Removing instrument from new account");
+    AppUtilities.logger.d("Removing instrument from new account");
 
     String instrumentKey = instrumentController.instruments.keys.elementAt(index);
     Instrument instrument = instrumentController.instruments[instrumentKey]!;
     instrumentController.instruments[instrumentKey]!.isFavorite = false;
-    logger.d("Removing instrument ${instrument.name}");
+    AppUtilities.logger.d("Removing instrument ${instrument.name}");
     instrumentController.favInstruments.remove(instrumentKey);
 
     update([AppPageIdConstants.onBoardingInstruments]);
   }
 
-  ///DEPRECATED
-  // @override
-  // Future<void>  addGenreIntro(int index) async {
-  //   logger.d("Adding instrument to new account");
-  //   String genreKey = genresController.genres.keys.elementAt(index);
-  //   Genre genre = genresController.genres[genreKey]!;
-  //   genresController.genres[genreKey]!.isFavorite = true;
-  //   genresController.favGenres[genreKey] = genre;
-  //
-  //   update([AppPageIdConstants.onBoardingGenres]);
-  // }
-  //
-  // @override
-  // Future<void> removeGenreIntro(int index) async {
-  //   logger.d("Removing genre from new account");
-  //
-  //   String genreKey = genresController.genres.keys.elementAt(index);
-  //   Genre genre = genresController.genres[genreKey]!;
-  //   genresController.genres[genreKey]!.isFavorite = false;
-  //   logger.d("Removing genre ${genre.name}");
-  //   genresController.favGenres.remove(genreKey);
-  //
-  //   update([AppPageIdConstants.onBoardingGenres]);
-  // }
-
   @override
   void addInstrumentToProfile(){
-    logger.d("Adding ${instrumentController.favInstruments.length} Instruments to Profile");
+    AppUtilities.logger.d("Adding ${instrumentController.favInstruments.length} Instruments to Profile");
 
     userController.newProfile.instruments = instrumentController.favInstruments
         .map((name, instrument) => MapEntry<String,Instrument>(name,instrument));
@@ -185,7 +158,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void addGenresToProfile() {
-    logger.d("Adding ${genresController.selectedGenres.length} Genres to Profile");
+    AppUtilities.logger.d("Adding ${genresController.selectedGenres.length} Genres to Profile");
 
     userController.newProfile.genres = Map<String, Genre>.fromEntries(
       genresController.selectedGenres.value
@@ -197,16 +170,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingGenres]);
   }
 
-
-
   @override
   void setReason(UsageReason reason) {
-    logger.d("ProfileType registered Reason as ${reason.name}");
+    AppUtilities.logger.d("ProfileType registered Reason as ${reason.name}");
     userController.newProfile.reason = reason;
     Get.toNamed(AppRouteConstants.introInstruments);
     update([AppPageIdConstants.onBoardingReason]);
   }
-
 
   @override
   void handleImage() async {
@@ -214,10 +184,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 
-
   @override
   void setDateOfBirth(DateTime? pickedDate) {
-    logger.d("");
+    AppUtilities.logger.d("");
     try {
       if (pickedDate != null
           && pickedDate.compareTo(dateOfBirth.value) != 0
@@ -225,29 +194,27 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         dateOfBirth.value = pickedDate;
       }
     } catch (e) {
-      logger.e(e.toString());
+      AppUtilities.logger.e(e.toString());
     }
 
     update([AppPageIdConstants.onBoardingAddImage]);
   }
-
 
   @override
   void setTermsAgreement(bool agree) {
-    logger.d("");
+    AppUtilities.logger.d("");
     try {
       agreeTerms.value = agree;
     } catch (e) {
-      logger.e(e.toString());
+      AppUtilities.logger.e(e.toString());
     }
 
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 
-
   @override
   Future<void> finishAccount() async {
-    logger.i("Finishing and creating account");
+    AppUtilities.logger.i("Finishing and creating account");
     focusNodeAboutMe.unfocus();
 
     String validateMsg = "";
@@ -280,7 +247,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     if(phoneNumber.isNotEmpty && validateMsg.isEmpty) {
         if(await UserFirestore().isAvailablePhone(phoneNumber)) {
-          logger.i("Phone number $phoneNumber is available");
+          AppUtilities.logger.i("Phone number $phoneNumber is available");
         } else {
           validateMsg = MessageTranslationConstants.phoneUsed;
         }
@@ -295,28 +262,28 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
 
       if(postUploadController.mediaFile.value.path.isNotEmpty) {
-        userController.user!.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
+        userController.user.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
       }
       if(phoneNumber.isNotEmpty) {
-        userController.user!.phoneNumber = phoneNumber;
-        userController.user!.countryCode = phoneCountry.value.dialCode;
+        userController.user.phoneNumber = phoneNumber;
+        userController.user.countryCode = phoneCountry.value.dialCode;
       }
-      userController.user!.referralCode = controllerCouponCode.text.toLowerCase().trim();
+      userController.user.referralCode = controllerCouponCode.text.toLowerCase().trim();
       userController.newProfile.aboutMe = controllerAboutMe.text.trim();
       userController.newProfile.name = controllerUsername.text.trim();
 
-      userController.user!.wallet = Wallet();
-      userController.user!.wallet.currency = AppCurrency.appCoin;
+      userController.user.wallet = Wallet();
+      userController.user.wallet.currency = AppCurrency.appCoin;
       AppCoupon coupon = AppCoupon();
 
-      if(userController.user!.referralCode.isNotEmpty) {
+      if(userController.user.referralCode.isNotEmpty) {
         coupon = await CouponFirestore()
             .getCouponByCode(user.value!.referralCode);
 
         if(coupon.id.isNotEmpty) {
           if(coupon.type == CouponType.coinAddition
-              && coupon.usageCount < coupon.usageLimit) {
-            userController.user!.wallet.amount = coupon.amount;
+              && (coupon.usedBy?.length ?? 0) < coupon.usageLimit) {
+            userController.user.wallet.amount = coupon.amount;
             userController.appliedCoupon = true;
             userController.coupon = coupon;
           }
@@ -350,7 +317,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> createAdditionalProfile() async {
-    logger.i("Finishing and creating additional profile");
+    AppUtilities.logger.i("Finishing and creating additional profile");
     focusNodeAboutMe.unfocus();
 
     String validateMsg = "";
@@ -382,16 +349,15 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 
-
   @override
   void setPlaceType(PlaceType placeType) {
-    logger.d("PlaceType registered as ${placeType.name}");
+    AppUtilities.logger.d("PlaceType registered as ${placeType.name}");
 
     try {
       userController.newProfile.places = {};
       userController.newProfile.places![placeType.name] = Place.addBasic(placeType);
     } catch (e) {
-      logger.e(e.toString());
+      AppUtilities.logger.e(e.toString());
     }
 
     Get.toNamed(AppRouteConstants.introGenres);
@@ -402,7 +368,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setFacilityType(FacilityType facilityTpe) {
-    logger.d("FacilityType registered as ${facilityTpe.name}");
+    AppUtilities.logger.d("FacilityType registered as ${facilityTpe.name}");
 
     userController.newProfile.facilities = {};
     userController.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
@@ -412,6 +378,83 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   }
 
+  List<TextEditingController> smsCodeControllers = List.generate(6, (index) => TextEditingController());
+  List<FocusNode> smsCodeFocusNodes = List.generate(6, (index) => FocusNode());
+  bool smsSent = false;
+  String smsCode = '';
+  bool isVerifiedPhone = false;
+  bool isValidatingSmsCode = false;
 
+  @override
+  Future<void> verifyPhone() async {
+    AppUtilities.logger.i("ValidatePhone");
+    focusNodeAboutMe.unfocus();
+
+    String validateMsg = "";
+
+    if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.value.minLength
+        || controllerPhone.text.length > phoneCountry.value.maxLength)) {
+      validateMsg = MessageTranslationConstants.pleaseEnterPhone;
+      phoneNumber = '';
+    } else if (phoneCountry.value.code.isEmpty) {
+      validateMsg = MessageTranslationConstants.pleaseEnterCountryCode;
+      phoneNumber = '';
+    } else {
+      phoneNumber = controllerPhone.text;
+    }
+
+    if(phoneNumber.isNotEmpty && validateMsg.isEmpty) {
+      if(await UserFirestore().isAvailablePhone(phoneNumber)) {
+        AppUtilities.logger.d("Phone number $phoneNumber is available");
+      } else {
+        validateMsg = MessageTranslationConstants.phoneUsed;
+      }
+    }
+
+    if(validateMsg.isEmpty) {
+      LoginController loginController = Get.find<LoginController>();
+
+      if(phoneNumber.isNotEmpty) {
+        userController.user.phoneNumber = phoneNumber;
+        userController.user.countryCode = phoneCountry.value.dialCode;
+        await loginController.verifyPhoneNumber('+${phoneCountry.value.dialCode}$phoneNumber');
+        smsSent = true;
+      }
+    } else {
+      Get.snackbar(
+          MessageTranslationConstants.finishingAccount.tr,
+          validateMsg.tr,
+          snackPosition: SnackPosition.bottom);
+    }
+    isLoading.value = false;
+    update([AppPageIdConstants.onBoardingAddImage]);
+  }
+
+  @override
+  Future<void> verifySmsCode() async {
+    AppUtilities.logger.d("verifySmsCode");
+
+    try {
+
+      for (var controller in smsCodeControllers) {
+        smsCode += controller.text; // Concatenar el valor de cada campo
+      }
+
+      if(smsCode.length == 6) {
+        isValidatingSmsCode = true;
+        update([AppPageIdConstants.onBoardingAddImage]);
+
+        LoginController loginController = Get.find<LoginController>();
+        isVerifiedPhone = await loginController.validateSmsCode(smsCode);
+      }
+    } catch(e) {
+      AppUtilities.logger.e(e.toString());
+    }
+
+    smsCode = '';
+    isValidatingSmsCode = false;
+    AppUtilities.logger.i("isValidPhone: $isVerifiedPhone");
+    update([AppPageIdConstants.onBoardingAddImage]);
+  }
 
 }

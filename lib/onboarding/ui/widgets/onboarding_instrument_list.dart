@@ -7,7 +7,7 @@ import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import '../onboarding_controller.dart';
 
 class OnBoardingInstrumentList extends StatelessWidget{
-  const OnBoardingInstrumentList({Key? key}) : super(key: key);
+  const OnBoardingInstrumentList({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -15,7 +15,7 @@ import 'package:neom_commons/core/utils/enums/facilitator_type.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingFacilityTypePage extends StatelessWidget {
-  const OnBoardingFacilityTypePage({Key? key}) : super(key: key);
+  const OnBoardingFacilityTypePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
               child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
+                HeaderIntro(subtitle: AppTranslationConstants.introFacilitatorType.tr),
                 AppTheme.heightSpace30,
                 SizedBox(
                   height: AppTheme.fullHeight(context)/2,
@@ -47,7 +47,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                           buildActionChip(appEnum: FacilityType.recordStudio,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
-                        ],) : Container(),
+                        ],) : const SizedBox.shrink(),
                         buildActionChip(appEnum: FacilityType.producer,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
@@ -71,20 +71,20 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                           buildActionChip(appEnum: FacilityType.equipmentRental,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
-                        ],) : Container(),
+                        ],) : const SizedBox.shrink(),
                         AppFlavour.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.rehearsalRoom,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
-                        ],) : Container(),
+                        ],) : const SizedBox.shrink(),
                         AppFlavour.appInUse != AppInUse.c
                             ? buildActionChip(appEnum: FacilityType.designer,
-                            controllerFunction: _.setFacilityType) : Container(),
+                            controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
                         AppTheme.heightSpace10,
                         AppFlavour.appInUse != AppInUse.c
                             ? buildActionChip(appEnum: FacilityType.photographer,
-                            controllerFunction: _.setFacilityType) : Container(),
+                            controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.podcaster,
                             controllerFunction: _.setFacilityType),

@@ -11,7 +11,7 @@ import 'onboarding_controller.dart';
 import 'widgets/onboarding_instrument_list.dart';
 
 class OnBoardingInstrumentsPage extends StatelessWidget {
-  const OnBoardingInstrumentsPage({Key? key}) : super(key: key);
+  const OnBoardingInstrumentsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class OnBoardingInstrumentsPage extends StatelessWidget {
               ]
           ),
         ),
-        floatingActionButton: _.instrumentController.favInstruments.values.isEmpty ? Container()
+        floatingActionButton: _.instrumentController.favInstruments.values.isEmpty ? const SizedBox.shrink()
           : FloatingActionButton(
               tooltip: AppTranslationConstants.next.tr,
               elevation: AppTheme.elevationFAB,

@@ -12,7 +12,7 @@ import 'package:neom_commons/core/utils/enums/place_type.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingPlaceTypePage extends StatelessWidget {
-  const OnBoardingPlaceTypePage({Key? key}) : super(key: key);
+  const OnBoardingPlaceTypePage({super.key});
 
 
   @override
@@ -32,7 +32,7 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
               child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
+                HeaderIntro(subtitle: AppTranslationConstants.introEventPlannerType.tr),
                 AppTheme.heightSpace30,
               SizedBox(
                 height: AppTheme.fullHeight(context)/2,

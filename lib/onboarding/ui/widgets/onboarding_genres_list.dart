@@ -1,3 +1,4 @@
+// ignore: dangling_library_doc_comments
 ///DEPRECATED
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';

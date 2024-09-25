@@ -14,7 +14,7 @@ import 'package:neom_commons/core/utils/enums/app_locale.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingLocalePage extends StatelessWidget {
-  const OnBoardingLocalePage({Key? key}) : super(key: key);
+  const OnBoardingLocalePage({super.key});
 
 
   @override

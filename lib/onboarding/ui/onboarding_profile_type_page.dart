@@ -33,7 +33,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr),
+                  HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr,),
                   AppTheme.heightSpace30,
                   buildActionChip(appEnum: ProfileType.artist,
                       controllerFunction: _.setProfileType),

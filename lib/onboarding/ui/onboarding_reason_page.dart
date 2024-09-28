@@ -32,7 +32,7 @@ class OnBoardingReasonPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  HeaderIntro(subtitle: AppTranslationConstants.introReason.tr),
+                  HeaderIntro(subtitle: AppTranslationConstants.introReason.tr,),
                   AppTheme.heightSpace30,
               SizedBox(
                 height: AppTheme.fullHeight(context)*0.4,

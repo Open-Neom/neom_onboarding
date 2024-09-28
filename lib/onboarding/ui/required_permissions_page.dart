@@ -30,7 +30,7 @@ class RequiredPermissionsPage extends StatelessWidget {
             height: AppTheme.fullHeight(context),
             width: AppTheme.fullWidth(context),
             padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
+            child: SingleChildScrollView(child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -105,7 +105,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                     textAlign: TextAlign.justify),
                 AppTheme.heightSpace20,
               ],
-            ),
+            ),),
           ),
         ),
       ),

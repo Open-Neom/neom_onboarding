@@ -96,8 +96,8 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         buildEntryDateField(_.dateOfBirth.value,
                             context: context, dateFunction: _.setDateOfBirth),
                         AppTheme.heightSpace10,
-                        buildPhoneField(onBoardingController: _),
-                        if(!_.isVerifiedPhone) TextButton(
+                        if(!_.isVerifiedPhone &&_.userController.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: _),
+                        if(!_.isVerifiedPhone &&_.userController.user.phoneNumber.isEmpty) TextButton(
                             onPressed: () => _.verifyPhone(),
                             child: Text(!_.smsSent ? AppTranslationConstants.verifyPhone.tr : AppTranslationConstants.sendCodeAgain.tr,
                               style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),

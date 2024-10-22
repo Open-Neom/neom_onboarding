@@ -111,7 +111,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           break;
         case ProfileType.broadcaster:
         case(ProfileType.researcher):
-        case(ProfileType.casual):
+        case(ProfileType.commonTarget):
           Get.toNamed(AppRouteConstants.introGenres);
           break;
           // TODO: Handle this case.

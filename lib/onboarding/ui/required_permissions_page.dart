@@ -22,7 +22,7 @@ class RequiredPermissionsPage extends StatelessWidget {
       onPopInvoked: (didPop) async {
         await Get.find<LoginController>().signOut();
       },
-      child: Scaffold(
+      child: SafeArea(child: Scaffold(
         backgroundColor: AppColor.main50,
         body: SingleChildScrollView(
           child: Container(
@@ -108,7 +108,7 @@ class RequiredPermissionsPage extends StatelessWidget {
             ),),
           ),
         ),
-      ),
+      ),),
     );
   }
 }

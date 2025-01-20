@@ -113,7 +113,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Checkbox(
                             value: _.agreeTerms.value,
@@ -121,10 +121,11 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               _.setTermsAgreement(value ?? false);
                             },
                           ),
-                          Text(AppTranslationConstants.iHaveReadAndAccept.tr,
+                          Text(AppTranslationConstants.iHaveReadAndAccept.tr+' ',
                             style: const TextStyle(fontSize: 14),
                           ),
                           TextButton(
+                            style: TextButton.styleFrom(padding: EdgeInsets.zero),
                             child: Text(AppTranslationConstants.termsAndConditions.tr,
                               style: const TextStyle(fontSize: 14),
                             ),

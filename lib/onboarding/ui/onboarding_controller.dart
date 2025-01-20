@@ -84,7 +84,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setLocale(AppLocale locale) async {
     await Get.find<SharedPreferenceController>().updateLocale(locale);
     update([AppPageIdConstants.onBoardingProfile]);
-    Get.toNamed(AppRouteConstants.introProfile);
+    Get.toNamed(AppRouteConstants.introAddImage);
   }
 
 
@@ -111,7 +111,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           break;
         case ProfileType.broadcaster:
         case(ProfileType.researcher):
-        case(ProfileType.commonTarget):
+        case(ProfileType.general):
           Get.toNamed(AppRouteConstants.introGenres);
           break;
           // TODO: Handle this case.
@@ -426,6 +426,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           validateMsg.tr,
           snackPosition: SnackPosition.bottom);
     }
+    
     isLoading.value = false;
     update([AppPageIdConstants.onBoardingAddImage]);
   }
@@ -445,6 +446,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         update([AppPageIdConstants.onBoardingAddImage]);
 
         LoginController loginController = Get.find<LoginController>();
+        loginController.isPhoneAuth = true;
         isVerifiedPhone = await loginController.validateSmsCode(smsCode);
       }
     } catch(e) {
@@ -453,7 +455,12 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     smsCode = '';
     isValidatingSmsCode = false;
-    AppUtilities.logger.i("isValidPhone: $isVerifiedPhone");
+    AppUtilities.logger.d("isValidPhone: $isVerifiedPhone");
+
+    Get.snackbar(AppTranslationConstants.verifyPhone.tr,
+        isVerifiedPhone ? AppTranslationConstants.phoneVerified.tr : AppTranslationConstants.phoneVerificationFailed.tr,
+        snackPosition: SnackPosition.bottom);
+    
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 

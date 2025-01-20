@@ -51,7 +51,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                     ],
                   ) : const SizedBox.shrink(),
                   AppTheme.heightSpace10,
-                  buildActionChip(appEnum: ProfileType.commonTarget,
+                  buildActionChip(appEnum: ProfileType.general,
                       controllerFunction: _.setProfileType),
                 ],
               ),

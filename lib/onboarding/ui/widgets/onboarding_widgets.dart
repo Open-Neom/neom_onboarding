@@ -51,7 +51,7 @@ Widget buildPhoneField({required OnBoardingController onBoardingController}) {
   );
 }
 
-Widget buildEntryDateField(DateTime dateOfBirth,
+Widget buildEntryDateField(DateTime? dateOfBirth,
     {required BuildContext context, required dateFunction}) {
   return Container(
     width: AppTheme.fullWidth(context),
@@ -77,8 +77,9 @@ Widget buildEntryDateField(DateTime dateOfBirth,
 
       },
       child: Text(
-        dateOfBirth == DateTime(AppConstants.lastYearDOB) ? '${AppTranslationConstants.enterDOB.tr} (${AppTranslationConstants.optional.tr})'
-            : DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth),
+        dateOfBirth != null && dateOfBirth!.isBefore(DateTime(AppConstants.lastYearDOB))
+            ? DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth)
+            : AppTranslationConstants.enterDOB.tr,
         style: const TextStyle(color: Colors.white, fontSize: 16),
       ),
     ),

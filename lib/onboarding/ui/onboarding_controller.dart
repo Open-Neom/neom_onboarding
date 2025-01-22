@@ -54,7 +54,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   final Rxn<AppUser> user = Rxn<AppUser>();
   final RxBool isLoading = false.obs;
   final RxBool agreeTerms = false.obs;
-  final Rx<DateTime> dateOfBirth = DateTime(AppConstants.lastYearDOB).obs;
+  final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
+  final DateTime minAllowedDate = DateTime(AppConstants.lastYearDOB, 1, 1);
+
   final Rx<Country> phoneCountry = IntlPhoneConstants.availableCountries[0].obs;
 
   String countryCode = '';
@@ -62,6 +64,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   String aboutMe = '';
 
   final FocusNode focusNodeAboutMe = FocusNode();
+  bool optionalPhoneNumber = true;
 
   @override
   void onInit() async {
@@ -188,9 +191,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setDateOfBirth(DateTime? pickedDate) {
     AppUtilities.logger.d("");
     try {
-      if (pickedDate != null
-          && pickedDate.compareTo(dateOfBirth.value) != 0
-          && pickedDate.compareTo(DateTime.now()) < 0) {
+      if (pickedDate != null && isValidDOB(pickedDate)) {
         dateOfBirth.value = pickedDate;
       }
     } catch (e) {
@@ -198,6 +199,20 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     update([AppPageIdConstants.onBoardingAddImage]);
+  }
+
+  bool isValidDOB(DateTime? dob) {
+    if (dob == null) {
+      AppUtilities.logger.w("Date of birth is null.");
+      return false;
+    }
+
+    if (dob.isBefore(minAllowedDate)) {
+      return true;
+    } else {
+      AppUtilities.logger.w("Invalid DOB: Must be before 2010.");
+      return false;
+    }
   }
 
   @override
@@ -225,9 +240,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       validateMsg = MessageTranslationConstants.profileNameUsed;
     }
 
-    bool optionalPhoneNumber = true;
+
+    if(!isValidDOB(dateOfBirth?.value)){
+      validateMsg = MessageTranslationConstants.pleaseEnterDOB;
+    }
 
     if(validateMsg.isEmpty) {
+
       if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.value.minLength
               || controllerPhone.text.length > phoneCountry.value.maxLength)) {
         validateMsg = MessageTranslationConstants.pleaseEnterPhone;
@@ -254,13 +273,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
-
-      if(dateOfBirth.value.compareTo(DateTime(AppConstants.lastYearDOB)) >= 0) {
-        ///Validation removed by Apple's Guidelines
-        //validateMsg = MessageTranslationConstants.pleaseEnterDOB;
-        dateOfBirth.value = DateTime.now();
-      }
-
       if(postUploadController.mediaFile.value.path.isNotEmpty) {
         userController.user.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
       }

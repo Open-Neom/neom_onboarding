@@ -29,11 +29,12 @@ class OnBoardingRoutes {
       page: () => const OnBoardingProfileTypePage(),
       transition: Transition.zoom,
     ),
-    GetPage(
-      name: AppRouteConstants.introInstruments,
-      page: () => const OnBoardingInstrumentsPage(),
-      transition: Transition.rightToLeft,
-    ),
+    ///DEPRECATED
+    // GetPage(
+    //   name: AppRouteConstants.introInstruments,
+    //   page: () => const OnBoardingInstrumentsPage(),
+    //   transition: Transition.rightToLeft,
+    // ),
     GetPage(
       name: AppRouteConstants.introFacility,
       page: () => const OnBoardingFacilityTypePage(),
@@ -44,11 +45,12 @@ class OnBoardingRoutes {
       page: () => const OnBoardingPlaceTypePage(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
-      name: AppRouteConstants.introGenres,
-      page: () => const OnBoardingGenresPage(),
-      transition: Transition.rightToLeft,
-    ),
+    ///DEPRECATED
+    // GetPage(
+    //   name: AppRouteConstants.introGenres,
+    //   page: () => const OnBoardingGenresPage(),
+    //   transition: Transition.rightToLeft,
+    // ),
     GetPage(
       name: AppRouteConstants.introReason,
       page: () => const OnBoardingReasonPage(),

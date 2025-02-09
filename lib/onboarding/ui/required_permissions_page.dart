@@ -61,7 +61,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                     try {
                       await Get.put(ProfileController()).updateLocation();
                       Get.find<UserController>().isNewUser
-                          ? Get.toNamed(AppFlavour.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introProfile)
+                          ? Get.toNamed(AppFlavour.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage)
                           : Get.toNamed(AppRouteConstants.home);
                     } catch (e) {
                       Get.toNamed(AppRouteConstants.logout,

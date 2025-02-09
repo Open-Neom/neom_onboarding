@@ -41,8 +41,8 @@ import 'package:neom_posts/posts/ui/add/post_upload_controller.dart';
 class OnBoardingController extends GetxController implements OnBoardingService {
 
   final userController = Get.find<UserController>();
-  final instrumentController = Get.put(InstrumentController());
-  final genresController = Get.put(GenresController());
+  ///DEPRECATED final instrumentController = Get.put(InstrumentController());
+  //DEPRECATED final genresController = Get.put(GenresController());
   final postUploadController = Get.put(PostUploadController());
 
   TextEditingController controllerFullName = TextEditingController();
@@ -73,8 +73,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     controllerFullName.text = user.value?.name ?? "";
     controllerUsername.text = user.value?.name ?? "";
 
-    genresController.favGenres.clear();
-    instrumentController.favInstruments.clear();
+    // genresController.favGenres.clear();
+    // instrumentController.favInstruments.clear();
 
     for (var country in countries) {
       if(Get.locale!.countryCode == country.code){
@@ -112,71 +112,72 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         case(ProfileType.host):
           Get.toNamed(AppRouteConstants.introPlace);
           break;
-        case ProfileType.broadcaster:
-        case(ProfileType.researcher):
-        case(ProfileType.general):
+        default:
           Get.toNamed(AppRouteConstants.introGenres);
           break;
-          // TODO: Handle this case.
       }
     }
 
 
   }
 
-  @override
-  Future<void>  addInstrumentIntro(int index) async {
-    AppUtilities.logger.d("Adding instrument to new account");
-    String instrumentKey = instrumentController.instruments.keys.elementAt(index);
-    Instrument instrument = instrumentController.instruments[instrumentKey]!;
-    instrumentController.instruments[instrumentKey]!.isFavorite = true;
-    instrumentController.favInstruments[instrumentKey] = instrument;
+  ///DEPRECATED
+  // @override
+  // Future<void>  addInstrumentIntro(int index) async {
+  //   AppUtilities.logger.d("Adding instrument to new account");
+  //   String instrumentKey = instrumentController.instruments.keys.elementAt(index);
+  //   Instrument instrument = instrumentController.instruments[instrumentKey]!;
+  //   instrumentController.instruments[instrumentKey]!.isFavorite = true;
+  //   instrumentController.favInstruments[instrumentKey] = instrument;
+  //
+  //   update([AppPageIdConstants.onBoardingInstruments]);
+  // }
 
-    update([AppPageIdConstants.onBoardingInstruments]);
-  }
+  ///DEPRECATED
+  // @override
+  // Future<void> removeInstrumentIntro(int index) async {
+  //   AppUtilities.logger.d("Removing instrument from new account");
+  //
+  //   String instrumentKey = instrumentController.instruments.keys.elementAt(index);
+  //   Instrument instrument = instrumentController.instruments[instrumentKey]!;
+  //   instrumentController.instruments[instrumentKey]!.isFavorite = false;
+  //   AppUtilities.logger.d("Removing instrument ${instrument.name}");
+  //   instrumentController.favInstruments.remove(instrumentKey);
+  //
+  //   update([AppPageIdConstants.onBoardingInstruments]);
+  // }
 
-  @override
-  Future<void> removeInstrumentIntro(int index) async {
-    AppUtilities.logger.d("Removing instrument from new account");
+  ///DEPRECATED
+  // @override
+  // void addInstrumentToProfile(){
+  //   AppUtilities.logger.d("Adding ${instrumentController.favInstruments.length} Instruments to Profile");
+  //
+  //   userController.newProfile.instruments = instrumentController.favInstruments
+  //       .map((name, instrument) => MapEntry<String,Instrument>(name,instrument));
+  //
+  //   update([AppPageIdConstants.onBoardingInstruments]);
+  //   Get.toNamed(AppRouteConstants.introGenres);
+  // }
 
-    String instrumentKey = instrumentController.instruments.keys.elementAt(index);
-    Instrument instrument = instrumentController.instruments[instrumentKey]!;
-    instrumentController.instruments[instrumentKey]!.isFavorite = false;
-    AppUtilities.logger.d("Removing instrument ${instrument.name}");
-    instrumentController.favInstruments.remove(instrumentKey);
-
-    update([AppPageIdConstants.onBoardingInstruments]);
-  }
-
-  @override
-  void addInstrumentToProfile(){
-    AppUtilities.logger.d("Adding ${instrumentController.favInstruments.length} Instruments to Profile");
-
-    userController.newProfile.instruments = instrumentController.favInstruments
-        .map((name, instrument) => MapEntry<String,Instrument>(name,instrument));
-
-    update([AppPageIdConstants.onBoardingInstruments]);
-    Get.toNamed(AppRouteConstants.introGenres);
-  }
-
-  @override
-  void addGenresToProfile() {
-    AppUtilities.logger.d("Adding ${genresController.selectedGenres.length} Genres to Profile");
-
-    userController.newProfile.genres = Map<String, Genre>.fromEntries(
-      genresController.selectedGenres.value
-          .map((genre) => MapEntry<String, Genre>(genre.name, genre)),
-    );
-
-
-    Get.toNamed(AppRouteConstants.introAddImage);
-    update([AppPageIdConstants.onBoardingGenres]);
-  }
+  ///DEPRECATED
+  // @override
+  // void addGenresToProfile() {
+  //   AppUtilities.logger.d("Adding ${genresController.selectedGenres.length} Genres to Profile");
+  //
+  //   userController.newProfile.genres = Map<String, Genre>.fromEntries(
+  //     genresController.selectedGenres.value
+  //         .map((genre) => MapEntry<String, Genre>(genre.name, genre)),
+  //   );
+  //
+  //
+  //   Get.toNamed(AppRouteConstants.introAddImage);
+  //   update([AppPageIdConstants.onBoardingGenres]);
+  // }
 
   @override
   void setReason(UsageReason reason) {
     AppUtilities.logger.d("ProfileType registered Reason as ${reason.name}");
-    userController.newProfile.reason = reason;
+    userController.newProfile.usageReason = reason;
     Get.toNamed(AppRouteConstants.introInstruments);
     update([AppPageIdConstants.onBoardingReason]);
   }

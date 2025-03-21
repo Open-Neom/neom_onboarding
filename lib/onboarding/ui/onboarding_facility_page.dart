@@ -60,15 +60,15 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                         buildActionChip(appEnum: FacilityType.teacher,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
-                        buildActionChip(appEnum: FacilityType.workshop,
-                            controllerFunction: _.setFacilityType),
+                        // buildActionChip(appEnum: FacilityType.workshop,
+                        //     controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.store,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
                         AppFlavour.appInUse == AppInUse.g
                             ? Column(children: [
-                          buildActionChip(appEnum: FacilityType.equipmentRental,
+                          buildActionChip(appEnum: FacilityType.soundRental,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
@@ -78,14 +78,14 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
-                        AppFlavour.appInUse != AppInUse.c
-                            ? buildActionChip(appEnum: FacilityType.designer,
-                            controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
-                        AppTheme.heightSpace10,
-                        AppFlavour.appInUse != AppInUse.c
-                            ? buildActionChip(appEnum: FacilityType.photographer,
-                            controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
-                        AppTheme.heightSpace10,
+                        // AppFlavour.appInUse != AppInUse.c
+                        //     ? buildActionChip(appEnum: FacilityType.designer,
+                        //     controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
+                        // AppTheme.heightSpace10,
+                        // AppFlavour.appInUse != AppInUse.c
+                        //     ? buildActionChip(appEnum: FacilityType.photographer,
+                        //     controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
+                        // AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.podcaster,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,

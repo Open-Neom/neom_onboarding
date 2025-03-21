@@ -77,7 +77,7 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
 
       },
       child: Text(
-        dateOfBirth != null && dateOfBirth!.isBefore(DateTime(AppConstants.lastYearDOB))
+        dateOfBirth != null && dateOfBirth.isBefore(DateTime(AppConstants.lastYearDOB))
             ? DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth)
             : AppTranslationConstants.enterDOB.tr,
         style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -179,7 +179,3 @@ Widget buildSmsCodeField(BuildContext context, {
     ),
   );
 }
-
-
-
-

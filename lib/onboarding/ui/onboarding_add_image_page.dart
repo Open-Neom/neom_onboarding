@@ -121,7 +121,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               _.setTermsAgreement(value ?? false);
                             },
                           ),
-                          Text(AppTranslationConstants.iHaveReadAndAccept.tr+' ',
+                          Text('${AppTranslationConstants.iHaveReadAndAccept.tr} ',
                             style: const TextStyle(fontSize: 14),
                           ),
                           TextButton(

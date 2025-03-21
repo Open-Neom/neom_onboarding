@@ -7,13 +7,11 @@ import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
 import 'package:neom_commons/core/data/firestore/profile_firestore.dart';
 import 'package:neom_commons/core/data/firestore/user_firestore.dart';
-import 'package:neom_commons/core/data/implementations/shared_preference_controller.dart';
+import 'package:neom_commons/core/data/implementations/app_hive_controller.dart';
 import 'package:neom_commons/core/data/implementations/user_controller.dart';
 import 'package:neom_commons/core/domain/model/app_coupon.dart';
 import 'package:neom_commons/core/domain/model/app_user.dart';
 import 'package:neom_commons/core/domain/model/facility.dart';
-import 'package:neom_commons/core/domain/model/genre.dart';
-import 'package:neom_commons/core/domain/model/instrument.dart';
 import 'package:neom_commons/core/domain/model/place.dart';
 import 'package:neom_commons/core/domain/model/wallet.dart';
 import 'package:neom_commons/core/domain/use_cases/onboarding_service.dart';
@@ -34,8 +32,6 @@ import 'package:neom_commons/core/utils/enums/profile_type.dart';
 import 'package:neom_commons/core/utils/enums/upload_image_type.dart';
 import 'package:neom_commons/core/utils/enums/usage_reason.dart';
 import 'package:neom_commons/core/utils/validator.dart';
-import 'package:neom_instruments/genres/data/implementations/genres_controller.dart';
-import 'package:neom_instruments/instruments/ui/instrument_controller.dart';
 import 'package:neom_posts/posts/ui/add/post_upload_controller.dart';
 
 class OnBoardingController extends GetxController implements OnBoardingService {
@@ -85,7 +81,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   }
 
   void setLocale(AppLocale locale) async {
-    await Get.find<SharedPreferenceController>().updateLocale(locale);
+    await Get.find<AppHiveController>().updateLocale(locale);
     update([AppPageIdConstants.onBoardingProfile]);
     Get.toNamed(AppRouteConstants.introAddImage);
   }
@@ -102,7 +98,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       Get.toNamed(AppRouteConstants.introAddImage);
     } else {
       switch(profileType) {
-        case(ProfileType.artist):
+        case(ProfileType.appArtist):
         case(ProfileType.band):
           Get.toNamed(AppRouteConstants.introReason);
           break;
@@ -242,7 +238,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
 
-    if(!isValidDOB(dateOfBirth?.value)){
+    if(!isValidDOB(dateOfBirth.value)){
       validateMsg = MessageTranslationConstants.pleaseEnterDOB;
     }
 

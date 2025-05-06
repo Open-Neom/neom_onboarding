@@ -23,7 +23,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoardingAddImage,
-      init: OnBoardingController(),
+      // init: OnBoardingController(),
       builder: (_) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBarChild(color: Colors.transparent),
@@ -87,7 +87,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             : AppTranslationConstants.addNewProfileInfoMsg.tr
                     ),
                     buildContainerTextField(AppTranslationConstants.username.tr,
-                        controller: _.controllerUsername),
+                        controller: _.controllerUsername, textInputType: TextInputType.text),
                     buildContainerTextField("${AppTranslationConstants.tellAboutYou.tr} (${AppTranslationConstants.optional.tr})",
                         controller: _.controllerAboutMe, maxLines: 20),
                     AppTheme.heightSpace20,
@@ -103,17 +103,16 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
                             )
                         ),
-                        if(_.smsSent && !_.isVerifiedPhone) _.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: _)
-                          ///WAITING FOR GIGCOIN TO WORK
-                          /// buildContainerTextField("${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
-                          ///     controller: _.controllerCouponCode),
+                        if(_.smsSent && !_.isVerifiedPhone) _.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: _),
+                        buildContainerTextField("${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
+                            controller: _.controllerCouponCode, textInputType: TextInputType.text),
                       ],
                     ),
                     AppTheme.heightSpace5,
                       SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
                             value: _.agreeTerms.value,
@@ -125,7 +124,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             style: const TextStyle(fontSize: 14),
                           ),
                           TextButton(
-                            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                            // style: TextButton.styleFrom(padding: EdgeInsets.zero),
                             child: Text(AppTranslationConstants.termsAndConditions.tr,
                               style: const TextStyle(fontSize: 14),
                             ),

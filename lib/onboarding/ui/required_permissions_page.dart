@@ -1,16 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/auth/ui/login/login_controller.dart';
-import 'package:neom_commons/core/app_flavour.dart';
-import 'package:neom_commons/core/data/implementations/user_controller.dart';
-import 'package:neom_commons/core/utils/app_color.dart';
-import 'package:neom_commons/core/utils/app_theme.dart';
-import 'package:neom_commons/core/utils/constants/app_assets.dart';
-import 'package:neom_commons/core/utils/constants/app_route_constants.dart';
-import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/core/utils/constants/message_translation_constants.dart';
-import 'package:neom_commons/core/utils/enums/app_in_use.dart';
-import 'package:neom_profile/profile/ui/profile_controller.dart';
+import 'package:neom_commons/neom_commons.dart';
+
+import 'onboarding_controller.dart';
 
 class RequiredPermissionsPage extends StatelessWidget {
 
@@ -18,7 +10,10 @@ class RequiredPermissionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
+    return GetBuilder<OnBoardingController>(
+        id: AppPageIdConstants.onBoardingAddImage,
+        init: OnBoardingController(),
+    builder: (_) => PopScope(
       onPopInvoked: (didPop) async {
         await Get.find<LoginController>().signOut();
       },
@@ -59,10 +54,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                 TextButton(
                   onPressed: () async {
                     try {
-                      await Get.put(ProfileController()).updateLocation();
-                      Get.find<UserController>().isNewUser
-                          ? Get.toNamed(AppFlavour.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage)
-                          : Get.toNamed(AppRouteConstants.home);
+                      _.setLocation();
                     } catch (e) {
                       Get.toNamed(AppRouteConstants.logout,
                           arguments: [AppRouteConstants.introRequiredPermissions]
@@ -108,6 +100,7 @@ class RequiredPermissionsPage extends StatelessWidget {
           ),
         ),
       ),),
+      ),
     );
   }
 }

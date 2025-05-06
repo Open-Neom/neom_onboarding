@@ -16,7 +16,6 @@ import 'onboarding_controller.dart';
 class OnBoardingLocalePage extends StatelessWidget {
   const OnBoardingLocalePage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(

@@ -1,3 +1,3 @@
-library neom_onboarding;
+library;
 
 export 'onboarding/onboarding_routes.dart';

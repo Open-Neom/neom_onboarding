@@ -17,6 +17,7 @@ import 'package:neom_commons/core/domain/model/wallet.dart';
 import 'package:neom_commons/core/domain/use_cases/onboarding_service.dart';
 import 'package:neom_commons/core/utils/app_utilities.dart';
 import 'package:neom_commons/core/utils/constants/app_constants.dart';
+import 'package:neom_commons/core/utils/constants/app_locale_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_route_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
@@ -32,14 +33,14 @@ import 'package:neom_commons/core/utils/enums/profile_type.dart';
 import 'package:neom_commons/core/utils/enums/upload_image_type.dart';
 import 'package:neom_commons/core/utils/enums/usage_reason.dart';
 import 'package:neom_commons/core/utils/validator.dart';
-import 'package:neom_posts/posts/ui/add/post_upload_controller.dart';
+import 'package:neom_posts/posts/ui/upload/post_upload_controller.dart';
+import 'package:neom_profile/neom_profile.dart';
 
 class OnBoardingController extends GetxController implements OnBoardingService {
 
   final userController = Get.find<UserController>();
-  ///DEPRECATED final instrumentController = Get.put(InstrumentController());
-  //DEPRECATED final genresController = Get.put(GenresController());
   final postUploadController = Get.put(PostUploadController());
+  final profileController = Get.put(ProfileController());
 
   TextEditingController controllerFullName = TextEditingController();
   TextEditingController controllerUsername = TextEditingController();
@@ -69,9 +70,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     controllerFullName.text = user.value?.name ?? "";
     controllerUsername.text = user.value?.name ?? "";
 
-    // genresController.favGenres.clear();
-    // instrumentController.favInstruments.clear();
-
     for (var country in countries) {
       if(Get.locale!.countryCode == country.code){
         phoneCountry.value = country; //Mexico
@@ -85,7 +83,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     update([AppPageIdConstants.onBoardingProfile]);
     Get.toNamed(AppRouteConstants.introAddImage);
   }
-
 
   @override
   void setProfileType(ProfileType profileType) {
@@ -114,61 +111,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
     }
 
-
   }
-
-  ///DEPRECATED
-  // @override
-  // Future<void>  addInstrumentIntro(int index) async {
-  //   AppUtilities.logger.d("Adding instrument to new account");
-  //   String instrumentKey = instrumentController.instruments.keys.elementAt(index);
-  //   Instrument instrument = instrumentController.instruments[instrumentKey]!;
-  //   instrumentController.instruments[instrumentKey]!.isFavorite = true;
-  //   instrumentController.favInstruments[instrumentKey] = instrument;
-  //
-  //   update([AppPageIdConstants.onBoardingInstruments]);
-  // }
-
-  ///DEPRECATED
-  // @override
-  // Future<void> removeInstrumentIntro(int index) async {
-  //   AppUtilities.logger.d("Removing instrument from new account");
-  //
-  //   String instrumentKey = instrumentController.instruments.keys.elementAt(index);
-  //   Instrument instrument = instrumentController.instruments[instrumentKey]!;
-  //   instrumentController.instruments[instrumentKey]!.isFavorite = false;
-  //   AppUtilities.logger.d("Removing instrument ${instrument.name}");
-  //   instrumentController.favInstruments.remove(instrumentKey);
-  //
-  //   update([AppPageIdConstants.onBoardingInstruments]);
-  // }
-
-  ///DEPRECATED
-  // @override
-  // void addInstrumentToProfile(){
-  //   AppUtilities.logger.d("Adding ${instrumentController.favInstruments.length} Instruments to Profile");
-  //
-  //   userController.newProfile.instruments = instrumentController.favInstruments
-  //       .map((name, instrument) => MapEntry<String,Instrument>(name,instrument));
-  //
-  //   update([AppPageIdConstants.onBoardingInstruments]);
-  //   Get.toNamed(AppRouteConstants.introGenres);
-  // }
-
-  ///DEPRECATED
-  // @override
-  // void addGenresToProfile() {
-  //   AppUtilities.logger.d("Adding ${genresController.selectedGenres.length} Genres to Profile");
-  //
-  //   userController.newProfile.genres = Map<String, Genre>.fromEntries(
-  //     genresController.selectedGenres.value
-  //         .map((genre) => MapEntry<String, Genre>(genre.name, genre)),
-  //   );
-  //
-  //
-  //   Get.toNamed(AppRouteConstants.introAddImage);
-  //   update([AppPageIdConstants.onBoardingGenres]);
-  // }
 
   @override
   void setReason(UsageReason reason) {
@@ -180,7 +123,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void handleImage() async {
-    await postUploadController.handleImage(uploadImageType: UploadImageType.profile);
+    await postUploadController.handleImage(imageType: UploadImageType.profile);
     update([AppPageIdConstants.onBoardingAddImage]);
   }
 
@@ -396,7 +339,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> verifyPhone() async {
-    AppUtilities.logger.i("ValidatePhone");
+    AppUtilities.logger.i("verifyPhone");
     focusNodeAboutMe.unfocus();
 
     String validateMsg = "";
@@ -471,6 +414,48 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         snackPosition: SnackPosition.bottom);
     
     update([AppPageIdConstants.onBoardingAddImage]);
+  }
+
+  Future<void> setLocation() async {
+    AppUtilities.logger.d("setLocation");
+    try {
+      await profileController.updateLocation();
+
+      if(profileController.location.value.isNotEmpty) {
+        // Lógica para establecer el idioma basada en la ubicación
+        String locationString = profileController.location.value;
+        // Intentar extraer el país (asumiendo formato "Ciudad, País" o similar)
+        List<String> parts = locationString.split(',');
+        String country = parts.isNotEmpty ? parts.last.trim().toLowerCase() : '';
+
+        AppLocale detectedLocale = AppLocale.english; // Default a inglés
+
+        // Mapear país a idioma usando las listas
+        if (AppLocaleConstants.spanishCountries.map((c) => c.toLowerCase()).contains(country)) {
+          detectedLocale = AppLocale.spanish;
+        } else if (AppLocaleConstants.frenchCountries.map((c) => c.toLowerCase()).contains(country)) {
+          detectedLocale = AppLocale.french;
+        } else if (AppLocaleConstants.germanCountries.map((c) => c.toLowerCase()).contains(country)) {
+          detectedLocale = AppLocale.deutsch;
+        }
+
+        // Llamar a updateLocale en AppHiveController para guardar la preferencia y actualizar GetX
+        setLocale(detectedLocale);
+        // _appHiveController.setLocale(detectedLocale); // Asegurarse de que GetX locale se actualice inmediatamente
+      }
+
+      if(userController.isNewUser) {
+        Get.toNamed(AppFlavour.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage);
+      } else {
+        Get.toNamed(AppRouteConstants.home);
+      }
+    } catch (e) {
+      AppUtilities.logger.e(e.toString());
+      Get.snackbar(
+          MessageTranslationConstants.creatingAccount.tr,
+          MessageTranslationConstants.userCurrentLocationErrorMsg.tr,
+          snackPosition: SnackPosition.bottom);
+    }
   }
 
 }

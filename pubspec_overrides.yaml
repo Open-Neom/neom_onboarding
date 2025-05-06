@@ -1,13 +1,7 @@
 dependency_overrides:
   neom_commons:
     path: ../neom_commons
-  #  neom_profile:
-  #    path: ../neom_profile
-  #  neom_posts:
-  #    path: ../neom_posts
-  #  neom_music_player:
-  #    path: ../neom_music_player
-  #  neom_instruments:
-  #    path: ../neom_instruments
-  uuid: 4.4.0
-  rxdart: 0.28.0
+  neom_profile:
+    path: ../neom_profile
+  neom_posts:
+    path: ../neom_posts

@@ -46,13 +46,6 @@ class OnBoardingReasonPage extends StatelessWidget {
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.professional,
                           controllerFunction: _.setReason),
-                      ///DEPRECATED
-                      // AppTheme.heightSpace10,
-                      // buildActionChip(appEnum: UsageReason.job,
-                      //     controllerFunction: _.setReason),
-                      // AppTheme.heightSpace10,
-                      // buildActionChip(appEnum: UsageReason.composition,
-                      //     controllerFunction: _.setReason),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.any,
                           controllerFunction: _.setReason),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/ui/widgets/appbar_child.dart';
@@ -104,8 +105,23 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             )
                         ),
                         if(_.smsSent && !_.isVerifiedPhone) _.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: _),
-                        buildContainerTextField("${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
-                            controller: _.controllerCouponCode, textInputType: TextInputType.text),
+                        Padding(
+                            padding: const EdgeInsets.only(
+                                left: AppTheme.padding20,
+                                right: AppTheme.padding20
+                            ),
+                            child: TextFormField(
+                              controller: _.controllerCouponCode,
+                              keyboardType: TextInputType.text,
+                              maxLines: 1,
+                              textCapitalization: TextCapitalization.characters,
+                              decoration: InputDecoration(labelText: "${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})"),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                                LengthLimitingTextInputFormatter(10),
+                              ],
+                            )
+                        )
                       ],
                     ),
                     AppTheme.heightSpace5,

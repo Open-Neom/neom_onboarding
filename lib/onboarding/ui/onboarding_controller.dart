@@ -23,13 +23,13 @@ import 'package:neom_commons/core/utils/constants/app_route_constants.dart';
 import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
 import 'package:neom_commons/core/utils/constants/intl_countries_list.dart';
 import 'package:neom_commons/core/utils/constants/message_translation_constants.dart';
-import 'package:neom_commons/core/utils/enums/app_currency.dart';
 import 'package:neom_commons/core/utils/enums/app_in_use.dart';
 import 'package:neom_commons/core/utils/enums/app_locale.dart';
 import 'package:neom_commons/core/utils/enums/coupon_type.dart';
 import 'package:neom_commons/core/utils/enums/facilitator_type.dart';
 import 'package:neom_commons/core/utils/enums/place_type.dart';
 import 'package:neom_commons/core/utils/enums/profile_type.dart';
+import 'package:neom_commons/core/utils/enums/subscription_level.dart';
 import 'package:neom_commons/core/utils/enums/upload_image_type.dart';
 import 'package:neom_commons/core/utils/enums/usage_reason.dart';
 import 'package:neom_commons/core/utils/validator.dart';
@@ -48,7 +48,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   TextEditingController controllerCouponCode = TextEditingController();
   TextEditingController controllerPhone = TextEditingController();
 
-  final Rxn<AppUser> user = Rxn<AppUser>();
   final RxBool isLoading = false.obs;
   final RxBool agreeTerms = false.obs;
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
@@ -56,6 +55,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   final Rx<Country> phoneCountry = IntlPhoneConstants.availableCountries[0].obs;
 
+  AppCoupon? validCoupon;
   String countryCode = '';
   String phoneNumber = '';
   String aboutMe = '';
@@ -66,9 +66,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   @override
   void onInit() async {
     super.onInit();
-    user.value = userController.user;
-    controllerFullName.text = user.value?.name ?? "";
-    controllerUsername.text = user.value?.name ?? "";
+    controllerFullName.text = userController.user.name;
+    controllerUsername.text = userController.user.name;
 
     for (var country in countries) {
       if(Get.locale!.countryCode == country.code){
@@ -79,7 +78,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   }
 
   void setLocale(AppLocale locale) async {
-    await Get.find<AppHiveController>().updateLocale(locale);
+    AppHiveController().setLocale(locale);
+    AppHiveController().updateLocale(locale);
     update([AppPageIdConstants.onBoardingProfile]);
     Get.toNamed(AppRouteConstants.introAddImage);
   }
@@ -171,19 +171,91 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   Future<void> finishAccount() async {
     AppUtilities.logger.i("Finishing and creating account");
     focusNodeAboutMe.unfocus();
+    isLoading.value = true;
 
-    String validateMsg = "";
+    try {
+      String validateMsg = await newAccountValidation();
 
-    validateMsg = Validator.validateUsername(controllerUsername.text);
+      if(validateMsg.isEmpty) {
 
-    if(!await ProfileFirestore().isAvailableName(controllerUsername.text)) {
-      validateMsg = MessageTranslationConstants.profileNameUsed;
+        if(controllerCouponCode.text.trim().isNotEmpty) {
+          validateMsg = await validateCoupon(controllerCouponCode.text.trim());
+        }
+
+        if(validateMsg.isEmpty) {
+          userController.newProfile.aboutMe = controllerAboutMe.text.trim();
+          userController.newProfile.name = controllerUsername.text.trim();
+
+          if(validCoupon != null && await handleCoupon(validCoupon!)) {
+            if(postUploadController.mediaFile.value.path.isNotEmpty) {
+              userController.user.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
+            }
+
+            Get.toNamed(AppRouteConstants.introWelcome,
+                arguments: [AppRouteConstants.introAddImage]);
+          }
+        }
+      }
+
+      if(validateMsg.isNotEmpty) {
+        AppUtilities.logger.w(validateMsg.tr);
+        Get.snackbar(MessageTranslationConstants.finishingAccount.tr,
+            validateMsg.tr, snackPosition: SnackPosition.bottom);
+      }
+    } catch (e) {
+      AppUtilities.logger.e(e.toString());
     }
 
+    isLoading.value = false;
+    update([AppPageIdConstants.onBoardingAddImage]);
+  }
+
+  Future<String> validateCoupon(String couponCode) async {
+    validCoupon = await CouponFirestore().getCouponByCode(couponCode);
+    if(validCoupon == null || (validCoupon?.id.isEmpty ?? true) || (validCoupon?.usedBy?.length ?? 0) >= (validCoupon?.usageLimit ?? 0)) {
+      return AppTranslationConstants.invalidCouponCodeMsg.tr;
+    } else {
+      return '';
+    }
+  }
+
+  Future<bool> handleCoupon(AppCoupon coupon) async {
+    userController.user.referralCode = coupon.code;
+
+    if(coupon.usedBy?.contains(userController.user.email) ?? false) {
+      Get.snackbar(AppTranslationConstants.appliedCouponCode.tr,
+          AppTranslationConstants.couponAlreadyUsed.tr,
+          snackPosition: SnackPosition.bottom);
+      return false;
+    } else if(coupon.type == CouponType.oneMonthFree) {
+      AppUser? ownerUser = await UserFirestore().getByEmail(coupon.ownerEmail);
+      if(ownerUser != null) {
+        UserFirestore().addToWallet(ownerUser.id, coupon.ownerAmount);
+      }
+
+      userController.user.subscriptionId = SubscriptionLevel.freeMonth.name;
+    } else if(coupon.type == CouponType.coinAddition) {
+      userController.user.wallet = Wallet();
+      userController.user.wallet.amount = coupon.amount;
+    }
+
+    CouponFirestore().addUsedBy(coupon.id, userController.user.email);
+    Get.snackbar(AppTranslationConstants.appliedCouponCode.tr,
+        AppTranslationConstants.appliedCouponCodeMsg.tr,
+        snackPosition: SnackPosition.bottom);
+    return true;
+  }
+
+  Future<String> newAccountValidation() async {
+    String validateMsg = Validator.validateUsername(controllerUsername.text);
 
     if(!isValidDOB(dateOfBirth.value)){
       validateMsg = MessageTranslationConstants.pleaseEnterDOB;
+    } else if(!await ProfileFirestore().isAvailableName(controllerUsername.text)) {
+      validateMsg = MessageTranslationConstants.profileNameUsed;
     }
+
+    userController.user.dateOfBirth = dateOfBirth.value?.millisecondsSinceEpoch ?? 0;
 
     if(validateMsg.isEmpty) {
 
@@ -196,6 +268,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         phoneNumber = '';
       } else {
         phoneNumber = controllerPhone.text;
+        userController.user.phoneNumber = phoneNumber;
+        userController.user.countryCode = phoneCountry.value.dialCode;
       }
 
       if(validateMsg.isNotEmpty && optionalPhoneNumber) {
@@ -211,60 +285,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           validateMsg = MessageTranslationConstants.phoneUsed;
         }
     }
-
-    if(validateMsg.isEmpty) {
-      if(postUploadController.mediaFile.value.path.isNotEmpty) {
-        userController.user.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
-      }
-      if(phoneNumber.isNotEmpty) {
-        userController.user.phoneNumber = phoneNumber;
-        userController.user.countryCode = phoneCountry.value.dialCode;
-      }
-      userController.user.referralCode = controllerCouponCode.text.toLowerCase().trim();
-      userController.newProfile.aboutMe = controllerAboutMe.text.trim();
-      userController.newProfile.name = controllerUsername.text.trim();
-
-      userController.user.wallet = Wallet();
-      userController.user.wallet.currency = AppCurrency.appCoin;
-      AppCoupon coupon = AppCoupon();
-
-      if(userController.user.referralCode.isNotEmpty) {
-        coupon = await CouponFirestore()
-            .getCouponByCode(user.value!.referralCode);
-
-        if(coupon.id.isNotEmpty) {
-          if(coupon.type == CouponType.coinAddition
-              && (coupon.usedBy?.length ?? 0) < coupon.usageLimit) {
-            userController.user.wallet.amount = coupon.amount;
-            userController.appliedCoupon = true;
-            userController.coupon = coupon;
-          }
-
-          Get.snackbar(AppTranslationConstants.appliedCouponCode.tr,
-              AppTranslationConstants.appliedCouponCodeMsg.tr,
-              snackPosition: SnackPosition.bottom);
-
-          await Future.delayed(const Duration(seconds: 2));
-
-          Get.toNamed(AppRouteConstants.introWelcome,
-              arguments: [AppRouteConstants.introAddImage]);
-
-        } else {
-          Get.snackbar(AppTranslationConstants.invalidCouponCode.tr,
-              AppTranslationConstants.invalidCouponCodeMsg.tr,
-              snackPosition: SnackPosition.bottom);
-        }
-      } else {
-        Get.toNamed(AppRouteConstants.introWelcome,
-            arguments: [AppRouteConstants.introAddImage]);
-      }
-    } else {
-      AppUtilities.logger.w(validateMsg.tr);
-      Get.snackbar(MessageTranslationConstants.finishingAccount.tr,
-          validateMsg.tr, snackPosition: SnackPosition.bottom);
-    }
-    isLoading.value = false;
-    update([AppPageIdConstants.onBoardingAddImage]);
+    return validateMsg;
   }
 
   @override
@@ -314,7 +335,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     Get.toNamed(AppRouteConstants.introGenres);
     update([AppPageIdConstants.onBoardingProfile]);
-
   }
 
 
@@ -419,6 +439,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   Future<void> setLocation() async {
     AppUtilities.logger.d("setLocation");
     try {
+      isLoading.value = true;
       await profileController.updateLocation();
 
       if(profileController.location.value.isNotEmpty) {
@@ -426,22 +447,23 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         String locationString = profileController.location.value;
         // Intentar extraer el país (asumiendo formato "Ciudad, País" o similar)
         List<String> parts = locationString.split(',');
-        String country = parts.isNotEmpty ? parts.last.trim().toLowerCase() : '';
+        String country = parts.isNotEmpty ? AppUtilities.normalizeString(parts.last.trim().toLowerCase()) : '';
 
-        AppLocale detectedLocale = AppLocale.english; // Default a inglés
+        AppLocale detectedLocale = AppFlavour.appInUse == AppInUse.e ? AppLocale.spanish : AppLocale.english;
 
         // Mapear país a idioma usando las listas
-        if (AppLocaleConstants.spanishCountries.map((c) => c.toLowerCase()).contains(country)) {
+        if (AppLocaleConstants.spanishCountries.contains(country)) {
           detectedLocale = AppLocale.spanish;
-        } else if (AppLocaleConstants.frenchCountries.map((c) => c.toLowerCase()).contains(country)) {
+        } else if (AppLocaleConstants.frenchCountries.contains(country)) {
           detectedLocale = AppLocale.french;
-        } else if (AppLocaleConstants.germanCountries.map((c) => c.toLowerCase()).contains(country)) {
+        } else if (AppLocaleConstants.germanCountries.contains(country)) {
           detectedLocale = AppLocale.deutsch;
         }
 
         // Llamar a updateLocale en AppHiveController para guardar la preferencia y actualizar GetX
         setLocale(detectedLocale);
         // _appHiveController.setLocale(detectedLocale); // Asegurarse de que GetX locale se actualice inmediatamente
+
       }
 
       if(userController.isNewUser) {
@@ -449,6 +471,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       } else {
         Get.toNamed(AppRouteConstants.home);
       }
+
+      isLoading.value = false;
     } catch (e) {
       AppUtilities.logger.e(e.toString());
       Get.snackbar(

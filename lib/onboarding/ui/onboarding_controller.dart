@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:neom_commerce/commerce/data/firestore/order_firestore.dart';
+import 'package:neom_commerce/commerce/domain/models/transaction_order.dart';
+import 'package:neom_commerce/commerce/utils/enums/transaction_type.dart';
 import 'package:neom_commons/auth/ui/login/login_controller.dart';
 import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
@@ -129,7 +132,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setDateOfBirth(DateTime? pickedDate) {
-    AppUtilities.logger.d("");
+    AppUtilities.logger.d("setDateOfBirth");
     try {
       if (pickedDate != null && isValidDOB(pickedDate)) {
         dateOfBirth.value = pickedDate;
@@ -157,7 +160,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setTermsAgreement(bool agree) {
-    AppUtilities.logger.d("");
+    AppUtilities.logger.t("setTermsAgreement");
     try {
       agreeTerms.value = agree;
     } catch (e) {
@@ -231,6 +234,22 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       AppUser? ownerUser = await UserFirestore().getByEmail(coupon.ownerEmail);
       if(ownerUser != null) {
         UserFirestore().addToWallet(ownerUser.id, coupon.ownerAmount);
+
+        TransactionOrder order = TransactionOrder(
+          description: coupon.type.name.tr,
+          createdTime: DateTime.now().millisecondsSinceEpoch,
+          customerEmail: userController.user.email,
+          couponId: coupon.id,
+          transactionType: TransactionType.deposit,
+        );
+
+        String orderId = await OrderFirestore().insert(order);
+
+        if(await UserFirestore().addOrderId(userId: ownerUser.id, orderId: orderId)) {
+          AppUtilities.logger.i('Order added to user ${ownerUser.id} successfully');
+        } else {
+          AppUtilities.logger.w("Something occurred while adding transaction order to User ${ownerUser.id}");
+        }
       }
 
       userController.user.subscriptionId = SubscriptionLevel.freeMonth.name;

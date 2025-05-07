@@ -1333,8 +1333,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "37c4715a8c27cb5399984152f99544f0eb2df4ce"
-      url: "git@github.com:Cyberneom/neom_audio_player.git"
+      resolved-ref: "884bd02921b5fa5c38439fdd8524f357b6043c38"
+      url: "https://github.com/Cyberneom/neom_audio_player.git"
     source: git
     version: "1.4.0"
   neom_bands:
@@ -1342,10 +1342,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "921c6622581d74a7b7d5e6175234db6efbc1302f"
+      resolved-ref: "7d1367dbedea268c849346c92905690941eb00f6"
       url: "git@github.com:emmanuel-montoya/neom_bands.git"
     source: git
-    version: "1.1.0"
+    version: "1.2.0"
   neom_booking:
     dependency: transitive
     description:
@@ -1356,13 +1356,11 @@ packages:
     source: git
     version: "1.2.0"
   neom_commerce:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "9868bd154698ea0978094cea513c6798d4d37946"
-      url: "git@github.com:emmanuel-montoya/neom_commerce.git"
-    source: git
+      path: "../neom_commerce"
+      relative: true
+    source: path
     version: "1.3.1"
   neom_commons:
     dependency: "direct main"
@@ -1402,7 +1400,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a59559ae390cecd53460eb0261d3a416ef15fbd3
+      resolved-ref: "7f7fda0ad2efbbf790055183aba5f40f485d3e0c"
       url: "git@github.com:Cyberneom/neom_home.git"
     source: git
     version: "1.3.0"
@@ -1429,7 +1427,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "839562972785a1984a462bdc3cbf783eacd89ba4"
+      resolved-ref: "1c6fed0527fa850c9eb6b16294ffbef8838c638f"
       url: "git@github.com:Cyberneom/neom_itemlists.git"
     source: git
     version: "1.3.0"
@@ -1438,7 +1436,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b88c9594e7f17bfbbefd4cfe01175c761f6c8752
+      resolved-ref: "9b2b540770f03daf42f05e02398304b032a9c842"
       url: "git@github.com:emmanuel-montoya/neom_jobs.git"
     source: git
     version: "1.2.0"
@@ -1456,7 +1454,7 @@ packages:
       path: "."
       ref: HEAD
       resolved-ref: "2ca8213a9253a180a4648da2f0af2538d84a7ca8"
-      url: "git@github.com:Cyberneom/neom_media_player.git"
+      url: "https://github.com/Cyberneom/neom_media_player.git"
     source: git
     version: "1.0.0"
   neom_notifications:
@@ -1487,7 +1485,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: f3badd8d7db73832945da7340e2722056738c364
+      resolved-ref: "7159364505cfef8001bbacf5416b7da61a8023fc"
       url: "git@github.com:Cyberneom/neom_timeline.git"
     source: git
     version: "1.4.0"
@@ -2108,10 +2106,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: ae7d4f1b41e3ac6d24dd9b9d5d6831b52d74a61bdd90a7a6262a33d8bb97c29a
+      sha256: "1f4e8e0e02403452d699ef7cf73fe9936fac8f6f0605303d111d71acb375d1bc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.2"
+    version: "2.8.3"
   video_player_avfoundation:
     dependency: transitive
     description:

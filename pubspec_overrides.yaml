@@ -1,4 +1,6 @@
 dependency_overrides:
+  neom_commerce:
+    path: ../neom_commerce
   neom_commons:
     path: ../neom_commons
   neom_profile:

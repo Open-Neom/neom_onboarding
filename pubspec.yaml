@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  neom_commerce:
+    git:
+      url: git@github.com:emmanuel-montoya/neom_commerce.git
   neom_commons:
     git:
       url: git@github.com:Cyberneom/neom_commons.git

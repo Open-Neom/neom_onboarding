@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:neom_commerce/bank/data/implementations/app_bank_controller.dart';
 import 'package:neom_commerce/commerce/data/firestore/order_firestore.dart';
-import 'package:neom_commerce/commerce/domain/models/transaction_order.dart';
-import 'package:neom_commerce/commerce/utils/enums/transaction_type.dart';
+import 'package:neom_commerce/commerce/domain/models/app_order.dart';
 import 'package:neom_commons/auth/ui/login/login_controller.dart';
 import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
@@ -16,7 +16,6 @@ import 'package:neom_commons/core/domain/model/app_coupon.dart';
 import 'package:neom_commons/core/domain/model/app_user.dart';
 import 'package:neom_commons/core/domain/model/facility.dart';
 import 'package:neom_commons/core/domain/model/place.dart';
-import 'package:neom_commons/core/domain/model/wallet.dart';
 import 'package:neom_commons/core/domain/use_cases/onboarding_service.dart';
 import 'package:neom_commons/core/utils/app_utilities.dart';
 import 'package:neom_commons/core/utils/constants/app_constants.dart';
@@ -223,6 +222,10 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   }
 
   Future<bool> handleCoupon(AppCoupon coupon) async {
+    AppUtilities.logger.i("Handling coupon ${coupon.code}");
+
+    AppBankController bankController = AppBankController();
+
     userController.user.referralCode = coupon.code;
 
     if(coupon.usedBy?.contains(userController.user.email) ?? false) {
@@ -233,14 +236,16 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     } else if(coupon.type == CouponType.oneMonthFree) {
       AppUser? ownerUser = await UserFirestore().getByEmail(coupon.ownerEmail);
       if(ownerUser != null) {
-        UserFirestore().addToWallet(ownerUser.id, coupon.ownerAmount);
+        AppUtilities.logger.i("Adding ${coupon.ownerAmount} to ${ownerUser.name} wallet");
 
-        TransactionOrder order = TransactionOrder(
+        bankController.addCoinsToWallet(ownerUser.email);
+        ///DEPRECATEd UserFirestore().addToWallet(ownerUser.id, coupon.ownerAmount);
+
+        AppOrder order = AppOrder(
           description: coupon.type.name.tr,
           createdTime: DateTime.now().millisecondsSinceEpoch,
           customerEmail: userController.user.email,
           couponId: coupon.id,
-          transactionType: TransactionType.deposit,
         );
 
         String orderId = await OrderFirestore().insert(order);
@@ -254,8 +259,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
       userController.user.subscriptionId = SubscriptionLevel.freeMonth.name;
     } else if(coupon.type == CouponType.coinAddition) {
-      userController.user.wallet = Wallet();
-      userController.user.wallet.amount = coupon.amount;
+      bankController.addCoinsToWallet(userController.user.email);
     }
 
     CouponFirestore().addUsedBy(coupon.id, userController.user.email);

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:neom_commerce/bank/data/implementations/app_bank_controller.dart';
-import 'package:neom_commerce/commerce/data/firestore/order_firestore.dart';
-import 'package:neom_commerce/commerce/domain/models/app_order.dart';
+import 'package:neom_commerce/commerce/utils/enums/transaction_type.dart';
 import 'package:neom_commons/auth/ui/login/login_controller.dart';
 import 'package:neom_commons/core/app_flavour.dart';
 import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
@@ -13,7 +12,6 @@ import 'package:neom_commons/core/data/firestore/user_firestore.dart';
 import 'package:neom_commons/core/data/implementations/app_hive_controller.dart';
 import 'package:neom_commons/core/data/implementations/user_controller.dart';
 import 'package:neom_commons/core/domain/model/app_coupon.dart';
-import 'package:neom_commons/core/domain/model/app_user.dart';
 import 'package:neom_commons/core/domain/model/facility.dart';
 import 'package:neom_commons/core/domain/model/place.dart';
 import 'package:neom_commons/core/domain/use_cases/onboarding_service.dart';
@@ -234,32 +232,10 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           snackPosition: SnackPosition.bottom);
       return false;
     } else if(coupon.type == CouponType.oneMonthFree) {
-      AppUser? ownerUser = await UserFirestore().getByEmail(coupon.ownerEmail);
-      if(ownerUser != null) {
-        AppUtilities.logger.i("Adding ${coupon.ownerAmount} to ${ownerUser.name} wallet");
-
-        bankController.addCoinsToWallet(ownerUser.email);
-        ///DEPRECATEd UserFirestore().addToWallet(ownerUser.id, coupon.ownerAmount);
-
-        AppOrder order = AppOrder(
-          description: coupon.type.name.tr,
-          createdTime: DateTime.now().millisecondsSinceEpoch,
-          customerEmail: userController.user.email,
-          couponId: coupon.id,
-        );
-
-        String orderId = await OrderFirestore().insert(order);
-
-        if(await UserFirestore().addOrderId(userId: ownerUser.id, orderId: orderId)) {
-          AppUtilities.logger.i('Order added to user ${ownerUser.id} successfully');
-        } else {
-          AppUtilities.logger.w("Something occurred while adding transaction order to User ${ownerUser.id}");
-        }
-      }
-
+      bankController.addCoinsToWallet(coupon.ownerEmail, coupon.ownerAmount, transactionType: TransactionType.coupon);
       userController.user.subscriptionId = SubscriptionLevel.freeMonth.name;
     } else if(coupon.type == CouponType.coinAddition) {
-      bankController.addCoinsToWallet(userController.user.email);
+      bankController.addCoinsToWallet(userController.user.email, coupon.amount, transactionType: TransactionType.coupon);
     }
 
     CouponFirestore().addUsedBy(coupon.id, userController.user.email);
@@ -281,7 +257,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     userController.user.dateOfBirth = dateOfBirth.value?.millisecondsSinceEpoch ?? 0;
 
     if(validateMsg.isEmpty) {
-
       if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.value.minLength
               || controllerPhone.text.length > phoneCountry.value.maxLength)) {
         validateMsg = MessageTranslationConstants.pleaseEnterPhone;

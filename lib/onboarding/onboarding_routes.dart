@@ -7,6 +7,7 @@ import 'ui/onboarding_locale_page.dart';
 import 'ui/onboarding_place_page.dart';
 import 'ui/onboarding_profile_type_page.dart';
 import 'ui/required_permissions_page.dart';
+import 'ui/welcome_page.dart';
 
 class OnBoardingRoutes {
 
@@ -26,12 +27,6 @@ class OnBoardingRoutes {
       page: () => const OnBoardingProfileTypePage(),
       transition: Transition.zoom,
     ),
-    ///DEPRECATED
-    // GetPage(
-    //   name: AppRouteConstants.introInstruments,
-    //   page: () => const OnBoardingInstrumentsPage(),
-    //   transition: Transition.rightToLeft,
-    // ),
     GetPage(
       name: AppRouteConstants.introFacility,
       page: () => const OnBoardingFacilityTypePage(),
@@ -42,17 +37,6 @@ class OnBoardingRoutes {
       page: () => const OnBoardingPlaceTypePage(),
       transition: Transition.rightToLeft,
     ),
-    ///DEPRECATED
-    // GetPage(
-    //   name: AppRouteConstants.introGenres,
-    //   page: () => const OnBoardingGenresPage(),
-    //   transition: Transition.rightToLeft,
-    // ),
-    // GetPage(
-    //   name: AppRouteConstants.introReason,
-    //   page: () => const OnBoardingReasonPage(),
-    //   transition: Transition.rightToLeft,
-    // ),
     GetPage(
       name: AppRouteConstants.introAddImage,
       page: () => const OnBoardingAddImagePage(),
@@ -62,6 +46,11 @@ class OnBoardingRoutes {
       name: AppRouteConstants.createAdditionalProfile,
       page: () => const OnBoardingAddImagePage(),
       transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRouteConstants.introWelcome,
+      page: () => const WelcomePage(),
+      transition: Transition.zoom,
     ),
   ];
 

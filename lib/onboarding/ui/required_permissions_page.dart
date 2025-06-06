@@ -12,7 +12,7 @@ class RequiredPermissionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
-      id: AppPageIdConstants.onBoardingAddImage,
+      id: AppPageIdConstants.onBoarding,
       init: OnBoardingController(),
       builder: (_) => PopScope(
         onPopInvoked: (didPop) async {

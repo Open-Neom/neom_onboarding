@@ -19,7 +19,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
-        id: AppPageIdConstants.onBoardingProfile,
+        id: AppPageIdConstants.onBoarding,
         init: OnBoardingController(),
         builder: (_) => Scaffold(
           extendBodyBehindAppBar: true,

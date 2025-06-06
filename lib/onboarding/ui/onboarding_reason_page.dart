@@ -18,7 +18,7 @@ class OnBoardingReasonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
-        id: AppPageIdConstants.onBoardingReason,
+        id: AppPageIdConstants.onBoarding,
         init: OnBoardingController(),
         builder: (_) => Scaffold(
           extendBodyBehindAppBar: true,

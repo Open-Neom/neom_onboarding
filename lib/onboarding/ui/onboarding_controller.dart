@@ -80,7 +80,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setLocale(AppLocale locale) async {
     AppHiveController().setLocale(locale);
     AppHiveController().updateLocale(locale);
-    update([AppPageIdConstants.onBoardingProfile]);
+    update([AppPageIdConstants.onBoarding]);
     Get.toNamed(AppRouteConstants.introAddImage);
   }
 
@@ -89,7 +89,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     AppUtilities.logger.d("ProfileType registered as ${profileType.name}");
     userController.newProfile.type = profileType;
 
-    update([AppPageIdConstants.onBoardingProfile]);
+    update([AppPageIdConstants.onBoarding]);
 
     if(AppFlavour.appInUse == AppInUse.c) {
       Get.toNamed(AppRouteConstants.introAddImage);
@@ -118,13 +118,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     AppUtilities.logger.d("ProfileType registered Reason as ${reason.name}");
     userController.newProfile.usageReason = reason;
     Get.toNamed(AppRouteConstants.introInstruments);
-    update([AppPageIdConstants.onBoardingReason]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   @override
   void handleImage() async {
     await postUploadController.handleImage(imageType: UploadImageType.profile);
-    update([AppPageIdConstants.onBoardingAddImage]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   @override
@@ -138,7 +138,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       AppUtilities.logger.e(e.toString());
     }
 
-    update([AppPageIdConstants.onBoardingAddImage]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   bool isValidDOB(DateTime? dob) {
@@ -164,7 +164,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       AppUtilities.logger.e(e.toString());
     }
 
-    update([AppPageIdConstants.onBoardingAddImage]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   @override
@@ -177,23 +177,28 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       String validateMsg = await newAccountValidation();
 
       if(validateMsg.isEmpty) {
-
         if(controllerCouponCode.text.trim().isNotEmpty) {
           validateMsg = await validateCoupon(controllerCouponCode.text.trim());
         }
 
         if(validateMsg.isEmpty) {
+          AppUtilities.logger.d('Finishing Account - HandlingCoupon');
+
           userController.newProfile.aboutMe = controllerAboutMe.text.trim();
           userController.newProfile.name = controllerUsername.text.trim();
 
-          if(validCoupon != null && await handleCoupon(validCoupon!)) {
+          bool couponHandled = await handleCoupon(validCoupon);
+
+          if(validCoupon == null || couponHandled) {
+            AppUtilities.logger.d('Finishing Account - Welcome & Creating User');
+            Get.toNamed(AppRouteConstants.introWelcome);
+
             if(postUploadController.mediaFile.value.path.isNotEmpty) {
               userController.user.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
             }
-
-            Get.toNamed(AppRouteConstants.introWelcome,
-                arguments: [AppRouteConstants.introAddImage]);
+            await userController.createUser();
           }
+
         }
       }
 
@@ -207,7 +212,6 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     isLoading.value = false;
-    update([AppPageIdConstants.onBoardingAddImage]);
   }
 
   Future<String> validateCoupon(String couponCode) async {
@@ -219,7 +223,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
   }
 
-  Future<bool> handleCoupon(AppCoupon coupon) async {
+  Future<bool> handleCoupon(AppCoupon? coupon) async {
+    if(coupon == null) return false;
+
     AppUtilities.logger.i("Handling coupon ${coupon.code}");
 
     AppBankController bankController = AppBankController();
@@ -317,7 +323,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           snackPosition: SnackPosition.bottom);
     }
     isLoading.value = false;
-    update([AppPageIdConstants.onBoardingAddImage]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   @override
@@ -332,7 +338,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     Get.toNamed(AppRouteConstants.introGenres);
-    update([AppPageIdConstants.onBoardingProfile]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
 
@@ -344,7 +350,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     userController.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
 
     Get.toNamed(AppRouteConstants.introGenres);
-    update([AppPageIdConstants.onBoardingProfile]);
+    update([AppPageIdConstants.onBoarding]);
 
   }
 
@@ -398,7 +404,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
     
     isLoading.value = false;
-    update([AppPageIdConstants.onBoardingAddImage]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   @override
@@ -413,7 +419,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
       if(smsCode.length == 6) {
         isValidatingSmsCode = true;
-        update([AppPageIdConstants.onBoardingAddImage]);
+        update([AppPageIdConstants.onBoarding]);
 
         LoginController loginController = Get.find<LoginController>();
         loginController.isPhoneAuth = true;
@@ -431,7 +437,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         isVerifiedPhone ? AppTranslationConstants.phoneVerified.tr : AppTranslationConstants.phoneVerificationFailed.tr,
         snackPosition: SnackPosition.bottom);
     
-    update([AppPageIdConstants.onBoardingAddImage]);
+    update([AppPageIdConstants.onBoarding]);
   }
 
   Future<void> setLocation() async {

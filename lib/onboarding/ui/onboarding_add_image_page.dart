@@ -23,8 +23,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
-      id: AppPageIdConstants.onBoardingAddImage,
-      // init: OnBoardingController(),
+      id: AppPageIdConstants.onBoarding,
       builder: (_) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBarChild(color: Colors.transparent),

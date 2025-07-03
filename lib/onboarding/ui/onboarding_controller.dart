@@ -2,37 +2,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
-import 'package:neom_commerce/bank/data/implementations/app_bank_controller.dart';
-import 'package:neom_commerce/commerce/utils/enums/transaction_type.dart';
-import 'package:neom_commons/auth/ui/login/login_controller.dart';
-import 'package:neom_commons/core/app_flavour.dart';
-import 'package:neom_commons/core/data/firestore/coupon_firestore.dart';
-import 'package:neom_commons/core/data/firestore/profile_firestore.dart';
-import 'package:neom_commons/core/data/firestore/user_firestore.dart';
-import 'package:neom_commons/core/data/implementations/app_hive_controller.dart';
-import 'package:neom_commons/core/data/implementations/user_controller.dart';
-import 'package:neom_commons/core/domain/model/app_coupon.dart';
-import 'package:neom_commons/core/domain/model/facility.dart';
-import 'package:neom_commons/core/domain/model/place.dart';
-import 'package:neom_commons/core/domain/use_cases/onboarding_service.dart';
-import 'package:neom_commons/core/utils/app_utilities.dart';
-import 'package:neom_commons/core/utils/constants/app_constants.dart';
-import 'package:neom_commons/core/utils/constants/app_locale_constants.dart';
-import 'package:neom_commons/core/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/core/utils/constants/app_route_constants.dart';
-import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/core/utils/constants/intl_countries_list.dart';
-import 'package:neom_commons/core/utils/constants/message_translation_constants.dart';
-import 'package:neom_commons/core/utils/enums/app_in_use.dart';
-import 'package:neom_commons/core/utils/enums/app_locale.dart';
-import 'package:neom_commons/core/utils/enums/coupon_type.dart';
-import 'package:neom_commons/core/utils/enums/facilitator_type.dart';
-import 'package:neom_commons/core/utils/enums/place_type.dart';
-import 'package:neom_commons/core/utils/enums/profile_type.dart';
-import 'package:neom_commons/core/utils/enums/subscription_level.dart';
-import 'package:neom_commons/core/utils/enums/upload_image_type.dart';
-import 'package:neom_commons/core/utils/enums/usage_reason.dart';
-import 'package:neom_commons/core/utils/validator.dart';
+import 'package:neom_bank/bank/data/implementations/app_bank_controller.dart';
+import 'package:neom_commons/commons/app_flavour.dart';
+import 'package:neom_commons/commons/utils/app_utilities.dart';
+import 'package:neom_commons/commons/utils/constants/app_locale_constants.dart';
+import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
+import 'package:neom_commons/commons/utils/constants/intl_countries_list.dart';
+import 'package:neom_commons/commons/utils/constants/message_translation_constants.dart';
+import 'package:neom_core/core/app_config.dart';
+import 'package:neom_core/core/data/firestore/coupon_firestore.dart';
+import 'package:neom_core/core/data/firestore/profile_firestore.dart';
+import 'package:neom_core/core/data/firestore/user_firestore.dart';
+import 'package:neom_core/core/data/implementations/app_hive_controller.dart';
+import 'package:neom_core/core/data/implementations/user_controller.dart';
+import 'package:neom_core/core/domain/model/app_coupon.dart';
+import 'package:neom_core/core/domain/model/facility.dart';
+import 'package:neom_core/core/domain/model/place.dart';
+import 'package:neom_core/core/domain/use_cases/login_service.dart';
+import 'package:neom_core/core/domain/use_cases/onboarding_service.dart';
+import 'package:neom_core/core/utils/constants/app_route_constants.dart';
+import 'package:neom_core/core/utils/constants/core_constants.dart';
+import 'package:neom_core/core/utils/enums/app_in_use.dart';
+import 'package:neom_core/core/utils/enums/app_locale.dart';
+import 'package:neom_core/core/utils/enums/coupon_type.dart';
+import 'package:neom_core/core/utils/enums/facilitator_type.dart';
+import 'package:neom_core/core/utils/enums/place_type.dart';
+import 'package:neom_core/core/utils/enums/profile_type.dart';
+import 'package:neom_core/core/utils/enums/subscription_level.dart';
+import 'package:neom_core/core/utils/enums/transaction_type.dart';
+import 'package:neom_core/core/utils/enums/upload_image_type.dart';
+import 'package:neom_core/core/utils/enums/usage_reason.dart';
+import 'package:neom_core/core/utils/validator.dart';
 import 'package:neom_posts/posts/ui/upload/post_upload_controller.dart';
 import 'package:neom_profile/neom_profile.dart';
 
@@ -51,7 +52,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   final RxBool isLoading = false.obs;
   final RxBool agreeTerms = false.obs;
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
-  final DateTime minAllowedDate = DateTime(AppConstants.lastYearDOB, 1, 1);
+  final DateTime minAllowedDate = DateTime(CoreConstants.lastYearDOB, 1, 1);
 
   final Rx<Country> phoneCountry = IntlPhoneConstants.availableCountries[0].obs;
 
@@ -86,7 +87,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setProfileType(ProfileType profileType) {
-    AppUtilities.logger.d("ProfileType registered as ${profileType.name}");
+    AppConfig.logger.d("ProfileType registered as ${profileType.name}");
     userController.newProfile.type = profileType;
 
     update([AppPageIdConstants.onBoarding]);
@@ -115,7 +116,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setReason(UsageReason reason) {
-    AppUtilities.logger.d("ProfileType registered Reason as ${reason.name}");
+    AppConfig.logger.d("ProfileType registered Reason as ${reason.name}");
     userController.newProfile.usageReason = reason;
     Get.toNamed(AppRouteConstants.introInstruments);
     update([AppPageIdConstants.onBoarding]);
@@ -129,13 +130,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setDateOfBirth(DateTime? pickedDate) {
-    AppUtilities.logger.d("setDateOfBirth");
+    AppConfig.logger.d("setDateOfBirth");
     try {
       if (pickedDate != null && isValidDOB(pickedDate)) {
         dateOfBirth.value = pickedDate;
       }
     } catch (e) {
-      AppUtilities.logger.e(e.toString());
+      AppConfig.logger.e(e.toString());
     }
 
     update([AppPageIdConstants.onBoarding]);
@@ -143,25 +144,25 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   bool isValidDOB(DateTime? dob) {
     if (dob == null) {
-      AppUtilities.logger.w("Date of birth is null.");
+      AppConfig.logger.w("Date of birth is null.");
       return false;
     }
 
     if (dob.isBefore(minAllowedDate)) {
       return true;
     } else {
-      AppUtilities.logger.w("Invalid DOB: Must be before 2010.");
+      AppConfig.logger.w("Invalid DOB: Must be before 2010.");
       return false;
     }
   }
 
   @override
   void setTermsAgreement(bool agree) {
-    AppUtilities.logger.t("setTermsAgreement");
+    AppConfig.logger.t("setTermsAgreement");
     try {
       agreeTerms.value = agree;
     } catch (e) {
-      AppUtilities.logger.e(e.toString());
+      AppConfig.logger.e(e.toString());
     }
 
     update([AppPageIdConstants.onBoarding]);
@@ -169,7 +170,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> finishAccount() async {
-    AppUtilities.logger.i("Finishing and creating account");
+    AppConfig.logger.i("Finishing and creating account");
     focusNodeAboutMe.unfocus();
     isLoading.value = true;
 
@@ -182,7 +183,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         }
 
         if(validateMsg.isEmpty) {
-          AppUtilities.logger.d('Finishing Account - HandlingCoupon');
+          AppConfig.logger.d('Finishing Account - HandlingCoupon');
 
           userController.newProfile.aboutMe = controllerAboutMe.text.trim();
           userController.newProfile.name = controllerUsername.text.trim();
@@ -190,7 +191,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
           bool couponHandled = await handleCoupon(validCoupon);
 
           if(validCoupon == null || couponHandled) {
-            AppUtilities.logger.d('Finishing Account - Welcome & Creating User');
+            AppConfig.logger.d('Finishing Account - Welcome & Creating User');
             Get.toNamed(AppRouteConstants.introWelcome);
 
             if(postUploadController.mediaFile.value.path.isNotEmpty) {
@@ -203,12 +204,12 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
 
       if(validateMsg.isNotEmpty) {
-        AppUtilities.logger.w(validateMsg.tr);
+        AppConfig.logger.w(validateMsg.tr);
         Get.snackbar(MessageTranslationConstants.finishingAccount.tr,
             validateMsg.tr, snackPosition: SnackPosition.bottom);
       }
     } catch (e) {
-      AppUtilities.logger.e(e.toString());
+      AppConfig.logger.e(e.toString());
     }
 
     isLoading.value = false;
@@ -226,7 +227,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   Future<bool> handleCoupon(AppCoupon? coupon) async {
     if(coupon == null) return false;
 
-    AppUtilities.logger.i("Handling coupon ${coupon.code}");
+    AppConfig.logger.i("Handling coupon ${coupon.code}");
 
     AppBankController bankController = AppBankController();
 
@@ -284,7 +285,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     if(phoneNumber.isNotEmpty && validateMsg.isEmpty) {
         if(await UserFirestore().isAvailablePhone(phoneNumber)) {
-          AppUtilities.logger.i("Phone number $phoneNumber is available");
+          AppConfig.logger.i("Phone number $phoneNumber is available");
         } else {
           validateMsg = MessageTranslationConstants.phoneUsed;
         }
@@ -294,7 +295,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> createAdditionalProfile() async {
-    AppUtilities.logger.i("Finishing and creating additional profile");
+    AppConfig.logger.i("Finishing and creating additional profile");
     focusNodeAboutMe.unfocus();
 
     String validateMsg = "";
@@ -328,13 +329,13 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setPlaceType(PlaceType placeType) {
-    AppUtilities.logger.d("PlaceType registered as ${placeType.name}");
+    AppConfig.logger.d("PlaceType registered as ${placeType.name}");
 
     try {
       userController.newProfile.places = {};
       userController.newProfile.places![placeType.name] = Place.addBasic(placeType);
     } catch (e) {
-      AppUtilities.logger.e(e.toString());
+      AppConfig.logger.e(e.toString());
     }
 
     Get.toNamed(AppRouteConstants.introGenres);
@@ -344,7 +345,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void setFacilityType(FacilityType facilityTpe) {
-    AppUtilities.logger.d("FacilityType registered as ${facilityTpe.name}");
+    AppConfig.logger.d("FacilityType registered as ${facilityTpe.name}");
 
     userController.newProfile.facilities = {};
     userController.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
@@ -363,7 +364,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> verifyPhone() async {
-    AppUtilities.logger.i("verifyPhone");
+    AppConfig.logger.i("verifyPhone");
     focusNodeAboutMe.unfocus();
 
     String validateMsg = "";
@@ -381,14 +382,14 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     if(phoneNumber.isNotEmpty && validateMsg.isEmpty) {
       if(await UserFirestore().isAvailablePhone(phoneNumber)) {
-        AppUtilities.logger.d("Phone number $phoneNumber is available");
+        AppConfig.logger.d("Phone number $phoneNumber is available");
       } else {
         validateMsg = MessageTranslationConstants.phoneUsed;
       }
     }
 
     if(validateMsg.isEmpty) {
-      LoginController loginController = Get.find<LoginController>();
+      final loginController = Get.find<LoginService>();
 
       if(phoneNumber.isNotEmpty) {
         userController.user.phoneNumber = phoneNumber;
@@ -409,7 +410,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   Future<void> verifySmsCode() async {
-    AppUtilities.logger.d("verifySmsCode");
+    AppConfig.logger.d("verifySmsCode");
 
     try {
 
@@ -421,17 +422,17 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         isValidatingSmsCode = true;
         update([AppPageIdConstants.onBoarding]);
 
-        LoginController loginController = Get.find<LoginController>();
-        loginController.isPhoneAuth = true;
+        final loginController = Get.find<LoginService>();
+        loginController.setIsPhoneAuth(true);
         isVerifiedPhone = await loginController.validateSmsCode(smsCode);
       }
     } catch(e) {
-      AppUtilities.logger.e(e.toString());
+      AppConfig.logger.e(e.toString());
     }
 
     smsCode = '';
     isValidatingSmsCode = false;
-    AppUtilities.logger.d("isValidPhone: $isVerifiedPhone");
+    AppConfig.logger.d("isValidPhone: $isVerifiedPhone");
 
     Get.snackbar(AppTranslationConstants.verifyPhone.tr,
         isVerifiedPhone ? AppTranslationConstants.phoneVerified.tr : AppTranslationConstants.phoneVerificationFailed.tr,
@@ -441,7 +442,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   }
 
   Future<void> setLocation() async {
-    AppUtilities.logger.d("setLocation");
+    AppConfig.logger.d("setLocation");
     try {
       isLoading.value = true;
       await profileController.updateLocation();
@@ -478,7 +479,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
       isLoading.value = false;
     } catch (e) {
-      AppUtilities.logger.e(e.toString());
+      AppConfig.logger.e(e.toString());
       Get.snackbar(
           MessageTranslationConstants.creatingAccount.tr,
           MessageTranslationConstants.userCurrentLocationErrorMsg.tr,

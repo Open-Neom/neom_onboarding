@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/core/ui/widgets/app_circular_progress_indicator.dart';
-import 'package:neom_commons/neom_commons.dart';
+import 'package:neom_commons/commons/ui/theme/app_color.dart';
+import 'package:neom_commons/commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/commons/ui/widgets/app_circular_progress_indicator.dart';
+import 'package:neom_commons/commons/utils/constants/app_assets.dart';
+import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
+import 'package:neom_commons/commons/utils/constants/message_translation_constants.dart';
+import 'package:neom_core/core/domain/use_cases/login_service.dart';
+import 'package:neom_core/core/utils/constants/app_route_constants.dart';
 
 import 'onboarding_controller.dart';
 
@@ -16,7 +23,7 @@ class RequiredPermissionsPage extends StatelessWidget {
       init: OnBoardingController(),
       builder: (_) => PopScope(
         onPopInvoked: (didPop) async {
-          await Get.find<LoginController>().signOut();
+          await Get.find<LoginService>().signOut();
         },
         child: SafeArea(
           child: Scaffold(

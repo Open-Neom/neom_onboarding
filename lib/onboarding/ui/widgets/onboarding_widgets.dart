@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:neom_commons/commons/ui/theme/app_color.dart';
+import 'package:neom_commons/commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
+import 'package:neom_commons/commons/utils/constants/intl_countries_list.dart';
+import 'package:neom_core/core/utils/constants/core_constants.dart';
+import 'package:neom_core/core/utils/enums/app_currency.dart';
 
-import 'package:neom_commons/core/utils/app_color.dart';
-import 'package:neom_commons/core/utils/app_theme.dart';
-import 'package:neom_commons/core/utils/constants/app_constants.dart';
-import 'package:neom_commons/core/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/core/utils/constants/intl_countries_list.dart';
-import 'package:neom_commons/core/utils/enums/app_currency.dart';
 import '../onboarding_controller.dart';
 
 Widget buildPhoneField({required OnBoardingController onBoardingController}) {
@@ -65,9 +65,9 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
         DateTime? selectedDate = await showDatePicker(
           context: context,
           initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: DateTime(AppConstants.lastYearDOB, 12, 31),
-          firstDate: DateTime(AppConstants.firstYearDOB, 1, 1),
-          lastDate: DateTime(AppConstants.lastYearDOB, 12, 31),
+          initialDate: DateTime(CoreConstants.lastYearDOB, 12, 31),
+          firstDate: DateTime(CoreConstants.firstYearDOB, 1, 1),
+          lastDate: DateTime(CoreConstants.lastYearDOB, 12, 31),
           currentDate: dateOfBirth,
         );
 
@@ -77,7 +77,7 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
 
       },
       child: Text(
-        dateOfBirth != null && dateOfBirth.isBefore(DateTime(AppConstants.lastYearDOB))
+        dateOfBirth != null && dateOfBirth.isBefore(DateTime(CoreConstants.lastYearDOB))
             ? DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth)
             : AppTranslationConstants.enterDOB.tr,
         style: const TextStyle(color: Colors.white, fontSize: 16),

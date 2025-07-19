@@ -2,46 +2,47 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl_phone_field/countries.dart';
-import 'package:neom_bank/bank/data/implementations/app_bank_controller.dart';
-import 'package:neom_commons/commons/app_flavour.dart';
-import 'package:neom_commons/commons/utils/app_utilities.dart';
-import 'package:neom_commons/commons/utils/constants/app_locale_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/commons/utils/constants/intl_countries_list.dart';
-import 'package:neom_commons/commons/utils/constants/message_translation_constants.dart';
-import 'package:neom_core/core/app_config.dart';
-import 'package:neom_core/core/data/firestore/coupon_firestore.dart';
-import 'package:neom_core/core/data/firestore/profile_firestore.dart';
-import 'package:neom_core/core/data/firestore/user_firestore.dart';
-import 'package:neom_core/core/data/implementations/app_hive_controller.dart';
-import 'package:neom_core/core/data/implementations/user_controller.dart';
-import 'package:neom_core/core/domain/model/app_coupon.dart';
-import 'package:neom_core/core/domain/model/facility.dart';
-import 'package:neom_core/core/domain/model/place.dart';
-import 'package:neom_core/core/domain/use_cases/login_service.dart';
-import 'package:neom_core/core/domain/use_cases/onboarding_service.dart';
-import 'package:neom_core/core/utils/constants/app_route_constants.dart';
-import 'package:neom_core/core/utils/constants/core_constants.dart';
-import 'package:neom_core/core/utils/enums/app_in_use.dart';
-import 'package:neom_core/core/utils/enums/app_locale.dart';
-import 'package:neom_core/core/utils/enums/coupon_type.dart';
-import 'package:neom_core/core/utils/enums/facilitator_type.dart';
-import 'package:neom_core/core/utils/enums/place_type.dart';
-import 'package:neom_core/core/utils/enums/profile_type.dart';
-import 'package:neom_core/core/utils/enums/subscription_level.dart';
-import 'package:neom_core/core/utils/enums/transaction_type.dart';
-import 'package:neom_core/core/utils/enums/upload_image_type.dart';
-import 'package:neom_core/core/utils/enums/usage_reason.dart';
-import 'package:neom_core/core/utils/validator.dart';
-import 'package:neom_posts/posts/ui/upload/post_upload_controller.dart';
-import 'package:neom_profile/neom_profile.dart';
+import 'package:neom_commons/utils/constants/app_locale_constants.dart';
+import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_commons/utils/constants/intl_countries_list.dart';
+import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
+import 'package:neom_commons/utils/constants/translations/message_translation_constants.dart';
+import 'package:neom_commons/utils/text_utilities.dart';
+import 'package:neom_core/app_config.dart';
+import 'package:neom_core/data/firestore/coupon_firestore.dart';
+import 'package:neom_core/data/firestore/profile_firestore.dart';
+import 'package:neom_core/data/firestore/user_firestore.dart';
+import 'package:neom_core/data/implementations/app_hive_controller.dart';
+import 'package:neom_core/data/implementations/user_controller.dart';
+import 'package:neom_core/domain/model/app_coupon.dart';
+import 'package:neom_core/domain/model/facility.dart';
+import 'package:neom_core/domain/model/place.dart';
+import 'package:neom_core/domain/use_cases/bank_service.dart';
+import 'package:neom_core/domain/use_cases/login_service.dart';
+import 'package:neom_core/domain/use_cases/media_upload_service.dart';
+import 'package:neom_core/domain/use_cases/onboarding_service.dart';
+import 'package:neom_core/domain/use_cases/profile_service.dart';
+import 'package:neom_core/utils/constants/app_route_constants.dart';
+import 'package:neom_core/utils/constants/core_constants.dart';
+import 'package:neom_core/utils/enums/app_in_use.dart';
+import 'package:neom_core/utils/enums/app_locale.dart';
+import 'package:neom_core/utils/enums/coupon_type.dart';
+import 'package:neom_core/utils/enums/facilitator_type.dart';
+import 'package:neom_core/utils/enums/media_upload_destination.dart';
+import 'package:neom_core/utils/enums/place_type.dart';
+import 'package:neom_core/utils/enums/profile_type.dart';
+import 'package:neom_core/utils/enums/subscription_level.dart';
+import 'package:neom_core/utils/enums/transaction_type.dart';
+import 'package:neom_core/utils/enums/usage_reason.dart';
+import 'package:neom_core/utils/validator.dart';
+
+import '../utils/constants/onboarding_translation_constants.dart';
 
 class OnBoardingController extends GetxController implements OnBoardingService {
 
   final userController = Get.find<UserController>();
-  final postUploadController = Get.put(PostUploadController());
-  final profileController = Get.put(ProfileController());
+  final mediaUploadServiceImpl = Get.find<MediaUploadService>();
+  final profileServiceImpl = Get.find<ProfileService>();
 
   TextEditingController controllerFullName = TextEditingController();
   TextEditingController controllerUsername = TextEditingController();
@@ -92,7 +93,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     update([AppPageIdConstants.onBoarding]);
 
-    if(AppFlavour.appInUse == AppInUse.c) {
+    if(AppConfig.instance.appInUse == AppInUse.c) {
       Get.toNamed(AppRouteConstants.introAddImage);
     } else {
       switch(profileType) {
@@ -124,7 +125,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
   @override
   void handleImage() async {
-    await postUploadController.handleImage(imageType: UploadImageType.profile);
+    await mediaUploadServiceImpl.handleImage(uploadDestination: MediaUploadDestination.profile);
     update([AppPageIdConstants.onBoarding]);
   }
 
@@ -194,8 +195,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
             AppConfig.logger.d('Finishing Account - Welcome & Creating User');
             Get.toNamed(AppRouteConstants.introWelcome);
 
-            if(postUploadController.mediaFile.value.path.isNotEmpty) {
-              userController.user.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
+            if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
+              userController.user.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
             }
             await userController.createUser();
           }
@@ -218,7 +219,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   Future<String> validateCoupon(String couponCode) async {
     validCoupon = await CouponFirestore().getCouponByCode(couponCode);
     if(validCoupon == null || (validCoupon?.id.isEmpty ?? true) || (validCoupon?.usedBy?.length ?? 0) >= (validCoupon?.usageLimit ?? 0)) {
-      return AppTranslationConstants.invalidCouponCodeMsg.tr;
+      return CommonTranslationConstants.invalidCouponCodeMsg.tr;
     } else {
       return '';
     }
@@ -229,25 +230,25 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     AppConfig.logger.i("Handling coupon ${coupon.code}");
 
-    AppBankController bankController = AppBankController();
+    final bankServiceImpl = Get.find<BankService>();
 
     userController.user.referralCode = coupon.code;
 
     if(coupon.usedBy?.contains(userController.user.email) ?? false) {
-      Get.snackbar(AppTranslationConstants.appliedCouponCode.tr,
-          AppTranslationConstants.couponAlreadyUsed.tr,
+      Get.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
+          CommonTranslationConstants.couponAlreadyUsed.tr,
           snackPosition: SnackPosition.bottom);
       return false;
     } else if(coupon.type == CouponType.oneMonthFree) {
-      bankController.addCoinsToWallet(coupon.ownerEmail, coupon.ownerAmount, transactionType: TransactionType.coupon);
+      bankServiceImpl.addCoinsToWallet(coupon.ownerEmail, coupon.ownerAmount, transactionType: TransactionType.coupon);
       userController.user.subscriptionId = SubscriptionLevel.freeMonth.name;
     } else if(coupon.type == CouponType.coinAddition) {
-      bankController.addCoinsToWallet(userController.user.email, coupon.amount, transactionType: TransactionType.coupon);
+      bankServiceImpl.addCoinsToWallet(userController.user.email, coupon.amount, transactionType: TransactionType.coupon);
     }
 
     CouponFirestore().addUsedBy(coupon.id, userController.user.email);
-    Get.snackbar(AppTranslationConstants.appliedCouponCode.tr,
-        AppTranslationConstants.appliedCouponCodeMsg.tr,
+    Get.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
+        CommonTranslationConstants.appliedCouponCodeMsg.tr,
         snackPosition: SnackPosition.bottom);
     return true;
   }
@@ -307,8 +308,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
-      if(postUploadController.mediaFile.value.path.isNotEmpty) {
-        userController.newProfile.photoUrl = await postUploadController.handleUploadImage(UploadImageType.profile);
+      if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
+        userController.newProfile.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
       }
 
       userController.newProfile.aboutMe = controllerAboutMe.text.trim();
@@ -434,8 +435,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     isValidatingSmsCode = false;
     AppConfig.logger.d("isValidPhone: $isVerifiedPhone");
 
-    Get.snackbar(AppTranslationConstants.verifyPhone.tr,
-        isVerifiedPhone ? AppTranslationConstants.phoneVerified.tr : AppTranslationConstants.phoneVerificationFailed.tr,
+    Get.snackbar(OnBoardingTranslationConstants.verifyPhone.tr,
+        isVerifiedPhone ? OnBoardingTranslationConstants.phoneVerified.tr : OnBoardingTranslationConstants.phoneVerificationFailed.tr,
         snackPosition: SnackPosition.bottom);
     
     update([AppPageIdConstants.onBoarding]);
@@ -445,16 +446,16 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     AppConfig.logger.d("setLocation");
     try {
       isLoading.value = true;
-      await profileController.updateLocation();
+      await profileServiceImpl.updateLocation();
 
-      if(profileController.location.value.isNotEmpty) {
+      if(profileServiceImpl.location.isNotEmpty) {
         // Lógica para establecer el idioma basada en la ubicación
-        String locationString = profileController.location.value;
+        String locationString = profileServiceImpl.location;
         // Intentar extraer el país (asumiendo formato "Ciudad, País" o similar)
         List<String> parts = locationString.split(',');
-        String country = parts.isNotEmpty ? AppUtilities.normalizeString(parts.last.trim().toLowerCase()) : '';
+        String country = parts.isNotEmpty ? TextUtilities.normalizeString(parts.last.trim().toLowerCase()) : '';
 
-        AppLocale detectedLocale = AppFlavour.appInUse == AppInUse.e ? AppLocale.spanish : AppLocale.english;
+        AppLocale detectedLocale = AppConfig.instance.appInUse == AppInUse.e ? AppLocale.spanish : AppLocale.english;
 
         // Mapear país a idioma usando las listas
         if (AppLocaleConstants.spanishCountries.contains(country)) {
@@ -472,7 +473,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
 
       if(userController.isNewUser) {
-        Get.toNamed(AppFlavour.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage);
+        Get.toNamed(AppConfig.instance.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage);
       } else {
         Get.toNamed(AppRouteConstants.home);
       }
@@ -481,7 +482,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     } catch (e) {
       AppConfig.logger.e(e.toString());
       Get.snackbar(
-          MessageTranslationConstants.creatingAccount.tr,
+          CommonTranslationConstants.creatingAccount.tr,
           MessageTranslationConstants.userCurrentLocationErrorMsg.tr,
           snackPosition: SnackPosition.bottom);
     }

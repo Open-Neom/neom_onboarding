@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/commons/ui/theme/app_color.dart';
-import 'package:neom_commons/commons/ui/theme/app_theme.dart';
-import 'package:neom_commons/commons/ui/widgets/app_circular_progress_indicator.dart';
-import 'package:neom_commons/commons/utils/constants/app_assets.dart';
-import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/commons/utils/constants/message_translation_constants.dart';
-import 'package:neom_core/core/domain/use_cases/login_service.dart';
-import 'package:neom_core/core/utils/constants/app_route_constants.dart';
-
+import 'package:neom_commons/ui/theme/app_color.dart';
+import 'package:neom_commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/ui/widgets/app_circular_progress_indicator.dart';
+import 'package:neom_commons/utils/constants/app_assets.dart';
+import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_commons/utils/constants/translations/app_translation_constants.dart';
+import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
+import 'package:neom_commons/utils/constants/translations/message_translation_constants.dart';
+import 'package:neom_core/domain/use_cases/login_service.dart';
+import 'package:neom_core/utils/constants/app_route_constants.dart';
+import '../utils/constants/onboarding_translation_constants.dart';
 import 'onboarding_controller.dart';
 
 class RequiredPermissionsPage extends StatelessWidget {
@@ -44,7 +45,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                         fit: BoxFit.fill),
                   ),
                   AppTheme.heightSpace10,
-                  Text(AppTranslationConstants.locationRequiredTitle.tr,
+                  Text(CommonTranslationConstants.locationRequiredTitle.tr,
                     style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w600
@@ -52,11 +53,11 @@ class RequiredPermissionsPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   AppTheme.heightSpace10,
-                  Text(AppTranslationConstants.locationRequiredMsg1.tr,
+                  Text(CommonTranslationConstants.locationRequiredMsg1.tr,
                       style: const TextStyle(fontSize: 18),textAlign: TextAlign.justify
                   ),
                   AppTheme.heightSpace20,
-                  AppTranslationConstants.locationRequiredMsg2.isNotEmpty ? Text(AppTranslationConstants.locationRequiredMsg2.tr,
+                  CommonTranslationConstants.locationRequiredMsg2.isNotEmpty ? Text(CommonTranslationConstants.locationRequiredMsg2.tr,
                       style: const TextStyle(fontSize: 18),textAlign: TextAlign.justify) : const SizedBox.shrink(),
                   AppTheme.heightSpace20,
                   TextButton(
@@ -68,7 +69,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                             arguments: [AppRouteConstants.introRequiredPermissions]
                         );
                         Get.snackbar(
-                          MessageTranslationConstants.userCurrentLocation.tr,
+                          CommonTranslationConstants.userCurrentLocation.tr,
                           MessageTranslationConstants.userCurrentLocationErrorMsg.tr,
                           snackPosition: SnackPosition.bottom,);
                       }
@@ -99,7 +100,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                     ),
                   ),
                   AppTheme.heightSpace20,
-                  Text('(${AppTranslationConstants.changeThisSettingLater.tr})',
+                  Text('(${OnBoardingTranslationConstants.changeThisSettingLater.tr})',
                       style: const TextStyle(fontSize: 15),
                       textAlign: TextAlign.justify),
                   AppTheme.heightSpace20,

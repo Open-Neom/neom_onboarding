@@ -4,15 +4,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/commons/ui/theme/app_color.dart';
-import 'package:neom_commons/commons/ui/theme/app_theme.dart';
-import 'package:neom_commons/commons/ui/widgets/appbar_child.dart';
-import 'package:neom_commons/commons/ui/widgets/core_widgets.dart';
-import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
-import 'package:neom_commons/commons/utils/external_utilities.dart';
-import 'package:neom_core/core/app_properties.dart';
+import 'package:neom_commons/ui/theme/app_color.dart';
+import 'package:neom_commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/ui/widgets/appbar_child.dart';
+import 'package:neom_commons/ui/widgets/core_widgets.dart';
+import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_commons/utils/constants/translations/app_translation_constants.dart';
+import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
+import 'package:neom_commons/utils/external_utilities.dart';
+import 'package:neom_core/app_properties.dart';
 
+import '../utils/constants/onboarding_translation_constants.dart';
 import 'onboarding_controller.dart';
 import 'widgets/onboarding_widgets.dart';
 
@@ -45,20 +47,20 @@ class OnBoardingAddImagePage extends StatelessWidget {
                       child: Center(
                         child: Stack(
                           children: <Widget>[
-                            (_.postUploadController.mediaFile.value.path.isEmpty &&
+                            (_.mediaUploadServiceImpl.getMediaFile().path.isEmpty &&
                             _.userController.user.photoUrl.isEmpty) ?
                             const Icon(Icons.account_circle, size: 150.0, color: Colors.grey) :
                             Container(
                               width: 140.0,
                               height: 140.0,
                               decoration: BoxDecoration(
-                                image: _.postUploadController.mediaFile.value.path.isEmpty ?
+                                image: _.mediaUploadServiceImpl.getMediaFile().path.isEmpty ?
                                 DecorationImage(
                                   image: CachedNetworkImageProvider(_.userController.user.photoUrl),
                                   fit: BoxFit.cover,
                                 ) :
                                 DecorationImage(
-                                  image: FileImage(File(_.postUploadController.mediaFile.value.path)),
+                                  image: FileImage(File(_.mediaUploadServiceImpl.getMediaFile().path)),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: const BorderRadius.all(Radius.circular(75.0)),
@@ -67,13 +69,13 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             Positioned(
                               bottom: 0,
                               right: 0,
-                              child: (_.postUploadController.mediaFile.value.path.isEmpty) ? FloatingActionButton(
+                              child: (_.mediaUploadServiceImpl.getMediaFile().path.isEmpty) ? FloatingActionButton(
                                 child: const Icon(Icons.camera_alt),
                                 onPressed: ()=> _.handleImage()
                               )
                               : FloatingActionButton (
                                   child: const Icon(Icons.close),
-                                  onPressed: () => _.postUploadController.clearMedia()
+                                  onPressed: () => _.mediaUploadServiceImpl.clearMedia()
                               ),
                             ),
                           ]),
@@ -81,14 +83,14 @@ class OnBoardingAddImagePage extends StatelessWidget {
                       ),),
                     buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userController.user.name.split(" ").first}",
                         _.userController.user.photoUrl.isEmpty
-                          ? AppTranslationConstants.addProfileImgMsg.tr
+                          ? OnBoardingTranslationConstants.addProfileImgMsg.tr
                           : _.userController.profile.id.isEmpty
-                            ? AppTranslationConstants.addLastProfileInfoMsg.tr
-                            : AppTranslationConstants.addNewProfileInfoMsg.tr
+                            ? OnBoardingTranslationConstants.addLastProfileInfoMsg.tr
+                            : OnBoardingTranslationConstants.addNewProfileInfoMsg.tr
                     ),
                     buildContainerTextField(AppTranslationConstants.username.tr,
                         controller: _.controllerUsername, textInputType: TextInputType.text),
-                    buildContainerTextField("${AppTranslationConstants.tellAboutYou.tr} (${AppTranslationConstants.optional.tr})",
+                    buildContainerTextField("${OnBoardingTranslationConstants.tellAboutYou.tr} (${AppTranslationConstants.optional.tr})",
                         controller: _.controllerAboutMe, maxLines: 20),
                     AppTheme.heightSpace20,
                     Column(
@@ -99,7 +101,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         if(!_.isVerifiedPhone &&_.userController.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: _),
                         if(!_.isVerifiedPhone &&_.userController.user.phoneNumber.isEmpty) TextButton(
                             onPressed: () => _.verifyPhone(),
-                            child: Text(!_.smsSent ? AppTranslationConstants.verifyPhone.tr : AppTranslationConstants.sendCodeAgain.tr,
+                            child: Text(!_.smsSent ? OnBoardingTranslationConstants.verifyPhone.tr : OnBoardingTranslationConstants.sendCodeAgain.tr,
                               style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
                             )
                         ),
@@ -135,12 +137,12 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               _.setTermsAgreement(value ?? false);
                             },
                           ),
-                          Text('${AppTranslationConstants.iHaveReadAndAccept.tr} ',
+                          Text('${CommonTranslationConstants.iHaveReadAndAccept.tr} ',
                             style: const TextStyle(fontSize: 14),
                           ),
                           TextButton(
                             // style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                            child: Text(AppTranslationConstants.termsAndConditions.tr,
+                            child: Text(CommonTranslationConstants.termsAndConditions.tr,
                               style: const TextStyle(fontSize: 14),
                             ),
                             onPressed: () async {
@@ -165,8 +167,8 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             backgroundColor: AppColor.bondiBlue,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),),
                           child: Text((_.userController.user.currentProfileId.isEmpty)
-                              ? AppTranslationConstants.finishAccount.tr
-                              : AppTranslationConstants.finishProfile.tr,
+                              ? OnBoardingTranslationConstants.finishAccount.tr
+                              : OnBoardingTranslationConstants.finishProfile.tr,
                             style: const TextStyle(
                               color: Colors.white, fontSize: 20.0,
                               fontWeight: FontWeight.bold

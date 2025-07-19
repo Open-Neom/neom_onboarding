@@ -1,11 +1,5 @@
 dependency_overrides:
-  neom_bank:
-    path: ../neom_bank
   neom_commons:
     path: ../neom_commons
   neom_core:
     path: ../neom_core
-  neom_posts:
-    path: ../neom_posts
-  neom_profile:
-    path: ../neom_profile

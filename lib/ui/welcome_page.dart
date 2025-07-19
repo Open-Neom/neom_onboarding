@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/commons/app_flavour.dart';
-import 'package:neom_commons/commons/ui/theme/app_color.dart';
-import 'package:neom_commons/commons/ui/theme/app_theme.dart';
-import 'package:neom_commons/commons/utils/constants/app_assets.dart';
-import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
-import 'package:neom_core/core/utils/enums/app_in_use.dart';
+import 'package:neom_commons/ui/theme/app_color.dart';
+import 'package:neom_commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/utils/constants/app_assets.dart';
+import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_commons/utils/constants/translations/app_translation_constants.dart';
+import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
+import 'package:neom_core/app_config.dart';
+import 'package:neom_core/utils/enums/app_in_use.dart';
 
 import 'onboarding_controller.dart';
 
@@ -28,13 +29,13 @@ class WelcomePage extends StatelessWidget {
               children: [
                 Image.asset(
                   AppAssets.logoAppWhite,
-                  height: AppFlavour.appInUse == AppInUse.g ? 50 : 150,
+                  height: AppConfig.instance.appInUse == AppInUse.g ? 50 : 150,
                   width: 150,
                 ),
                 Column(
                   children: [
                     const SizedBox(height: 20,),
-                    Text(AppTranslationConstants.splashSubtitle.tr,
+                    Text(CommonTranslationConstants.splashSubtitle.tr,
                       style: TextStyle(
                           color: Colors.white.withOpacity(1.0),
                           fontFamily: AppTheme.fontFamily,

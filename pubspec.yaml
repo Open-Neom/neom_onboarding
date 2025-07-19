@@ -11,21 +11,18 @@ dependencies:
   flutter:
     sdk: flutter
 
-  neom_bank:
-    git:
-      url: git@github.com:Cyberneom/neom_bank.git
   neom_commons:
     git:
       url: git@github.com:Cyberneom/neom_commons.git
   neom_core:
     git:
       url: git@github.com:Cyberneom/neom_core.git
-  neom_posts:
-    git:
-      url: git@github.com:Cyberneom/neom_posts.git
-  neom_profile:
-    git:
-      url: git@github.com:Cyberneom/neom_profile.git
+#  neom_posts:
+#    git:
+#      url: git@github.com:Cyberneom/neom_posts.git
+#  neom_profile:
+#    git:
+#      url: git@github.com:Cyberneom/neom_profile.git
 
 dev_dependencies:
   flutter_test:

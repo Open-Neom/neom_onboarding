@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/commons/app_flavour.dart';
-import 'package:neom_commons/commons/ui/theme/app_color.dart';
-import 'package:neom_commons/commons/ui/theme/app_theme.dart';
-import 'package:neom_commons/commons/ui/widgets/appbar_child.dart';
-import 'package:neom_commons/commons/ui/widgets/core_widgets.dart';
-import 'package:neom_commons/commons/ui/widgets/header_intro.dart';
-import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
-import 'package:neom_core/core/utils/enums/app_in_use.dart';
-import 'package:neom_core/core/utils/enums/profile_type.dart';
+import 'package:neom_commons/ui/theme/app_color.dart';
+import 'package:neom_commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/ui/widgets/appbar_child.dart';
+import 'package:neom_commons/ui/widgets/core_widgets.dart';
+import 'package:neom_commons/ui/widgets/header_intro.dart';
+import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_core/app_config.dart';
+import 'package:neom_core/utils/enums/app_in_use.dart';
+import 'package:neom_core/utils/enums/profile_type.dart';
 
+import '../utils/constants/onboarding_translation_constants.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingProfileTypePage extends StatelessWidget {
@@ -33,7 +33,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  HeaderIntro(subtitle: AppTranslationConstants.introProfileType.tr,),
+                  HeaderIntro(subtitle: OnBoardingTranslationConstants.introProfileType.tr,),
                   AppTheme.heightSpace30,
                   buildActionChip(appEnum: ProfileType.appArtist,
                       controllerFunction: _.setProfileType),
@@ -43,7 +43,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                   AppTheme.heightSpace10,
                   buildActionChip(appEnum: ProfileType.host,
                       controllerFunction: _.setProfileType),
-                  AppFlavour.appInUse == AppInUse.c ? Column(
+                  AppConfig.instance.appInUse == AppInUse.c ? Column(
                     children: [
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: ProfileType.researcher,

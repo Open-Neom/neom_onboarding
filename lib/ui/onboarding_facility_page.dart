@@ -1,17 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:neom_commons/commons/app_flavour.dart';
-import 'package:neom_commons/commons/ui/theme/app_color.dart';
-import 'package:neom_commons/commons/ui/theme/app_theme.dart';
-import 'package:neom_commons/commons/ui/widgets/appbar_child.dart';
-import 'package:neom_commons/commons/ui/widgets/core_widgets.dart';
-import 'package:neom_commons/commons/ui/widgets/header_intro.dart';
-import 'package:neom_commons/commons/utils/constants/app_page_id_constants.dart';
-import 'package:neom_commons/commons/utils/constants/app_translation_constants.dart';
-import 'package:neom_core/core/utils/enums/app_in_use.dart';
-import 'package:neom_core/core/utils/enums/facilitator_type.dart';
+import 'package:neom_commons/ui/theme/app_color.dart';
+import 'package:neom_commons/ui/theme/app_theme.dart';
+import 'package:neom_commons/ui/widgets/appbar_child.dart';
+import 'package:neom_commons/ui/widgets/core_widgets.dart';
+import 'package:neom_commons/ui/widgets/header_intro.dart';
+import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
+import 'package:neom_core/app_config.dart';
+import 'package:neom_core/utils/enums/app_in_use.dart';
+import 'package:neom_core/utils/enums/facilitator_type.dart';
 
+import '../utils/constants/onboarding_translation_constants.dart';
 import 'onboarding_controller.dart';
 
 class OnBoardingFacilityTypePage extends StatelessWidget {
@@ -34,7 +33,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
               child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                HeaderIntro(subtitle: AppTranslationConstants.introFacilitatorType.tr),
+                HeaderIntro(subtitle: OnBoardingTranslationConstants.introFacilitatorType.tr),
                 AppTheme.heightSpace30,
                 SizedBox(
                   height: AppTheme.fullHeight(context)/2,
@@ -42,7 +41,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        AppFlavour.appInUse == AppInUse.g
+                        AppConfig.instance.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.recordStudio,
                               controllerFunction: _.setFacilityType),
@@ -66,23 +65,23 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                         buildActionChip(appEnum: FacilityType.store,
                             controllerFunction: _.setFacilityType),
                         AppTheme.heightSpace10,
-                        AppFlavour.appInUse == AppInUse.g
+                        AppConfig.instance.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.soundRental,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
-                        AppFlavour.appInUse == AppInUse.g
+                        AppConfig.instance.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.rehearsalRoom,
                               controllerFunction: _.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
-                        // AppFlavour.appInUse != AppInUse.c
+                        // AppConfig.instance.appInUse != AppInUse.c
                         //     ? buildActionChip(appEnum: FacilityType.designer,
                         //     controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
                         // AppTheme.heightSpace10,
-                        // AppFlavour.appInUse != AppInUse.c
+                        // AppConfig.instance.appInUse != AppInUse.c
                         //     ? buildActionChip(appEnum: FacilityType.photographer,
                         //     controllerFunction: _.setFacilityType) : const SizedBox.shrink(),
                         // AppTheme.heightSpace10,

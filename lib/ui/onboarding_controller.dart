@@ -13,7 +13,6 @@ import 'package:neom_core/data/firestore/coupon_firestore.dart';
 import 'package:neom_core/data/firestore/profile_firestore.dart';
 import 'package:neom_core/data/firestore/user_firestore.dart';
 import 'package:neom_core/data/implementations/app_hive_controller.dart';
-import 'package:neom_core/data/implementations/user_controller.dart';
 import 'package:neom_core/domain/model/app_coupon.dart';
 import 'package:neom_core/domain/model/facility.dart';
 import 'package:neom_core/domain/model/place.dart';
@@ -22,6 +21,7 @@ import 'package:neom_core/domain/use_cases/login_service.dart';
 import 'package:neom_core/domain/use_cases/media_upload_service.dart';
 import 'package:neom_core/domain/use_cases/onboarding_service.dart';
 import 'package:neom_core/domain/use_cases/profile_service.dart';
+import 'package:neom_core/domain/use_cases/user_service.dart';
 import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:neom_core/utils/constants/core_constants.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
@@ -40,7 +40,7 @@ import '../utils/constants/onboarding_translation_constants.dart';
 
 class OnBoardingController extends GetxController implements OnBoardingService {
 
-  final userController = Get.find<UserController>();
+  final userServiceImpl = Get.find<UserService>();
   final mediaUploadServiceImpl = Get.find<MediaUploadService>();
   final profileServiceImpl = Get.find<ProfileService>();
 
@@ -68,8 +68,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   @override
   void onInit() async {
     super.onInit();
-    controllerFullName.text = userController.user.name;
-    controllerUsername.text = userController.user.name;
+    controllerFullName.text = userServiceImpl.user.name;
+    controllerUsername.text = userServiceImpl.user.name;
 
     for (var country in countries) {
       if(Get.locale!.countryCode == country.code){
@@ -89,7 +89,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   @override
   void setProfileType(ProfileType profileType) {
     AppConfig.logger.d("ProfileType registered as ${profileType.name}");
-    userController.newProfile.type = profileType;
+    userServiceImpl.newProfile.type = profileType;
 
     update([AppPageIdConstants.onBoarding]);
 
@@ -118,7 +118,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   @override
   void setReason(UsageReason reason) {
     AppConfig.logger.d("ProfileType registered Reason as ${reason.name}");
-    userController.newProfile.usageReason = reason;
+    userServiceImpl.newProfile.usageReason = reason;
     Get.toNamed(AppRouteConstants.introInstruments);
     update([AppPageIdConstants.onBoarding]);
   }
@@ -186,8 +186,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         if(validateMsg.isEmpty) {
           AppConfig.logger.d('Finishing Account - HandlingCoupon');
 
-          userController.newProfile.aboutMe = controllerAboutMe.text.trim();
-          userController.newProfile.name = controllerUsername.text.trim();
+          userServiceImpl.newProfile.aboutMe = controllerAboutMe.text.trim();
+          userServiceImpl.newProfile.name = controllerUsername.text.trim();
 
           bool couponHandled = await handleCoupon(validCoupon);
 
@@ -196,9 +196,9 @@ class OnBoardingController extends GetxController implements OnBoardingService {
             Get.toNamed(AppRouteConstants.introWelcome);
 
             if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
-              userController.user.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
+              userServiceImpl.user.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
             }
-            await userController.createUser();
+            await userServiceImpl.createUser();
           }
 
         }
@@ -219,7 +219,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   Future<String> validateCoupon(String couponCode) async {
     validCoupon = await CouponFirestore().getCouponByCode(couponCode);
     if(validCoupon == null || (validCoupon?.id.isEmpty ?? true) || (validCoupon?.usedBy?.length ?? 0) >= (validCoupon?.usageLimit ?? 0)) {
-      return CommonTranslationConstants.invalidCouponCodeMsg.tr;
+      return MessageTranslationConstants.invalidCouponCodeMsg.tr;
     } else {
       return '';
     }
@@ -232,23 +232,23 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     final bankServiceImpl = Get.find<BankService>();
 
-    userController.user.referralCode = coupon.code;
+    userServiceImpl.user.referralCode = coupon.code;
 
-    if(coupon.usedBy?.contains(userController.user.email) ?? false) {
+    if(coupon.usedBy?.contains(userServiceImpl.user.email) ?? false) {
       Get.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
           CommonTranslationConstants.couponAlreadyUsed.tr,
           snackPosition: SnackPosition.bottom);
       return false;
     } else if(coupon.type == CouponType.oneMonthFree) {
       bankServiceImpl.addCoinsToWallet(coupon.ownerEmail, coupon.ownerAmount, transactionType: TransactionType.coupon);
-      userController.user.subscriptionId = SubscriptionLevel.freeMonth.name;
+      userServiceImpl.user.subscriptionId = SubscriptionLevel.freeMonth.name;
     } else if(coupon.type == CouponType.coinAddition) {
-      bankServiceImpl.addCoinsToWallet(userController.user.email, coupon.amount, transactionType: TransactionType.coupon);
+      bankServiceImpl.addCoinsToWallet(userServiceImpl.user.email, coupon.amount, transactionType: TransactionType.coupon);
     }
 
-    CouponFirestore().addUsedBy(coupon.id, userController.user.email);
+    CouponFirestore().addUsedBy(coupon.id, userServiceImpl.user.email);
     Get.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
-        CommonTranslationConstants.appliedCouponCodeMsg.tr,
+        MessageTranslationConstants.appliedCouponCodeMsg.tr,
         snackPosition: SnackPosition.bottom);
     return true;
   }
@@ -262,7 +262,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       validateMsg = MessageTranslationConstants.profileNameUsed;
     }
 
-    userController.user.dateOfBirth = dateOfBirth.value?.millisecondsSinceEpoch ?? 0;
+    userServiceImpl.user.dateOfBirth = dateOfBirth.value?.millisecondsSinceEpoch ?? 0;
 
     if(validateMsg.isEmpty) {
       if (controllerPhone.text.isEmpty && (controllerPhone.text.length < phoneCountry.value.minLength
@@ -274,8 +274,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         phoneNumber = '';
       } else {
         phoneNumber = controllerPhone.text;
-        userController.user.phoneNumber = phoneNumber;
-        userController.user.countryCode = phoneCountry.value.dialCode;
+        userServiceImpl.user.phoneNumber = phoneNumber;
+        userServiceImpl.user.countryCode = phoneCountry.value.dialCode;
       }
 
       if(validateMsg.isNotEmpty && optionalPhoneNumber) {
@@ -309,11 +309,11 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     if(validateMsg.isEmpty) {
       if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
-        userController.newProfile.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
+        userServiceImpl.newProfile.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
       }
 
-      userController.newProfile.aboutMe = controllerAboutMe.text.trim();
-      userController.newProfile.name = controllerUsername.text.trim();
+      userServiceImpl.newProfile.aboutMe = controllerAboutMe.text.trim();
+      userServiceImpl.newProfile.name = controllerUsername.text.trim();
 
       Get.toNamed(AppRouteConstants.introWelcome,
           arguments: [AppRouteConstants.createAdditionalProfile]
@@ -333,8 +333,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     AppConfig.logger.d("PlaceType registered as ${placeType.name}");
 
     try {
-      userController.newProfile.places = {};
-      userController.newProfile.places![placeType.name] = Place.addBasic(placeType);
+      userServiceImpl.newProfile.places = {};
+      userServiceImpl.newProfile.places![placeType.name] = Place.addBasic(placeType);
     } catch (e) {
       AppConfig.logger.e(e.toString());
     }
@@ -348,8 +348,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setFacilityType(FacilityType facilityTpe) {
     AppConfig.logger.d("FacilityType registered as ${facilityTpe.name}");
 
-    userController.newProfile.facilities = {};
-    userController.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
+    userServiceImpl.newProfile.facilities = {};
+    userServiceImpl.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
 
     Get.toNamed(AppRouteConstants.introGenres);
     update([AppPageIdConstants.onBoarding]);
@@ -393,8 +393,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       final loginController = Get.find<LoginService>();
 
       if(phoneNumber.isNotEmpty) {
-        userController.user.phoneNumber = phoneNumber;
-        userController.user.countryCode = phoneCountry.value.dialCode;
+        userServiceImpl.user.phoneNumber = phoneNumber;
+        userServiceImpl.user.countryCode = phoneCountry.value.dialCode;
         await loginController.verifyPhoneNumber('+${phoneCountry.value.dialCode}$phoneNumber');
         smsSent = true;
       }
@@ -472,7 +472,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
       }
 
-      if(userController.isNewUser) {
+      if(userServiceImpl.isNewUser) {
         Get.toNamed(AppConfig.instance.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage);
       } else {
         Get.toNamed(AppRouteConstants.home);

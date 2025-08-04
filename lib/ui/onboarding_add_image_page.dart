@@ -48,7 +48,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         child: Stack(
                           children: <Widget>[
                             (_.mediaUploadServiceImpl.getMediaFile().path.isEmpty &&
-                            _.userController.user.photoUrl.isEmpty) ?
+                            _.userServiceImpl.user.photoUrl.isEmpty) ?
                             const Icon(Icons.account_circle, size: 150.0, color: Colors.grey) :
                             Container(
                               width: 140.0,
@@ -56,7 +56,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 image: _.mediaUploadServiceImpl.getMediaFile().path.isEmpty ?
                                 DecorationImage(
-                                  image: CachedNetworkImageProvider(_.userController.user.photoUrl),
+                                  image: CachedNetworkImageProvider(_.userServiceImpl.user.photoUrl),
                                   fit: BoxFit.cover,
                                 ) :
                                 DecorationImage(
@@ -81,10 +81,10 @@ class OnBoardingAddImagePage extends StatelessWidget {
                           ]),
                         ),
                       ),),
-                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userController.user.name.split(" ").first}",
-                        _.userController.user.photoUrl.isEmpty
+                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userServiceImpl.user.name.split(" ").first}",
+                        _.userServiceImpl.user.photoUrl.isEmpty
                           ? OnBoardingTranslationConstants.addProfileImgMsg.tr
-                          : _.userController.profile.id.isEmpty
+                          : _.userServiceImpl.profile.id.isEmpty
                             ? OnBoardingTranslationConstants.addLastProfileInfoMsg.tr
                             : OnBoardingTranslationConstants.addNewProfileInfoMsg.tr
                     ),
@@ -98,8 +98,8 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         buildEntryDateField(_.dateOfBirth.value,
                             context: context, dateFunction: _.setDateOfBirth),
                         AppTheme.heightSpace10,
-                        if(!_.isVerifiedPhone &&_.userController.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: _),
-                        if(!_.isVerifiedPhone &&_.userController.user.phoneNumber.isEmpty) TextButton(
+                        if(!_.isVerifiedPhone &&_.userServiceImpl.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: _),
+                        if(!_.isVerifiedPhone &&_.userServiceImpl.user.phoneNumber.isEmpty) TextButton(
                             onPressed: () => _.verifyPhone(),
                             child: Text(!_.smsSent ? OnBoardingTranslationConstants.verifyPhone.tr : OnBoardingTranslationConstants.sendCodeAgain.tr,
                               style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
@@ -156,7 +156,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: TextButton(
                           onPressed: () async => {
-                            if(_.userController.user.currentProfileId.isEmpty) {
+                            if(_.userServiceImpl.user.currentProfileId.isEmpty) {
                               await _.finishAccount()
                             } else {
                               await _.createAdditionalProfile()
@@ -166,7 +166,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                             backgroundColor: AppColor.bondiBlue,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),),
-                          child: Text((_.userController.user.currentProfileId.isEmpty)
+                          child: Text((_.userServiceImpl.user.currentProfileId.isEmpty)
                               ? OnBoardingTranslationConstants.finishAccount.tr
                               : OnBoardingTranslationConstants.finishProfile.tr,
                             style: const TextStyle(

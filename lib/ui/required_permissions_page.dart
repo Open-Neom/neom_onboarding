@@ -53,11 +53,11 @@ class RequiredPermissionsPage extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   AppTheme.heightSpace10,
-                  Text(CommonTranslationConstants.locationRequiredMsg1.tr,
+                  Text(MessageTranslationConstants.locationRequiredMsg1.tr,
                       style: const TextStyle(fontSize: 18),textAlign: TextAlign.justify
                   ),
                   AppTheme.heightSpace20,
-                  CommonTranslationConstants.locationRequiredMsg2.isNotEmpty ? Text(CommonTranslationConstants.locationRequiredMsg2.tr,
+                  MessageTranslationConstants.locationRequiredMsg2.isNotEmpty ? Text(MessageTranslationConstants.locationRequiredMsg2.tr,
                       style: const TextStyle(fontSize: 18),textAlign: TextAlign.justify) : const SizedBox.shrink(),
                   AppTheme.heightSpace20,
                   TextButton(

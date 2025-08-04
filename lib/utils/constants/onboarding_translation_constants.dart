@@ -8,7 +8,6 @@ class OnBoardingTranslationConstants {
   static const String finishAccount = 'finishAccount';
   static const String finishProfile = 'finishProfile';
   static const String introEventPlannerType = 'introEventPlannerType';
-  static const String introFacilitatorType = 'introFacilitatorType';
   static const String introGenres = 'introGenres';
   static const String introInstruments = 'introInstruments';
   static const String introLocale = 'introLocale';

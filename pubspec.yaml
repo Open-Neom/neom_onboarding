@@ -1,11 +1,12 @@
 name: neom_onboarding
 description: OnBoarding processes for Open Neom.
 version: 1.4.0
-homepage: https://github.com/Cyberneom/neom_onboarding
+homepage: https://github.com/Open-Neom/neom_onboarding
 publish_to: 'none'
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
@@ -13,16 +14,10 @@ dependencies:
 
   neom_commons:
     git:
-      url: git@github.com:Cyberneom/neom_commons.git
+      url: git@github.com:Open-Neom/neom_commons.git
   neom_core:
     git:
-      url: git@github.com:Cyberneom/neom_core.git
-#  neom_posts:
-#    git:
-#      url: git@github.com:Cyberneom/neom_posts.git
-#  neom_profile:
-#    git:
-#      url: git@github.com:Cyberneom/neom_profile.git
+      url: git@github.com:Open-Neom/neom_core.git
 
 dev_dependencies:
   flutter_test:

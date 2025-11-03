@@ -21,7 +21,7 @@ class OnBoardingLocalePage extends StatelessWidget {
     return GetBuilder<OnBoardingController>(
         id: AppPageIdConstants.onBoarding,
         init: OnBoardingController(),
-        builder: (_) => Scaffold(
+        builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
@@ -34,17 +34,17 @@ class OnBoardingLocalePage extends StatelessWidget {
                 HeaderIntro(subtitle: OnBoardingTranslationConstants.introLocale.tr),
                 AppTheme.heightSpace30,
                 buildActionChip(appEnum: AppLocale.english,
-                    controllerFunction: _.setLocale, isActive: AppConfig.instance.appInUse == AppInUse.g),
+                    controllerFunction: controller.setLocale, isActive: AppConfig.instance.appInUse == AppInUse.g),
                 AppTheme.heightSpace10,
                 buildActionChip(appEnum: AppLocale.spanish,
-                    controllerFunction: _.setLocale),
+                    controllerFunction: controller.setLocale),
                 //TODO Add French and Deutsch Translations
                 AppTheme.heightSpace10,
                 buildActionChip(appEnum: AppLocale.french,
-                    controllerFunction: _.setLocale, isActive: AppConfig.instance.appInUse == AppInUse.g),
+                    controllerFunction: controller.setLocale, isActive: AppConfig.instance.appInUse == AppInUse.g),
                 // AppTheme.heightSpace10,
                 // buildActionChip(appEnum: AppLocale.deutsch,
-                //     controllerFunction: _.setLocale, isActive: false),
+                //     controllerFunction: controller.setLocale, isActive: false),
               ],
             ),
           ),

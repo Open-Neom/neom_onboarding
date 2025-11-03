@@ -21,7 +21,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
     return GetBuilder<OnBoardingController>(
         id: AppPageIdConstants.onBoarding,
         init: OnBoardingController(),
-        builder: (_) => Scaffold(
+        builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
@@ -44,41 +44,41 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
                         AppConfig.instance.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.recordStudio,
-                              controllerFunction: _.setFacilityType),
+                              controllerFunction: controller.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
                         buildActionChip(appEnum: FacilityType.producer,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.publisher,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.printing,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.teacher,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.store,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace10,
                         AppConfig.instance.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.soundRental,
-                              controllerFunction: _.setFacilityType),
+                              controllerFunction: controller.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
                         AppConfig.instance.appInUse == AppInUse.g
                             ? Column(children: [
                           buildActionChip(appEnum: FacilityType.rehearsalRoom,
-                              controllerFunction: _.setFacilityType),
+                              controllerFunction: controller.setFacilityType),
                           AppTheme.heightSpace10,
                         ],) : const SizedBox.shrink(),
                         buildActionChip(appEnum: FacilityType.podcaster,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace10,
                         buildActionChip(appEnum: FacilityType.radio,
-                            controllerFunction: _.setFacilityType),
+                            controllerFunction: controller.setFacilityType),
                         AppTheme.heightSpace30,
                       ]
                   ),

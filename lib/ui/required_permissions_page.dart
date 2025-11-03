@@ -22,7 +22,7 @@ class RequiredPermissionsPage extends StatelessWidget {
     return GetBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
       init: OnBoardingController(),
-      builder: (_) => PopScope(
+      builder: (controller) => PopScope(
         onPopInvoked: (didPop) async {
           await Get.find<LoginService>().signOut();
         },
@@ -34,7 +34,7 @@ class RequiredPermissionsPage extends StatelessWidget {
               height: AppTheme.fullHeight(context),
               width: AppTheme.fullWidth(context),
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Obx(()=>_.isLoading.value ? AppCircularProgressIndicator() : Column(
+              child: Obx(()=>controller.isLoading.value ? AppCircularProgressIndicator() : Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -63,7 +63,7 @@ class RequiredPermissionsPage extends StatelessWidget {
                   TextButton(
                     onPressed: () async {
                       try {
-                        _.setLocation();
+                        controller.setLocation();
                       } catch (e) {
                         Get.toNamed(AppRouteConstants.logout,
                             arguments: [AppRouteConstants.introRequiredPermissions]

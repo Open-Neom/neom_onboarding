@@ -26,7 +26,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
-      builder: (_) => Scaffold(
+      builder: (controller) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBarChild(color: Colors.transparent),
         backgroundColor: AppColor.main50,
@@ -47,20 +47,20 @@ class OnBoardingAddImagePage extends StatelessWidget {
                       child: Center(
                         child: Stack(
                           children: <Widget>[
-                            (_.mediaUploadServiceImpl.getMediaFile().path.isEmpty &&
-                            _.userServiceImpl.user.photoUrl.isEmpty) ?
+                            (controller.mediaUploadServiceImpl.getMediaFile().path.isEmpty &&
+                            controller.userServiceImpl.user.photoUrl.isEmpty) ?
                             const Icon(Icons.account_circle, size: 150.0, color: Colors.grey) :
                             Container(
                               width: 140.0,
                               height: 140.0,
                               decoration: BoxDecoration(
-                                image: _.mediaUploadServiceImpl.getMediaFile().path.isEmpty ?
+                                image: controller.mediaUploadServiceImpl.getMediaFile().path.isEmpty ?
                                 DecorationImage(
-                                  image: CachedNetworkImageProvider(_.userServiceImpl.user.photoUrl),
+                                  image: CachedNetworkImageProvider(controller.userServiceImpl.user.photoUrl),
                                   fit: BoxFit.cover,
                                 ) :
                                 DecorationImage(
-                                  image: FileImage(File(_.mediaUploadServiceImpl.getMediaFile().path)),
+                                  image: FileImage(File(controller.mediaUploadServiceImpl.getMediaFile().path)),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: const BorderRadius.all(Radius.circular(75.0)),
@@ -69,50 +69,50 @@ class OnBoardingAddImagePage extends StatelessWidget {
                             Positioned(
                               bottom: 0,
                               right: 0,
-                              child: (_.mediaUploadServiceImpl.getMediaFile().path.isEmpty) ? FloatingActionButton(
+                              child: (controller.mediaUploadServiceImpl.getMediaFile().path.isEmpty) ? FloatingActionButton(
                                 child: const Icon(Icons.camera_alt),
-                                onPressed: ()=> _.handleImage()
+                                onPressed: ()=> controller.handleImage()
                               )
                               : FloatingActionButton (
                                   child: const Icon(Icons.close),
-                                  onPressed: () => _.mediaUploadServiceImpl.clearMedia()
+                                  onPressed: () => controller.mediaUploadServiceImpl.clearMedia()
                               ),
                             ),
                           ]),
                         ),
                       ),),
-                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${_.userServiceImpl.user.name.split(" ").first}",
-                        _.userServiceImpl.user.photoUrl.isEmpty
+                    buildLabel(context, "${AppTranslationConstants.welcome.tr} ${controller.userServiceImpl.user.name.split(" ").first}",
+                        controller.userServiceImpl.user.photoUrl.isEmpty
                           ? OnBoardingTranslationConstants.addProfileImgMsg.tr
-                          : _.userServiceImpl.profile.id.isEmpty
+                          : controller.userServiceImpl.profile.id.isEmpty
                             ? OnBoardingTranslationConstants.addLastProfileInfoMsg.tr
                             : OnBoardingTranslationConstants.addNewProfileInfoMsg.tr
                     ),
                     buildContainerTextField(AppTranslationConstants.username.tr,
-                        controller: _.controllerUsername, textInputType: TextInputType.text),
+                        controller: controller.controllerUsername, textInputType: TextInputType.text),
                     buildContainerTextField("${OnBoardingTranslationConstants.tellAboutYou.tr} (${AppTranslationConstants.optional.tr})",
-                        controller: _.controllerAboutMe, maxLines: 20),
+                        controller: controller.controllerAboutMe, maxLines: 20),
                     AppTheme.heightSpace20,
                     Column(
                       children: [
-                        buildEntryDateField(_.dateOfBirth.value,
-                            context: context, dateFunction: _.setDateOfBirth),
+                        buildEntryDateField(controller.dateOfBirth.value,
+                            context: context, dateFunction: controller.setDateOfBirth),
                         AppTheme.heightSpace10,
-                        if(!_.isVerifiedPhone &&_.userServiceImpl.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: _),
-                        if(!_.isVerifiedPhone &&_.userServiceImpl.user.phoneNumber.isEmpty) TextButton(
-                            onPressed: () => _.verifyPhone(),
-                            child: Text(!_.smsSent ? OnBoardingTranslationConstants.verifyPhone.tr : OnBoardingTranslationConstants.sendCodeAgain.tr,
+                        if(!controller.isVerifiedPhone &&controller.userServiceImpl.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: controller),
+                        if(!controller.isVerifiedPhone &&controller.userServiceImpl.user.phoneNumber.isEmpty) TextButton(
+                            onPressed: () => controller.verifyPhone(),
+                            child: Text(!controller.smsSent ? OnBoardingTranslationConstants.verifyPhone.tr : OnBoardingTranslationConstants.sendCodeAgain.tr,
                               style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
                             )
                         ),
-                        if(_.smsSent && !_.isVerifiedPhone) _.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: _),
+                        if(controller.smsSent && !controller.isVerifiedPhone) controller.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: controller),
                         Padding(
                             padding: const EdgeInsets.only(
                                 left: AppTheme.padding20,
                                 right: AppTheme.padding20
                             ),
                             child: TextFormField(
-                              controller: _.controllerCouponCode,
+                              controller: controller.controllerCouponCode,
                               keyboardType: TextInputType.text,
                               maxLines: 1,
                               textCapitalization: TextCapitalization.characters,
@@ -132,16 +132,16 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
-                            value: _.agreeTerms.value,
+                            value: controller.agreeTerms.value,
                             onChanged: (value) {
-                              _.setTermsAgreement(value ?? false);
+                              controller.setTermsAgreement(value ?? false);
                             },
                           ),
                           Text('${CommonTranslationConstants.iHaveReadAndAccept.tr} ',
                             style: const TextStyle(fontSize: 14),
                           ),
                           TextButton(
-                            // style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                            style: TextButton.styleFrom(padding: EdgeInsets.zero),
                             child: Text(CommonTranslationConstants.termsAndConditions.tr,
                               style: const TextStyle(fontSize: 14),
                             ),
@@ -151,22 +151,22 @@ class OnBoardingAddImagePage extends StatelessWidget {
                           ),
                         ],),
                       ),
-                      if(_.agreeTerms.value) Container(
+                      if(controller.agreeTerms.value) Container(
                         width: MediaQuery.of(context).size.width*0.66,
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: TextButton(
                           onPressed: () async => {
-                            if(_.userServiceImpl.user.currentProfileId.isEmpty) {
-                              await _.finishAccount()
+                            if(controller.userServiceImpl.user.currentProfileId.isEmpty) {
+                              await controller.finishAccount()
                             } else {
-                              await _.createAdditionalProfile()
+                              await controller.createAdditionalProfile()
                             }
                           },
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                             backgroundColor: AppColor.bondiBlue,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),),
-                          child: Text((_.userServiceImpl.user.currentProfileId.isEmpty)
+                          child: Text((controller.userServiceImpl.user.currentProfileId.isEmpty)
                               ? OnBoardingTranslationConstants.finishAccount.tr
                               : OnBoardingTranslationConstants.finishProfile.tr,
                             style: const TextStyle(
@@ -179,7 +179,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                if(_.isLoading.value) Container(
+                if(controller.isLoading.value) Container(
                   color: Colors.black87,
                   child: const Center(
                     child: CircularProgressIndicator(

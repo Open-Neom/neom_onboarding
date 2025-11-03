@@ -21,7 +21,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
     return GetBuilder<OnBoardingController>(
         id: AppPageIdConstants.onBoarding,
         init: OnBoardingController(),
-        builder: (_) => Scaffold(
+        builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
@@ -36,23 +36,23 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                   HeaderIntro(subtitle: OnBoardingTranslationConstants.introProfileType.tr,),
                   AppTheme.heightSpace30,
                   buildActionChip(appEnum: ProfileType.appArtist,
-                      controllerFunction: _.setProfileType),
+                      controllerFunction: controller.setProfileType),
                   AppTheme.heightSpace10,
                   buildActionChip(appEnum: ProfileType.facilitator,
-                      controllerFunction: _.setProfileType),
+                      controllerFunction: controller.setProfileType),
                   AppTheme.heightSpace10,
                   buildActionChip(appEnum: ProfileType.host,
-                      controllerFunction: _.setProfileType),
+                      controllerFunction: controller.setProfileType),
                   AppConfig.instance.appInUse == AppInUse.c ? Column(
                     children: [
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: ProfileType.researcher,
-                          controllerFunction: _.setProfileType),
+                          controllerFunction: controller.setProfileType),
                     ],
                   ) : const SizedBox.shrink(),
                   AppTheme.heightSpace10,
                   buildActionChip(appEnum: ProfileType.general,
-                      controllerFunction: _.setProfileType),
+                      controllerFunction: controller.setProfileType),
                 ],
               ),
             ),

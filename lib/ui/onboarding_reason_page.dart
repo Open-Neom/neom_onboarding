@@ -18,9 +18,9 @@ class OnBoardingReasonPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<OnBoardingController>(
-        id: AppPageIdConstants.onBoarding,
-        init: OnBoardingController(),
-        builder: (_) => Scaffold(
+      id: AppPageIdConstants.onBoarding,
+      init: OnBoardingController(),
+      builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(color: Colors.transparent),
           backgroundColor: AppColor.main50,
@@ -42,13 +42,13 @@ class OnBoardingReasonPage extends StatelessWidget {
                     children: <Widget>[
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.casual,
-                          controllerFunction: _.setReason),
+                          controllerFunction: controller.setReason),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.professional,
-                          controllerFunction: _.setReason),
+                          controllerFunction: controller.setReason),
                       AppTheme.heightSpace10,
                       buildActionChip(appEnum: UsageReason.any,
-                          controllerFunction: _.setReason),
+                          controllerFunction: controller.setReason),
                     ]
                   ),
                 ),

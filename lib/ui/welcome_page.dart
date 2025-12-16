@@ -28,7 +28,7 @@ class WelcomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  AppAssets.logoAppWhite,
+                  AppAssets.isologoAppWhite,
                   height: AppConfig.instance.appInUse == AppInUse.g ? 50 : 150,
                   width: 150,
                 ),

@@ -5,6 +5,7 @@ import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/ui/widgets/appbar_child.dart';
 import 'package:neom_commons/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/ui/widgets/header_intro.dart';
+import 'package:neom_commons/ui/widgets/right_side_company_logo.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
 import 'package:neom_core/utils/enums/usage_reason.dart';
 
@@ -22,7 +23,7 @@ class OnBoardingReasonPage extends StatelessWidget {
       init: OnBoardingController(),
       builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBarChild(color: Colors.transparent),
+        appBar: AppBarChild(actionWidgets: [RightSideCompanyLogo()],),
           backgroundColor: AppColor.main50,
           body: Container(
             decoration: AppTheme.appBoxDecoration,
@@ -32,7 +33,10 @@ class OnBoardingReasonPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  HeaderIntro(subtitle: OnBoardingTranslationConstants.introReason.tr,),
+                  HeaderIntro(
+                    showPreLogo: true,
+                    subtitle: OnBoardingTranslationConstants.introReason.tr,
+                  ),
                   AppTheme.heightSpace30,
               SizedBox(
                 height: AppTheme.fullHeight(context)*0.4,

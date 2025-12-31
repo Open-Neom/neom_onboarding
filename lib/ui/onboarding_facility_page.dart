@@ -5,6 +5,7 @@ import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/ui/widgets/appbar_child.dart';
 import 'package:neom_commons/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/ui/widgets/header_intro.dart';
+import 'package:neom_commons/ui/widgets/right_side_company_logo.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
 import 'package:neom_core/app_config.dart';
@@ -23,7 +24,7 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
         init: OnBoardingController(),
         builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBarChild(color: Colors.transparent),
+          appBar: AppBarChild(actionWidgets: [RightSideCompanyLogo()],),
           backgroundColor: AppColor.main50,
           body: Container(
             width: AppTheme.fullWidth(context),
@@ -33,7 +34,9 @@ class OnBoardingFacilityTypePage extends StatelessWidget {
               child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                HeaderIntro(subtitle: CommonTranslationConstants.whatFacilitatorType.tr),
+                HeaderIntro(
+                  showPreLogo: true,
+                  subtitle: CommonTranslationConstants.whatFacilitatorType.tr),
                 AppTheme.heightSpace30,
                 SizedBox(
                   height: AppTheme.fullHeight(context)/2,

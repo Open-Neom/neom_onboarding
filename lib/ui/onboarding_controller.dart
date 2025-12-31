@@ -91,36 +91,28 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     AppConfig.logger.d("ProfileType registered as ${profileType.name}");
     userServiceImpl.newProfile.type = profileType;
 
-    update([AppPageIdConstants.onBoarding]);
-
-    if(AppConfig.instance.appInUse == AppInUse.c) {
-      Get.toNamed(AppRouteConstants.introAddImage);
-    } else {
-      switch(profileType) {
-        case(ProfileType.appArtist):
-        case(ProfileType.band):
-          Get.toNamed(AppRouteConstants.introReason);
-          break;
-        case(ProfileType.facilitator):
-          Get.toNamed(AppRouteConstants.introFacility);
-          break;
-        case(ProfileType.host):
-          Get.toNamed(AppRouteConstants.introPlace);
-          break;
-        default:
-          Get.toNamed(AppRouteConstants.introGenres);
-          break;
-      }
+    switch(profileType) {
+      case(ProfileType.appArtist):
+      case(ProfileType.band):
+        Get.toNamed(AppRouteConstants.introReason);
+        break;
+      case(ProfileType.facilitator):
+        Get.toNamed(AppRouteConstants.introFacility);
+        break;
+      case(ProfileType.host):
+        Get.toNamed(AppRouteConstants.introPlace);
+        break;
+      default:
+        Get.toNamed(AppRouteConstants.introAddImage);
+        break;
     }
-
   }
 
   @override
   void setReason(UsageReason reason) {
     AppConfig.logger.d("ProfileType registered Reason as ${reason.name}");
     userServiceImpl.newProfile.usageReason = reason;
-    Get.toNamed(AppRouteConstants.introInstruments);
-    update([AppPageIdConstants.onBoarding]);
+    Get.toNamed(AppRouteConstants.introAddImage);
   }
 
   @override
@@ -339,8 +331,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       AppConfig.logger.e(e.toString());
     }
 
-    Get.toNamed(AppRouteConstants.introGenres);
-    update([AppPageIdConstants.onBoarding]);
+    Get.toNamed(AppRouteConstants.introAddImage);
+    ///DEPRECATED update([AppPageIdConstants.onBoarding]);
   }
 
 
@@ -351,9 +343,8 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     userServiceImpl.newProfile.facilities = {};
     userServiceImpl.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
 
-    Get.toNamed(AppRouteConstants.introGenres);
-    update([AppPageIdConstants.onBoarding]);
-
+    Get.toNamed(AppRouteConstants.introAddImage);
+    ///DEPRECATED update([AppPageIdConstants.onBoarding]);
   }
 
   List<TextEditingController> smsCodeControllers = List.generate(6, (index) => TextEditingController());

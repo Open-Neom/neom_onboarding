@@ -6,6 +6,7 @@ import 'ui/onboarding_facility_page.dart';
 import 'ui/onboarding_locale_page.dart';
 import 'ui/onboarding_place_page.dart';
 import 'ui/onboarding_profile_type_page.dart';
+import 'ui/onboarding_reason_page.dart';
 import 'ui/required_permissions_page.dart';
 import 'ui/welcome_page.dart';
 
@@ -35,6 +36,11 @@ class OnBoardingRoutes {
     GetPage(
       name: AppRouteConstants.introPlace,
       page: () => const OnBoardingPlaceTypePage(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: AppRouteConstants.introReason,
+      page: () => const OnBoardingReasonPage(),
       transition: Transition.rightToLeft,
     ),
     GetPage(

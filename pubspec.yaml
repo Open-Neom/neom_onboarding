@@ -1,6 +1,6 @@
 name: neom_onboarding
 description: OnBoarding processes for Open Neom.
-version: 1.5.2
+version: 1.5.3
 homepage: https://github.com/Open-Neom/neom_onboarding
 publish_to: 'none'
 

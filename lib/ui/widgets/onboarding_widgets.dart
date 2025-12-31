@@ -78,10 +78,10 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
         }
 
       },
-      child: Text(
-        dateOfBirth != null && dateOfBirth.isBefore(DateTime(CoreConstants.lastYearDOB))
-            ? DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth)
-            : OnBoardingTranslationConstants.enterDOB.tr,
+      child: Text(dateOfBirth != null
+        && dateOfBirth.isBefore(DateTime(CoreConstants.lastYearDOB))
+          ? DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth)
+          : OnBoardingTranslationConstants.enterDOB.tr,
         style: const TextStyle(color: Colors.white, fontSize: 16),
       ),
     ),

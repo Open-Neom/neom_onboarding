@@ -5,6 +5,7 @@ import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/ui/widgets/appbar_child.dart';
 import 'package:neom_commons/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/ui/widgets/header_intro.dart';
+import 'package:neom_commons/ui/widgets/right_side_company_logo.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
 import 'package:neom_core/app_config.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
@@ -23,7 +24,7 @@ class OnBoardingProfileTypePage extends StatelessWidget {
         init: OnBoardingController(),
         builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBarChild(color: Colors.transparent),
+          appBar: AppBarChild(actionWidgets: [RightSideCompanyLogo()],),
           backgroundColor: AppColor.main50,
           body: Container(
             decoration: AppTheme.appBoxDecoration,
@@ -33,7 +34,9 @@ class OnBoardingProfileTypePage extends StatelessWidget {
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  HeaderIntro(subtitle: OnBoardingTranslationConstants.introProfileType.tr,),
+                  HeaderIntro(
+                    showPreLogo: true,
+                    subtitle: OnBoardingTranslationConstants.introProfileType.tr,),
                   AppTheme.heightSpace30,
                   buildActionChip(appEnum: ProfileType.appArtist,
                       controllerFunction: controller.setProfileType),

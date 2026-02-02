@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:sint/sint.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:neom_commons/utils/constants/app_locale_constants.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
@@ -38,11 +38,11 @@ import 'package:neom_core/utils/validator.dart';
 
 import '../utils/constants/onboarding_translation_constants.dart';
 
-class OnBoardingController extends GetxController implements OnBoardingService {
+class OnBoardingController extends SintController implements OnBoardingService {
 
-  final userServiceImpl = Get.find<UserService>();
-  final mediaUploadServiceImpl = Get.find<MediaUploadService>();
-  final profileServiceImpl = Get.find<ProfileService>();
+  final userServiceImpl = Sint.find<UserService>();
+  final mediaUploadServiceImpl = Sint.find<MediaUploadService>();
+  final profileServiceImpl = Sint.find<ProfileService>();
 
   TextEditingController controllerFullName = TextEditingController();
   TextEditingController controllerUsername = TextEditingController();
@@ -72,7 +72,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     controllerUsername.text = userServiceImpl.user.name;
 
     for (var country in countries) {
-      if(Get.locale!.countryCode == country.code){
+      if(Sint.locale!.countryCode == country.code){
         phoneCountry.value = country; //Mexico
       }
     }
@@ -83,7 +83,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     AppHiveController().setLocale(locale);
     AppHiveController().updateLocale(locale);
     update([AppPageIdConstants.onBoarding]);
-    Get.toNamed(AppRouteConstants.introAddImage);
+    Sint.toNamed(AppRouteConstants.introAddImage);
   }
 
   @override
@@ -94,16 +94,16 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     switch(profileType) {
       case(ProfileType.appArtist):
       case(ProfileType.band):
-        Get.toNamed(AppRouteConstants.introReason);
+        Sint.toNamed(AppRouteConstants.introReason);
         break;
       case(ProfileType.facilitator):
-        Get.toNamed(AppRouteConstants.introFacility);
+        Sint.toNamed(AppRouteConstants.introFacility);
         break;
       case(ProfileType.host):
-        Get.toNamed(AppRouteConstants.introPlace);
+        Sint.toNamed(AppRouteConstants.introPlace);
         break;
       default:
-        Get.toNamed(AppRouteConstants.introAddImage);
+        Sint.toNamed(AppRouteConstants.introAddImage);
         break;
     }
   }
@@ -112,7 +112,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
   void setReason(UsageReason reason) {
     AppConfig.logger.d("ProfileType registered Reason as ${reason.name}");
     userServiceImpl.newProfile.usageReason = reason;
-    Get.toNamed(AppRouteConstants.introAddImage);
+    Sint.toNamed(AppRouteConstants.introAddImage);
   }
 
   @override
@@ -185,7 +185,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
           if(validCoupon == null || couponHandled) {
             AppConfig.logger.d('Finishing Account - Welcome & Creating User');
-            Get.toNamed(AppRouteConstants.introWelcome);
+            Sint.toNamed(AppRouteConstants.introWelcome);
 
             if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
               userServiceImpl.user.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
@@ -198,7 +198,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
       if(validateMsg.isNotEmpty) {
         AppConfig.logger.w(validateMsg.tr);
-        Get.snackbar(MessageTranslationConstants.finishingAccount.tr,
+        Sint.snackbar(MessageTranslationConstants.finishingAccount.tr,
             validateMsg.tr, snackPosition: SnackPosition.bottom);
       }
     } catch (e) {
@@ -222,12 +222,12 @@ class OnBoardingController extends GetxController implements OnBoardingService {
 
     AppConfig.logger.i("Handling coupon ${coupon.code}");
 
-    final bankServiceImpl = Get.find<BankService>();
+    final bankServiceImpl = Sint.find<BankService>();
 
     userServiceImpl.user.referralCode = coupon.code;
 
     if(coupon.usedBy?.contains(userServiceImpl.user.email) ?? false) {
-      Get.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
+      Sint.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
           CommonTranslationConstants.couponAlreadyUsed.tr,
           snackPosition: SnackPosition.bottom);
       return false;
@@ -239,7 +239,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     CouponFirestore().addUsedBy(coupon.id, userServiceImpl.user.email);
-    Get.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
+    Sint.snackbar(CommonTranslationConstants.appliedCouponCode.tr,
         MessageTranslationConstants.appliedCouponCodeMsg.tr,
         snackPosition: SnackPosition.bottom);
     return true;
@@ -307,11 +307,11 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       userServiceImpl.newProfile.aboutMe = controllerAboutMe.text.trim();
       userServiceImpl.newProfile.name = controllerUsername.text.trim();
 
-      Get.toNamed(AppRouteConstants.introWelcome,
+      Sint.toNamed(AppRouteConstants.introWelcome,
           arguments: [AppRouteConstants.createAdditionalProfile]
       );
     } else {
-      Get.snackbar(
+      Sint.snackbar(
           MessageTranslationConstants.finishingAccount.tr,
           validateMsg.tr,
           snackPosition: SnackPosition.bottom);
@@ -331,7 +331,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       AppConfig.logger.e(e.toString());
     }
 
-    Get.toNamed(AppRouteConstants.introAddImage);
+    Sint.toNamed(AppRouteConstants.introAddImage);
     ///DEPRECATED update([AppPageIdConstants.onBoarding]);
   }
 
@@ -343,7 +343,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     userServiceImpl.newProfile.facilities = {};
     userServiceImpl.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
 
-    Get.toNamed(AppRouteConstants.introAddImage);
+    Sint.toNamed(AppRouteConstants.introAddImage);
     ///DEPRECATED update([AppPageIdConstants.onBoarding]);
   }
 
@@ -381,7 +381,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
-      final loginController = Get.find<LoginService>();
+      final loginController = Sint.find<LoginService>();
 
       if(phoneNumber.isNotEmpty) {
         userServiceImpl.user.phoneNumber = phoneNumber;
@@ -390,7 +390,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         smsSent = true;
       }
     } else {
-      Get.snackbar(
+      Sint.snackbar(
           MessageTranslationConstants.finishingAccount.tr,
           validateMsg.tr,
           snackPosition: SnackPosition.bottom);
@@ -414,7 +414,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
         isValidatingSmsCode = true;
         update([AppPageIdConstants.onBoarding]);
 
-        final loginController = Get.find<LoginService>();
+        final loginController = Sint.find<LoginService>();
         loginController.setIsPhoneAuth(true);
         isVerifiedPhone = await loginController.validateSmsCode(smsCode);
       }
@@ -426,7 +426,7 @@ class OnBoardingController extends GetxController implements OnBoardingService {
     isValidatingSmsCode = false;
     AppConfig.logger.d("isValidPhone: $isVerifiedPhone");
 
-    Get.snackbar(OnBoardingTranslationConstants.verifyPhone.tr,
+    Sint.snackbar(OnBoardingTranslationConstants.verifyPhone.tr,
         isVerifiedPhone ? OnBoardingTranslationConstants.phoneVerified.tr : OnBoardingTranslationConstants.phoneVerificationFailed.tr,
         snackPosition: SnackPosition.bottom);
     
@@ -464,15 +464,15 @@ class OnBoardingController extends GetxController implements OnBoardingService {
       }
 
       if(userServiceImpl.isNewUser) {
-        Get.toNamed(AppConfig.instance.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage);
+        Sint.toNamed(AppConfig.instance.appInUse == AppInUse.g ? AppRouteConstants.introLocale : AppRouteConstants.introAddImage);
       } else {
-        Get.toNamed(AppRouteConstants.home);
+        Sint.toNamed(AppRouteConstants.home);
       }
 
       isLoading.value = false;
     } catch (e) {
       AppConfig.logger.e(e.toString());
-      Get.snackbar(
+      Sint.snackbar(
           CommonTranslationConstants.creatingAccount.tr,
           MessageTranslationConstants.userCurrentLocationErrorMsg.tr,
           snackPosition: SnackPosition.bottom);

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:sint/sint.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/ui/widgets/app_circular_progress_indicator.dart';
@@ -19,12 +19,12 @@ class RequiredPermissionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<OnBoardingController>(
+    return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
       init: OnBoardingController(),
       builder: (controller) => PopScope(
         onPopInvoked: (didPop) async {
-          await Get.find<LoginService>().signOut();
+          await Sint.find<LoginService>().signOut();
         },
         child: SafeArea(
           child: Scaffold(
@@ -65,10 +65,10 @@ class RequiredPermissionsPage extends StatelessWidget {
                       try {
                         controller.setLocation();
                       } catch (e) {
-                        Get.toNamed(AppRouteConstants.logout,
+                        Sint.toNamed(AppRouteConstants.logout,
                             arguments: [AppRouteConstants.introRequiredPermissions]
                         );
-                        Get.snackbar(
+                        Sint.snackbar(
                           CommonTranslationConstants.userCurrentLocation.tr,
                           MessageTranslationConstants.userCurrentLocationErrorMsg.tr,
                           snackPosition: SnackPosition.bottom,);

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:sint/sint.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/ui/widgets/appbar_child.dart';
@@ -24,7 +24,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<OnBoardingController>(
+    return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
       builder: (controller) => Scaffold(
         extendBodyBehindAppBar: true,

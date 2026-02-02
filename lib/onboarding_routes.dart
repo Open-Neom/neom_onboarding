@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import 'package:sint/sint.dart';
 
 import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'ui/onboarding_add_image_page.dart';
@@ -12,48 +12,48 @@ import 'ui/welcome_page.dart';
 
 class OnBoardingRoutes {
 
-  static final List<GetPage<dynamic>> routes = [
-    GetPage(
+  static final List<SintPage<dynamic>> routes = [
+    SintPage(
       name: AppRouteConstants.introRequiredPermissions,
       page: () => const RequiredPermissionsPage(),
       transition: Transition.zoom,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introLocale,
       page: () => const OnBoardingLocalePage(),
       transition: Transition.zoom,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introProfile,
       page: () => const OnBoardingProfileTypePage(),
       transition: Transition.zoom,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introFacility,
       page: () => const OnBoardingFacilityTypePage(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introPlace,
       page: () => const OnBoardingPlaceTypePage(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introReason,
       page: () => const OnBoardingReasonPage(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introAddImage,
       page: () => const OnBoardingAddImagePage(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.createAdditionalProfile,
       page: () => const OnBoardingAddImagePage(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
+    SintPage(
       name: AppRouteConstants.introWelcome,
       page: () => const WelcomePage(),
       transition: Transition.zoom,

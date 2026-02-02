@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:sint/sint.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -80,7 +80,7 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
       },
       child: Text(dateOfBirth != null
         && dateOfBirth.isBefore(DateTime(CoreConstants.lastYearDOB))
-          ? DateFormat.yMMMMd(Get.locale.toString()).format(dateOfBirth)
+          ? DateFormat.yMMMMd(Sint.locale.toString()).format(dateOfBirth)
           : OnBoardingTranslationConstants.enterDOB.tr,
         style: const TextStyle(color: Colors.white, fontSize: 16),
       ),

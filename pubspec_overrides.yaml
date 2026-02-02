@@ -1,6 +1,8 @@
 dependency_overrides:
+  sint:
+    path: ../sint
   neom_commons:
     path: ../neom_commons
   neom_core:
     path: ../neom_core
-  package_info_plus: 9.0.0
+#  package_info_plus: 9.0.0

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sint/sint.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/ui/widgets/appbar_child.dart';
@@ -13,6 +12,7 @@ import 'package:neom_commons/utils/constants/translations/app_translation_consta
 import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
 import 'package:neom_commons/utils/external_utilities.dart';
 import 'package:neom_core/app_properties.dart';
+import 'package:sint/sint.dart';
 
 import '../utils/constants/onboarding_translation_constants.dart';
 import 'onboarding_controller.dart';
@@ -98,14 +98,15 @@ class OnBoardingAddImagePage extends StatelessWidget {
                         buildEntryDateField(controller.dateOfBirth.value,
                             context: context, dateFunction: controller.setDateOfBirth),
                         AppTheme.heightSpace10,
-                        if(!controller.isVerifiedPhone &&controller.userServiceImpl.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: controller),
-                        if(!controller.isVerifiedPhone &&controller.userServiceImpl.user.phoneNumber.isEmpty) TextButton(
-                            onPressed: () => controller.verifyPhone(),
-                            child: Text(!controller.smsSent ? OnBoardingTranslationConstants.verifyPhone.tr : OnBoardingTranslationConstants.sendCodeAgain.tr,
-                              style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
-                            )
-                        ),
-                        if(controller.smsSent && !controller.isVerifiedPhone) controller.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: controller),
+                        if(controller.userServiceImpl.user.phoneNumber.isEmpty) buildPhoneField(onBoardingController: controller),
+                        // TODO: Implement phone verification when > 10,000 users
+                        // if(!controller.isVerifiedPhone &&controller.userServiceImpl.user.phoneNumber.isEmpty) TextButton(
+                        //     onPressed: () => controller.verifyPhone(),
+                        //     child: Text(!controller.smsSent ? OnBoardingTranslationConstants.verifyPhone.tr : OnBoardingTranslationConstants.sendCodeAgain.tr,
+                        //       style: const TextStyle(decoration: TextDecoration.underline, fontSize: 15),
+                        //     )
+                        // ),
+                        // if(controller.smsSent && !controller.isVerifiedPhone) controller.isValidatingSmsCode ? const CircularProgressIndicator() : buildSmsCodeField(context, onBoardingController: controller),
                         Padding(
                             padding: const EdgeInsets.only(
                                 left: AppTheme.padding20,

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sint/sint.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:neom_commons/utils/constants/app_locale_constants.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
@@ -35,6 +34,7 @@ import 'package:neom_core/utils/enums/subscription_level.dart';
 import 'package:neom_core/utils/enums/transaction_type.dart';
 import 'package:neom_core/utils/enums/usage_reason.dart';
 import 'package:neom_core/utils/validator.dart';
+import 'package:sint/sint.dart';
 
 import '../utils/constants/onboarding_translation_constants.dart';
 
@@ -64,6 +64,13 @@ class OnBoardingController extends SintController implements OnBoardingService {
 
   final FocusNode focusNodeAboutMe = FocusNode();
   bool optionalPhoneNumber = true;
+
+  List<TextEditingController> smsCodeControllers = List.generate(6, (index) => TextEditingController());
+  List<FocusNode> smsCodeFocusNodes = List.generate(6, (index) => FocusNode());
+  bool smsSent = false;
+  String smsCode = '';
+  bool isVerifiedPhone = false;
+  bool isValidatingSmsCode = false;
 
   @override
   void onInit() async {
@@ -202,7 +209,14 @@ class OnBoardingController extends SintController implements OnBoardingService {
             validateMsg.tr, snackPosition: SnackPosition.bottom);
       }
     } catch (e) {
-      AppConfig.logger.e(e.toString());
+      AppConfig.logger.e("Error finishing account: $e");
+      Sint.snackbar(
+        MessageTranslationConstants.finishingAccount.tr,
+        e.toString(),
+        snackPosition: SnackPosition.bottom,
+      );
+      // Navigate back to login on critical error
+      Sint.offAllNamed(AppRouteConstants.login);
     }
 
     isLoading.value = false;
@@ -332,7 +346,6 @@ class OnBoardingController extends SintController implements OnBoardingService {
     }
 
     Sint.toNamed(AppRouteConstants.introAddImage);
-    ///DEPRECATED update([AppPageIdConstants.onBoarding]);
   }
 
 
@@ -344,15 +357,9 @@ class OnBoardingController extends SintController implements OnBoardingService {
     userServiceImpl.newProfile.facilities![facilityTpe.name] = Facility.addBasic(facilityTpe);
 
     Sint.toNamed(AppRouteConstants.introAddImage);
-    ///DEPRECATED update([AppPageIdConstants.onBoarding]);
   }
 
-  List<TextEditingController> smsCodeControllers = List.generate(6, (index) => TextEditingController());
-  List<FocusNode> smsCodeFocusNodes = List.generate(6, (index) => FocusNode());
-  bool smsSent = false;
-  String smsCode = '';
-  bool isVerifiedPhone = false;
-  bool isValidatingSmsCode = false;
+
 
   @override
   Future<void> verifyPhone() async {

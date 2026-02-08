@@ -1,3 +1,30 @@
+### 2.0.0 - Error Handling & Stability Improvements
+
+This release focuses on robust error handling during account creation to prevent users from getting stuck on loading screens.
+
+**Bug Fixes:**
+
+* **Account Creation Error Handling:**
+    * Fixed critical issue where users could get stuck on "Welcome" loading screen if account creation failed.
+    * Added proper error handling in `finishAccount()` that navigates users back to login on critical errors.
+    * Users now see clear error messages when account creation fails.
+
+* **Code Organization:**
+    * Reorganized SMS verification controller variables to the top of the class for better code structure.
+    * Removed deprecated code comments.
+
+**Improvements:**
+
+* **Better Error Messages:**
+    * Error messages now display the actual error to help diagnose issues.
+    * Snackbar notifications inform users of what went wrong.
+
+* **Graceful Failure Recovery:**
+    * When account creation fails, users are redirected to login page instead of being stuck.
+    * Loading state is properly reset after errors.
+
+---
+
 ### 1.4.0 - Architectural Enhancements & Feature Refinements
 
 This release for `neom_onboarding` includes significant architectural improvements, primarily focusing on decoupling its core logic and enhancing maintainability, alongside general refinements aligned with the broader Open Neom refactoring efforts.

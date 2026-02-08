@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sint/sint.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/utils/constants/app_assets.dart';
@@ -8,6 +7,7 @@ import 'package:neom_commons/utils/constants/translations/app_translation_consta
 import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
 import 'package:neom_core/app_config.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
+import 'package:sint/sint.dart';
 
 import 'onboarding_controller.dart';
 
@@ -48,12 +48,11 @@ class WelcomePage extends StatelessWidget {
                 const SizedBox(height: 30,),
                 const CircularProgressIndicator(),
                 const SizedBox(height: 30,),
-                Obx(() => Text(AppTranslationConstants.welcome.tr,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(1.0),
-                      fontFamily: AppTheme.fontFamily,
-                      fontSize: 15.0,
-                    ),
+                Text(AppTranslationConstants.welcome.tr,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(1.0),
+                    fontFamily: AppTheme.fontFamily,
+                    fontSize: 15.0,
                   ),
                 ),
               ]

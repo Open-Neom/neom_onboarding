@@ -1,4 +1,8 @@
 # neom_onboarding
+
+[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/Open-Neom/neom_onboarding)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](LICENSE)
+
 neom_onboarding is a critical module within the Open Neom ecosystem, dedicated to guiding new users
 through their initial setup and personalization journey. It encompasses all the necessary screens
 and logic for onboarding processes, from requesting essential permissions and selecting preferences

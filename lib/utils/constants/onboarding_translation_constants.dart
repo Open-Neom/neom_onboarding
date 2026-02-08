@@ -18,5 +18,7 @@ class OnBoardingTranslationConstants {
   static const String sendCodeAgain = 'sendCodeAgain';
   static const String tellAboutYou = 'tellAboutYou';
   static const String verifyPhone = 'verifyPhone';
+  static const String pleaseAddDescription = 'pleaseAddDescription';
+  static const String pleaseAddName = 'pleaseAddName';
 
 }

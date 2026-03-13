@@ -24,7 +24,7 @@ class OnBoardingPlaceTypePage extends StatelessWidget {
         builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(actionWidgets: [RightSideCompanyLogo()],),
-          backgroundColor: AppColor.main50,
+          backgroundColor: AppColor.scaffold,
           body: Container(
             width: AppTheme.fullWidth(context),
             height: AppTheme.fullHeight(context),

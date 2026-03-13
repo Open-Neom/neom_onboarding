@@ -25,7 +25,7 @@ class OnBoardingLocalePage extends StatelessWidget {
         builder: (controller) => Scaffold(
           extendBodyBehindAppBar: true,
           appBar: AppBarChild(actionWidgets: [RightSideCompanyLogo()],),
-          backgroundColor: AppColor.main50,
+          backgroundColor: AppColor.scaffold,
           body: Container(
             decoration: AppTheme.appBoxDecoration,
             child: Center(

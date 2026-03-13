@@ -34,7 +34,7 @@ Widget buildPhoneField({required OnBoardingController onBoardingController}) {
         alignLabelWithHint: true,
       ),
       pickerDialogStyle: PickerDialogStyle(
-        backgroundColor: AppColor.getMain(),
+        backgroundColor: AppColor.scaffold,
         searchFieldInputDecoration: InputDecoration(
           labelText: CommonTranslationConstants.searchByCountryName.tr,
         )

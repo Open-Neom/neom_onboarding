@@ -1,7 +1,7 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:neom_commons/ui/widgets/custom_image.dart';
+import 'package:neom_commons/ui/widgets/images/media_preview_image.dart';
 import 'package:flutter/services.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
@@ -29,7 +29,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
       builder: (controller) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBarChild(color: Colors.transparent),
-        backgroundColor: AppColor.main50,
+        backgroundColor: AppColor.scaffold,
         body: Container(
           width: AppTheme.fullWidth(context),
           height: AppTheme.fullHeight(context),
@@ -42,45 +42,26 @@ class OnBoardingAddImagePage extends StatelessWidget {
                   children: <Widget>[
                     AppTheme.heightSpace50,
                     AppTheme.heightSpace20,
-                    Obx(()=> Container(
+                    Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: Center(
                         child: Stack(
                           children: <Widget>[
-                            (controller.mediaUploadServiceImpl.getMediaFile().path.isEmpty &&
-                            controller.userServiceImpl.user.photoUrl.isEmpty) ?
-                            const Icon(Icons.account_circle, size: 150.0, color: Colors.grey) :
-                            Container(
-                              width: 140.0,
-                              height: 140.0,
-                              decoration: BoxDecoration(
-                                image: controller.mediaUploadServiceImpl.getMediaFile().path.isEmpty ?
-                                DecorationImage(
-                                  image: CachedNetworkImageProvider(controller.userServiceImpl.user.photoUrl),
-                                  fit: BoxFit.cover,
-                                ) :
-                                DecorationImage(
-                                  image: FileImage(File(controller.mediaUploadServiceImpl.getMediaFile().path)),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: const BorderRadius.all(Radius.circular(75.0)),
-                              ),
-                            ),
+                            _buildProfileImage(controller),
                             Positioned(
                               bottom: 0,
                               right: 0,
-                              child: (controller.mediaUploadServiceImpl.getMediaFile().path.isEmpty) ? FloatingActionButton(
-                                child: const Icon(Icons.camera_alt),
-                                onPressed: ()=> controller.handleImage()
-                              )
-                              : FloatingActionButton (
+                              child: _hasMediaFile(controller) ? FloatingActionButton(
                                   child: const Icon(Icons.close),
-                                  onPressed: () => controller.mediaUploadServiceImpl.clearMedia()
+                                  onPressed: () => controller.mediaUploadServiceImpl?.clearMedia()
+                              ) : FloatingActionButton(
+                                child: Icon(kIsWeb ? Icons.photo_library : Icons.camera_alt),
+                                onPressed: ()=> controller.handleImage()
                               ),
                             ),
                           ]),
                         ),
-                      ),),
+                      ),
                     buildLabel(context, "${AppTranslationConstants.welcome.tr} ${controller.userServiceImpl.user.name.split(" ").first}",
                         controller.userServiceImpl.user.photoUrl.isEmpty
                           ? OnBoardingTranslationConstants.addProfileImgMsg.tr
@@ -190,6 +171,35 @@ class OnBoardingAddImagePage extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  bool _hasMediaFile(OnBoardingController controller) {
+    if (controller.mediaUploadServiceImpl == null) return false;
+    return controller.mediaUploadServiceImpl!.mediaFileExists();
+  }
+
+  Widget _buildProfileImage(OnBoardingController controller) {
+    final hasFile = _hasMediaFile(controller);
+    final hasPhotoUrl = controller.userServiceImpl.user.photoUrl.isNotEmpty;
+
+    if (!hasFile && !hasPhotoUrl) {
+      return const Icon(Icons.account_circle, size: 150.0, color: Colors.grey);
+    }
+
+    final imageProvider = hasFile
+        ? buildMediaImageProvider(controller.mediaUploadServiceImpl)
+        : platformImageProvider(controller.userServiceImpl.user.photoUrl);
+
+    return Container(
+      width: 140.0,
+      height: 140.0,
+      decoration: BoxDecoration(
+        image: imageProvider != null
+          ? DecorationImage(image: imageProvider, fit: BoxFit.cover)
+          : null,
+        borderRadius: const BorderRadius.all(Radius.circular(75.0)),
       ),
     );
   }

@@ -20,7 +20,7 @@ class WelcomePage extends StatelessWidget {
     return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
       builder: (_) => Scaffold(
-        backgroundColor: AppColor.main50,
+        backgroundColor: AppColor.scaffold,
         body: Container(
           decoration: AppTheme.appBoxDecoration,
           child: Center(

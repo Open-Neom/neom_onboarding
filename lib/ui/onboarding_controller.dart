@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:neom_commons/utils/constants/app_locale_constants.dart';
@@ -10,7 +11,9 @@ import 'package:neom_commons/utils/text_utilities.dart';
 import 'package:neom_core/app_config.dart';
 import 'package:neom_core/data/firestore/coupon_firestore.dart';
 import 'package:neom_core/data/firestore/profile_firestore.dart';
+import 'package:neom_core/data/firestore/royalty_payout_firestore.dart';
 import 'package:neom_core/data/firestore/user_firestore.dart';
+import 'package:neom_core/utils/enums/royalty_payout_status.dart';
 import 'package:neom_core/data/implementations/app_hive_controller.dart';
 import 'package:neom_core/domain/model/app_coupon.dart';
 import 'package:neom_core/domain/model/facility.dart';
@@ -41,7 +44,7 @@ import '../utils/constants/onboarding_translation_constants.dart';
 class OnBoardingController extends SintController implements OnBoardingService {
 
   final userServiceImpl = Sint.find<UserService>();
-  final mediaUploadServiceImpl = Sint.find<MediaUploadService>();
+  final MediaUploadService? mediaUploadServiceImpl = Sint.find<MediaUploadService>();
   final profileServiceImpl = Sint.find<ProfileService>();
 
   TextEditingController controllerFullName = TextEditingController();
@@ -124,7 +127,8 @@ class OnBoardingController extends SintController implements OnBoardingService {
 
   @override
   void handleImage() async {
-    await mediaUploadServiceImpl.handleImage(uploadDestination: MediaUploadDestination.profile);
+    if (mediaUploadServiceImpl == null) return;
+    await mediaUploadServiceImpl!.handleImage(uploadDestination: MediaUploadDestination.profile);
     update([AppPageIdConstants.onBoarding]);
   }
 
@@ -194,10 +198,14 @@ class OnBoardingController extends SintController implements OnBoardingService {
             AppConfig.logger.d('Finishing Account - Welcome & Creating User');
             Sint.toNamed(AppRouteConstants.introWelcome);
 
-            if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
-              userServiceImpl.user.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
+            if(mediaUploadServiceImpl != null && mediaUploadServiceImpl!.getMediaFile().path.isNotEmpty) {
+              userServiceImpl.user.photoUrl = (await mediaUploadServiceImpl!.uploadFile(MediaUploadDestination.profile)) ?? '';
             }
             await userServiceImpl.createUser();
+
+            // Check for unclaimed NUPALE royalties (CF handles deposit,
+            // this just notifies the user)
+            _checkUnclaimedRoyalties(userServiceImpl.user.email);
           }
 
         }
@@ -220,6 +228,28 @@ class OnBoardingController extends SintController implements OnBoardingService {
     }
 
     isLoading.value = false;
+  }
+
+  /// Non-blocking check for unclaimed NUPALE royalties.
+  /// The Cloud Function handles the actual deposit; this just notifies the user.
+  void _checkUnclaimedRoyalties(String email) async {
+    try {
+      if (email.isEmpty) return;
+      final unclaimed = await RoyaltyPayoutFirestore()
+          .fetchByOwnerAndStatus(email, RoyaltyPayoutStatus.unclaimed);
+
+      if (unclaimed.isNotEmpty) {
+        double total = unclaimed.fold(0.0, (sum, p) => sum + p.grossAmountMxn);
+        AppConfig.logger.d("Found ${unclaimed.length} unclaimed royalties for $email totaling $total");
+        Sint.snackbar(
+          'Regal\u00edas NUPALE',
+          'Tienes ${total.toStringAsFixed(2)} AppCoins en regal\u00edas pendientes. Se depositar\u00e1n autom\u00e1ticamente.',
+          snackPosition: SnackPosition.bottom,
+        );
+      }
+    } catch (e) {
+      AppConfig.logger.e("Error checking unclaimed royalties: $e");
+    }
   }
 
   Future<String> validateCoupon(String couponCode) async {
@@ -314,8 +344,8 @@ class OnBoardingController extends SintController implements OnBoardingService {
     }
 
     if(validateMsg.isEmpty) {
-      if(mediaUploadServiceImpl.getMediaFile().path.isNotEmpty) {
-        userServiceImpl.newProfile.photoUrl = (await mediaUploadServiceImpl.uploadFile(MediaUploadDestination.profile)) ?? '';
+      if(mediaUploadServiceImpl != null && mediaUploadServiceImpl!.getMediaFile().path.isNotEmpty) {
+        userServiceImpl.newProfile.photoUrl = (await mediaUploadServiceImpl!.uploadFile(MediaUploadDestination.profile)) ?? '';
       }
 
       userServiceImpl.newProfile.aboutMe = controllerAboutMe.text.trim();

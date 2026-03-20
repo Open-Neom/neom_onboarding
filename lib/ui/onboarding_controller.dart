@@ -28,6 +28,7 @@ import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:neom_core/utils/constants/core_constants.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
 import 'package:neom_core/utils/enums/app_locale.dart';
+import 'package:neom_core/utils/neom_flow_tracker.dart';
 import 'package:neom_core/utils/enums/coupon_type.dart';
 import 'package:neom_core/utils/enums/facilitator_type.dart';
 import 'package:neom_core/utils/enums/media_upload_destination.dart';
@@ -90,6 +91,7 @@ class OnBoardingController extends SintController implements OnBoardingService {
   }
 
   void setLocale(AppLocale locale) async {
+    NeomFlowTracker.flowStep('registration', 'locale_selected');
     AppHiveController().setLocale(locale);
     AppHiveController().updateLocale(locale);
     update([AppPageIdConstants.onBoarding]);
@@ -99,6 +101,7 @@ class OnBoardingController extends SintController implements OnBoardingService {
   @override
   void setProfileType(ProfileType profileType) {
     AppConfig.logger.d("ProfileType registered as ${profileType.name}");
+    NeomFlowTracker.flowStep('registration', 'profile_type_${profileType.name}');
     userServiceImpl.newProfile.type = profileType;
 
     switch(profileType) {
@@ -121,6 +124,7 @@ class OnBoardingController extends SintController implements OnBoardingService {
   @override
   void setReason(UsageReason reason) {
     AppConfig.logger.d("ProfileType registered Reason as ${reason.name}");
+    NeomFlowTracker.flowStep('registration', 'usage_reason_${reason.name}');
     userServiceImpl.newProfile.usageReason = reason;
     Sint.toNamed(AppRouteConstants.introAddImage);
   }
@@ -196,12 +200,15 @@ class OnBoardingController extends SintController implements OnBoardingService {
 
           if(validCoupon == null || couponHandled) {
             AppConfig.logger.d('Finishing Account - Welcome & Creating User');
+            NeomFlowTracker.flowStep('registration', 'creating_user');
             Sint.toNamed(AppRouteConstants.introWelcome);
 
             if(mediaUploadServiceImpl != null && mediaUploadServiceImpl!.getMediaFile().path.isNotEmpty) {
               userServiceImpl.user.photoUrl = (await mediaUploadServiceImpl!.uploadFile(MediaUploadDestination.profile)) ?? '';
             }
             await userServiceImpl.createUser();
+            NeomFlowTracker.setUserId(userServiceImpl.user.id);
+            NeomFlowTracker.endFlow('registration');
 
             // Check for unclaimed NUPALE royalties (CF handles deposit,
             // this just notifies the user)
@@ -218,6 +225,7 @@ class OnBoardingController extends SintController implements OnBoardingService {
       }
     } catch (e) {
       AppConfig.logger.e("Error finishing account: $e");
+      NeomFlowTracker.endFlow('registration', success: false);
       Sint.snackbar(
         MessageTranslationConstants.finishingAccount.tr,
         e.toString(),

@@ -5,14 +5,13 @@ import 'package:neom_commons/ui/widgets/images/media_preview_image.dart';
 import 'package:flutter/services.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
-import 'package:neom_commons/ui/widgets/appbar_child.dart';
+import 'package:sint/sint.dart';
 import 'package:neom_commons/ui/widgets/core_widgets.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/utils/constants/translations/app_translation_constants.dart';
 import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
 import 'package:neom_commons/utils/external_utilities.dart';
 import 'package:neom_core/app_properties.dart';
-import 'package:sint/sint.dart';
 
 import '../utils/constants/onboarding_translation_constants.dart';
 import 'onboarding_controller.dart';
@@ -28,7 +27,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
       id: AppPageIdConstants.onBoarding,
       builder: (controller) => Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: AppBarChild(color: Colors.transparent),
+        appBar: SintAppBar(backgroundColor: Colors.transparent),
         backgroundColor: AppColor.scaffold,
         body: Container(
           width: AppTheme.fullWidth(context),

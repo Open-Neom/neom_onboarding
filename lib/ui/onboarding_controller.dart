@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:neom_commons/utils/constants/app_locale_constants.dart';
@@ -13,11 +12,11 @@ import 'package:neom_core/data/firestore/coupon_firestore.dart';
 import 'package:neom_core/data/firestore/profile_firestore.dart';
 import 'package:neom_core/data/firestore/royalty_payout_firestore.dart';
 import 'package:neom_core/data/firestore/user_firestore.dart';
-import 'package:neom_core/utils/enums/royalty_payout_status.dart';
 import 'package:neom_core/data/implementations/app_hive_controller.dart';
 import 'package:neom_core/domain/model/app_coupon.dart';
 import 'package:neom_core/domain/model/facility.dart';
 import 'package:neom_core/domain/model/place.dart';
+import 'package:neom_core/domain/use_cases/app_hive_service.dart';
 import 'package:neom_core/domain/use_cases/bank_service.dart';
 import 'package:neom_core/domain/use_cases/login_service.dart';
 import 'package:neom_core/domain/use_cases/media_upload_service.dart';
@@ -28,21 +27,25 @@ import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:neom_core/utils/constants/core_constants.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
 import 'package:neom_core/utils/enums/app_locale.dart';
-import 'package:neom_core/utils/neom_flow_tracker.dart';
 import 'package:neom_core/utils/enums/coupon_type.dart';
 import 'package:neom_core/utils/enums/facilitator_type.dart';
 import 'package:neom_core/utils/enums/media_upload_destination.dart';
 import 'package:neom_core/utils/enums/place_type.dart';
 import 'package:neom_core/utils/enums/profile_type.dart';
+import 'package:neom_core/utils/enums/royalty_payout_status.dart';
 import 'package:neom_core/utils/enums/subscription_level.dart';
 import 'package:neom_core/utils/enums/transaction_type.dart';
 import 'package:neom_core/utils/enums/usage_reason.dart';
+import 'package:neom_core/utils/neom_flow_tracker.dart';
 import 'package:neom_core/utils/validator.dart';
 import 'package:sint/sint.dart';
 
 import '../utils/constants/onboarding_translation_constants.dart';
 
 class OnBoardingController extends SintController implements OnBoardingService {
+
+  /// Guard to prevent infinite loop on web RequiredPermissionsPage rebuild.
+  bool hasNavigatedFromPermissions = false;
 
   final userServiceImpl = Sint.find<UserService>();
   final MediaUploadService? mediaUploadServiceImpl = Sint.find<MediaUploadService>();
@@ -476,6 +479,44 @@ class OnBoardingController extends SintController implements OnBoardingService {
         snackPosition: SnackPosition.bottom);
     
     update([AppPageIdConstants.onBoarding]);
+  }
+
+  /// Web-only: detect locale from browser language and skip geolocation.
+  void setLocationFromBrowser() {
+    AppConfig.logger.d("setLocationFromBrowser");
+    try {
+      // Detect locale from browser/system locale
+      final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+      final langCode = systemLocale.languageCode.toLowerCase();
+
+      AppLocale detectedLocale = AppConfig.instance.appInUse == AppInUse.e
+          ? AppLocale.spanish
+          : AppLocale.english;
+
+      if (langCode == 'es') {
+        detectedLocale = AppLocale.spanish;
+      } else if (langCode == 'fr') {
+        detectedLocale = AppLocale.french;
+      } else if (langCode == 'de') {
+        detectedLocale = AppLocale.deutsch;
+      } else if (langCode == 'en') {
+        detectedLocale = AppLocale.english;
+      }
+
+      final hiveCtrl = Sint.find<AppHiveService>();
+      hiveCtrl.setLocale(detectedLocale);
+      hiveCtrl.updateLocale(detectedLocale);
+
+      if (userServiceImpl.isNewUser) {
+        Sint.toNamed(AppRouteConstants.introAddImage);
+      } else {
+        Sint.toNamed(AppRouteConstants.home);
+      }
+    } catch (e) {
+      AppConfig.logger.e("setLocationFromBrowser error: $e");
+      // Fallback: go straight to add image
+      Sint.toNamed(AppRouteConstants.introAddImage);
+    }
   }
 
   Future<void> setLocation() async {

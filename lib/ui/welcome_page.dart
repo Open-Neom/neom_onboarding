@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
 import 'package:neom_commons/ui/theme/app_theme.dart';
@@ -17,6 +18,11 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = kIsWeb && MediaQuery.of(context).size.width > 800;
+    final logoSize = isWide ? 120.0 : (AppConfig.instance.appInUse == AppInUse.g ? 50.0 : 150.0);
+    final titleSize = isWide ? 24.0 : 20.0;
+    final subtitleSize = isWide ? 17.0 : 15.0;
+
     return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
       builder: (_) => Scaffold(
@@ -24,43 +30,42 @@ class WelcomePage extends StatelessWidget {
         body: Container(
           decoration: AppTheme.appBoxDecoration,
           child: Center(
-            child:Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  AppAssets.isologoAppWhite,
-                  height: AppConfig.instance.appInUse == AppInUse.g ? 50 : 150,
-                  width: 150,
-                ),
-                Column(
-                  children: [
-                    const SizedBox(height: 20,),
-                    Text(CommonTranslationConstants.splashSubtitle.tr,
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(1.0),
-                          fontFamily: AppTheme.fontFamily,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30,),
-                const CircularProgressIndicator(),
-                const SizedBox(height: 30,),
-                Text(AppTranslationConstants.welcome.tr,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(1.0),
-                    fontFamily: AppTheme.fontFamily,
-                    fontSize: 15.0,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 500),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    AppAssets.isologoAppWhite,
+                    height: logoSize,
+                    width: logoSize,
                   ),
-                ),
-              ]
+                  const SizedBox(height: 20),
+                  Text(CommonTranslationConstants.splashSubtitle.tr,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: AppTheme.fontFamily,
+                        fontSize: titleSize,
+                        fontWeight: FontWeight.bold
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 30),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 30),
+                  Text(AppTranslationConstants.welcome.tr,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: AppTheme.fontFamily,
+                      fontSize: subtitleSize,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
-
 }

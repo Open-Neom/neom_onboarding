@@ -1,4 +1,4 @@
-import 'package:neom_onboarding/utils/constants/onboarding_translation_constants.dart';
+import '../../utils/constants/onboarding_translation_constants.dart';
 
 class OnBoardingFrTranslations {
 
@@ -10,19 +10,20 @@ class OnBoardingFrTranslations {
     OnBoardingTranslationConstants.enterDOB: 'Entre ta date de naissance',
     OnBoardingTranslationConstants.finishAccount: 'Terminer le compte',
     OnBoardingTranslationConstants.finishProfile: 'Terminer le profil',
-    OnBoardingTranslationConstants.introEventPlannerType: '',
+    OnBoardingTranslationConstants.changeThisSettingLater: 'Tu peux modifier ce parametre plus tard',
+    OnBoardingTranslationConstants.introEventPlannerType: 'Quel type d\'organisateur es-tu?',
     OnBoardingTranslationConstants.introGenres: 'Quels genres ecoutes-tu habituellement?',
-    OnBoardingTranslationConstants.introInstruments: '',
+    OnBoardingTranslationConstants.introInstruments: 'Quels instruments pratiques-tu?',
     OnBoardingTranslationConstants.introLocale: 'Choisis ta langue preferee',
-    OnBoardingTranslationConstants.introProfileType: '',
-    OnBoardingTranslationConstants.introReason: '',
-    OnBoardingTranslationConstants.phoneVerificationFailed: '',
-    OnBoardingTranslationConstants.phoneVerified: '',
-    OnBoardingTranslationConstants.pleaseAddDescription: '',
-    OnBoardingTranslationConstants.pleaseAddName: '',
-    OnBoardingTranslationConstants.sendCodeAgain: '',
+    OnBoardingTranslationConstants.introProfileType: 'Choisis une option pour commencer',
+    OnBoardingTranslationConstants.introReason: 'Quelle est ta preference pour jouer?',
+    OnBoardingTranslationConstants.phoneVerificationFailed: 'Le code de verification est incorrect. Veuillez reessayer.',
+    OnBoardingTranslationConstants.phoneVerified: 'Numero verifie avec succes',
+    OnBoardingTranslationConstants.pleaseAddDescription: 'Veuillez ajouter une description',
+    OnBoardingTranslationConstants.pleaseAddName: 'Veuillez ajouter un nom',
+    OnBoardingTranslationConstants.sendCodeAgain: 'Renvoyer le code',
     OnBoardingTranslationConstants.tellAboutYou: 'Dis-nous quelque chose sur toi',
-    OnBoardingTranslationConstants.verifyPhone: '',
+    OnBoardingTranslationConstants.verifyPhone: 'Verifier le telephone',
   };
 
 }

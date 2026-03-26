@@ -1,4 +1,4 @@
-import 'package:neom_onboarding/utils/constants/onboarding_translation_constants.dart';
+import '../../utils/constants/onboarding_translation_constants.dart';
 
 class OnBoardingEsTranslations {
 
@@ -10,6 +10,7 @@ class OnBoardingEsTranslations {
     OnBoardingTranslationConstants.enterDOB: 'Ingresa tu fecha de nacimiento',
     OnBoardingTranslationConstants.finishAccount: 'Finalizar Cuenta',
     OnBoardingTranslationConstants.finishProfile: 'Finalizar Perfil',
+    OnBoardingTranslationConstants.changeThisSettingLater: 'Puedes cambiar esta configuración después',
     OnBoardingTranslationConstants.introEventPlannerType: '¿Qué tipo de organizador eres?',
     OnBoardingTranslationConstants.introGenres: '¿Qué géneros sueles escuchar?',
     OnBoardingTranslationConstants.introInstruments: '¿Qué instrumentos practicas?',

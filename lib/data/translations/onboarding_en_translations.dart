@@ -1,4 +1,4 @@
-import 'package:neom_onboarding/utils/constants/onboarding_translation_constants.dart';
+import '../../utils/constants/onboarding_translation_constants.dart';
 
 class OnBoardingEnTranslations {
 
@@ -10,19 +10,20 @@ class OnBoardingEnTranslations {
     OnBoardingTranslationConstants.enterDOB: 'Enter your date of birth',
     OnBoardingTranslationConstants.finishAccount: 'Finish Account',
     OnBoardingTranslationConstants.finishProfile: 'Finish Profile',
-    OnBoardingTranslationConstants.introEventPlannerType: '',
+    OnBoardingTranslationConstants.changeThisSettingLater: 'You can change this setting later',
+    OnBoardingTranslationConstants.introEventPlannerType: 'What type of event planner are you?',
     OnBoardingTranslationConstants.introGenres: 'What genres do you usually listen to?',
-    OnBoardingTranslationConstants.introInstruments: '',
+    OnBoardingTranslationConstants.introInstruments: 'What instruments do you play?',
     OnBoardingTranslationConstants.introLocale: 'Choose your preferred language',
-    OnBoardingTranslationConstants.introProfileType: '',
-    OnBoardingTranslationConstants.introReason: '',
-    OnBoardingTranslationConstants.phoneVerificationFailed: '',
-    OnBoardingTranslationConstants.phoneVerified: '',
-    OnBoardingTranslationConstants.pleaseAddDescription: '',
-    OnBoardingTranslationConstants.pleaseAddName: '',
-    OnBoardingTranslationConstants.sendCodeAgain: '',
+    OnBoardingTranslationConstants.introProfileType: 'Choose an option to get started',
+    OnBoardingTranslationConstants.introReason: 'What is your preference when playing?',
+    OnBoardingTranslationConstants.phoneVerificationFailed: 'The verification code is incorrect. Please try again.',
+    OnBoardingTranslationConstants.phoneVerified: 'Number verified successfully',
+    OnBoardingTranslationConstants.pleaseAddDescription: 'Please add a description',
+    OnBoardingTranslationConstants.pleaseAddName: 'Please add a name',
+    OnBoardingTranslationConstants.sendCodeAgain: 'Send code again',
     OnBoardingTranslationConstants.tellAboutYou: 'Tell us something about yourself',
-    OnBoardingTranslationConstants.verifyPhone: '',
+    OnBoardingTranslationConstants.verifyPhone: 'Verify Phone',
   };
 
 }

@@ -24,6 +24,9 @@ class OnBoardingEnTranslations {
     OnBoardingTranslationConstants.sendCodeAgain: 'Send code again',
     OnBoardingTranslationConstants.tellAboutYou: 'Tell us something about yourself',
     OnBoardingTranslationConstants.verifyPhone: 'Verify Phone',
+    OnBoardingTranslationConstants.simpleOnboardingSubtitle: 'Complete your info to personalize your experience.',
+    OnBoardingTranslationConstants.byClickingFinish: 'By clicking "Finish Account", you agree to our ',
+    OnBoardingTranslationConstants.andPrivacyPolicy: ' and have read our Privacy Policy.',
   };
 
 }

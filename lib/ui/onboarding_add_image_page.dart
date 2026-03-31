@@ -115,69 +115,68 @@ class OnBoardingAddImagePage extends StatelessWidget {
             padding: const EdgeInsets.all(36),
             child: IntrinsicHeight(
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Left column: Avatar + basic info
-                  SizedBox(
-                    width: 320,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildCircularAvatar(controller),
-                        const SizedBox(height: 28),
-                        _buildTextField(
-                          AppTranslationConstants.username.tr,
-                          controller.controllerUsername,
-                          TextInputType.text,
-                        ),
-                        const SizedBox(height: 16),
-                        _buildTextField(
-                          "${OnBoardingTranslationConstants.tellAboutYou.tr}...",
-                          controller.controllerAboutMe,
-                          TextInputType.multiline,
-                          maxLines: 4,
-                          optional: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Divider vertical
-                  Container(
-                    width: 1,
-                    margin: const EdgeInsets.symmetric(horizontal: 32),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          AppColor.bondiBlue.withValues(alpha: 0.3),
-                          Colors.transparent,
+                  // Left column: Avatar + basic info (flex: 2)
+                  Expanded(
+                    flex: 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 12),
+                          Center(child: _buildCircularAvatar(controller)),
+                          const SizedBox(height: 28),
+                          _buildTextField(
+                            AppTranslationConstants.username.tr,
+                            controller.controllerUsername,
+                            TextInputType.text,
+                          ),
+                          const SizedBox(height: 16),
+                          Expanded(
+                            child: _buildTextField(
+                              "${OnBoardingTranslationConstants.tellAboutYou.tr}...",
+                              controller.controllerAboutMe,
+                              TextInputType.multiline,
+                              maxLines: 4,
+                              optional: true,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  // Right column: Details + actions (centered)
+                  // Right column: Details + actions (flex: 3)
                   Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        buildEntryDateField(controller.dateOfBirth.value,
-                            context: context, dateFunction: controller.setDateOfBirth),
-                        const SizedBox(height: 16),
-                        if(controller.userServiceImpl.user.phoneNumber.isEmpty)
-                          buildPhoneField(onBoardingController: controller),
-                        const SizedBox(height: 16),
-                        _buildTextField(
-                          "${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
-                          controller.controllerCouponCode,
-                          TextInputType.text,
-                          maxLength: 10,
-                          capitalize: true,
-                        ),
-                        const SizedBox(height: 28),
-                        _buildTermsAndButton(context, controller),
-                      ],
+                    flex: 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.03),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          buildEntryDateField(controller.dateOfBirth.value,
+                              context: context, dateFunction: controller.setDateOfBirth),
+                          const SizedBox(height: 16),
+                          if(controller.userServiceImpl.user.phoneNumber.isEmpty)
+                            buildPhoneField(onBoardingController: controller),
+                          const SizedBox(height: 16),
+                          _buildTextField(
+                            "${AppTranslationConstants.couponCode.tr} (${AppTranslationConstants.optional.tr})",
+                            controller.controllerCouponCode,
+                            TextInputType.text,
+                            maxLength: 10,
+                            capitalize: true,
+                          ),
+                          const SizedBox(height: 24),
+                          _buildTermsAndButton(context, controller),
+                          const Spacer(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -417,23 +416,39 @@ class OnBoardingAddImagePage extends StatelessWidget {
             ),
           ],
         ),
-        if(controller.agreeTerms.value) Container(
+        Container(
           width: double.infinity,
           height: 56,
           margin: const EdgeInsets.symmetric(vertical: 12),
+          decoration: controller.agreeTerms.value ? BoxDecoration(
+            borderRadius: BorderRadius.circular(28),
+            gradient: LinearGradient(
+              colors: [AppColor.getMain(), AppColor.bondiBlue],
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColor.bondiBlue.withValues(alpha: 0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ) : null,
           child: ElevatedButton(
-            onPressed: () async => {
+            onPressed: controller.agreeTerms.value ? () async => {
               if(controller.userServiceImpl.user.currentProfileId.isEmpty) {
                 await controller.finishAccount()
               } else {
                 await controller.createAdditionalProfile()
               }
-            },
+            } : null,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.bondiBlue,
+              backgroundColor: controller.agreeTerms.value
+                  ? Colors.transparent : Colors.white.withValues(alpha: 0.08),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              elevation: 4,
+              disabledForegroundColor: Colors.white38,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+              elevation: 0,
             ),
             child: Text(
               (controller.userServiceImpl.user.currentProfileId.isEmpty)

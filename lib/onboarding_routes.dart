@@ -2,6 +2,7 @@ import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:sint/sint.dart';
 
 import 'ui/onboarding_add_image_page.dart';
+import 'ui/onboarding_simple_page.dart';
 import 'ui/onboarding_facility_page.dart';
 import 'ui/onboarding_locale_page.dart';
 import 'ui/onboarding_place_page.dart';
@@ -41,6 +42,11 @@ class OnBoardingRoutes {
     SintPage(
       name: AppRouteConstants.introReason,
       page: () => const OnBoardingReasonPage(),
+      transition: Transition.rightToLeft,
+    ),
+    SintPage(
+      name: AppRouteConstants.introSimple,
+      page: () => const OnBoardingSimplePage(),
       transition: Transition.rightToLeft,
     ),
     SintPage(

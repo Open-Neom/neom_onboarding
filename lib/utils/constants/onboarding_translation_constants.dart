@@ -20,5 +20,8 @@ class OnBoardingTranslationConstants {
   static const String verifyPhone = 'verifyPhone';
   static const String pleaseAddDescription = 'pleaseAddDescription';
   static const String pleaseAddName = 'pleaseAddName';
+  static const String simpleOnboardingSubtitle = 'simpleOnboardingSubtitle';
+  static const String byClickingFinish = 'byClickingFinish';
+  static const String andPrivacyPolicy = 'andPrivacyPolicy';
 
 }

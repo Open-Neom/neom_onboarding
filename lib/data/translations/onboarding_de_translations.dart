@@ -24,6 +24,9 @@ class OnBoardingDeTranslations {
     OnBoardingTranslationConstants.sendCodeAgain: 'Code erneut senden',
     OnBoardingTranslationConstants.tellAboutYou: 'Erzahl uns etwas uber dich',
     OnBoardingTranslationConstants.verifyPhone: 'Telefon verifizieren',
+    OnBoardingTranslationConstants.simpleOnboardingSubtitle: 'Vervollständige deine Daten für ein personalisiertes Erlebnis.',
+    OnBoardingTranslationConstants.byClickingFinish: 'Mit Klick auf "Konto abschliessen" akzeptierst du unsere ',
+    OnBoardingTranslationConstants.andPrivacyPolicy: ' und unsere Datenschutzrichtlinie.',
   };
 
 }

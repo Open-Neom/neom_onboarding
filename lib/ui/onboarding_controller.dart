@@ -489,7 +489,9 @@ class OnBoardingController extends SintController implements OnBoardingService {
       final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
       final langCode = systemLocale.languageCode.toLowerCase();
 
-      AppLocale detectedLocale = AppConfig.instance.appInUse == AppInUse.e
+      AppLocale detectedLocale = (AppConfig.instance.appInUse == AppInUse.e
+          || AppConfig.instance.appInUse == AppInUse.i
+          || AppConfig.instance.appInUse == AppInUse.c)
           ? AppLocale.spanish
           : AppLocale.english;
 
@@ -508,7 +510,12 @@ class OnBoardingController extends SintController implements OnBoardingService {
       hiveCtrl.updateLocale(detectedLocale);
 
       if (userServiceImpl.isNewUser) {
-        Sint.toNamed(AppRouteConstants.introAddImage);
+        // Itzli: simple onboarding (name + age only)
+        if (AppConfig.instance.appInUse == AppInUse.i) {
+          Sint.toNamed(AppRouteConstants.introSimple);
+        } else {
+          Sint.toNamed(AppRouteConstants.introAddImage);
+        }
       } else {
         Sint.toNamed(AppRouteConstants.home);
       }

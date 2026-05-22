@@ -1,67 +1,68 @@
+import 'package:neom_core/ui/deferred_loader.dart';
 import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:sint/sint.dart';
 
-import 'ui/onboarding_add_image_page.dart';
-import 'ui/onboarding_simple_page.dart';
-import 'ui/onboarding_facility_page.dart';
-import 'ui/onboarding_locale_page.dart';
-import 'ui/onboarding_place_page.dart';
-import 'ui/onboarding_profile_type_page.dart';
-import 'ui/onboarding_reason_page.dart';
-import 'ui/required_permissions_page.dart';
-import 'ui/welcome_page.dart';
+import 'ui/onboarding_add_image_page.dart' deferred as add_image;
+import 'ui/onboarding_simple_page.dart' deferred as simple;
+import 'ui/onboarding_facility_page.dart' deferred as facility;
+import 'ui/onboarding_locale_page.dart' deferred as locale;
+import 'ui/onboarding_place_page.dart' deferred as place;
+import 'ui/onboarding_profile_type_page.dart' deferred as profile_type;
+import 'ui/onboarding_reason_page.dart' deferred as reason;
+import 'ui/required_permissions_page.dart' deferred as permissions;
+import 'ui/welcome_page.dart' deferred as welcome;
 
 class OnBoardingRoutes {
 
   static final List<SintPage<dynamic>> routes = [
     SintPage(
       name: AppRouteConstants.introRequiredPermissions,
-      page: () => const RequiredPermissionsPage(),
+      page: () => DeferredLoader(permissions.loadLibrary, () => permissions.RequiredPermissionsPage()),
       transition: Transition.zoom,
     ),
     SintPage(
       name: AppRouteConstants.introLocale,
-      page: () => const OnBoardingLocalePage(),
+      page: () => DeferredLoader(locale.loadLibrary, () => locale.OnBoardingLocalePage()),
       transition: Transition.zoom,
     ),
     SintPage(
       name: AppRouteConstants.introProfile,
-      page: () => const OnBoardingProfileTypePage(),
+      page: () => DeferredLoader(profile_type.loadLibrary, () => profile_type.OnBoardingProfileTypePage()),
       transition: Transition.zoom,
     ),
     SintPage(
       name: AppRouteConstants.introFacility,
-      page: () => const OnBoardingFacilityTypePage(),
+      page: () => DeferredLoader(facility.loadLibrary, () => facility.OnBoardingFacilityTypePage()),
       transition: Transition.rightToLeft,
     ),
     SintPage(
       name: AppRouteConstants.introPlace,
-      page: () => const OnBoardingPlaceTypePage(),
+      page: () => DeferredLoader(place.loadLibrary, () => place.OnBoardingPlaceTypePage()),
       transition: Transition.rightToLeft,
     ),
     SintPage(
       name: AppRouteConstants.introReason,
-      page: () => const OnBoardingReasonPage(),
+      page: () => DeferredLoader(reason.loadLibrary, () => reason.OnBoardingReasonPage()),
       transition: Transition.rightToLeft,
     ),
     SintPage(
       name: AppRouteConstants.introSimple,
-      page: () => const OnBoardingSimplePage(),
+      page: () => DeferredLoader(simple.loadLibrary, () => simple.OnBoardingSimplePage()),
       transition: Transition.rightToLeft,
     ),
     SintPage(
       name: AppRouteConstants.introAddImage,
-      page: () => const OnBoardingAddImagePage(),
+      page: () => DeferredLoader(add_image.loadLibrary, () => add_image.OnBoardingAddImagePage()),
       transition: Transition.rightToLeft,
     ),
     SintPage(
       name: AppRouteConstants.createAdditionalProfile,
-      page: () => const OnBoardingAddImagePage(),
+      page: () => DeferredLoader(add_image.loadLibrary, () => add_image.OnBoardingAddImagePage()),
       transition: Transition.rightToLeft,
     ),
     SintPage(
       name: AppRouteConstants.introWelcome,
-      page: () => const WelcomePage(),
+      page: () => DeferredLoader(welcome.loadLibrary, () => welcome.WelcomePage()),
       transition: Transition.zoom,
     ),
   ];

@@ -45,7 +45,11 @@ import '../utils/constants/onboarding_translation_constants.dart';
 class OnBoardingController extends SintController implements OnBoardingService {
 
   /// Guard to prevent infinite loop on web RequiredPermissionsPage rebuild.
-  bool hasNavigatedFromPermissions = false;
+  /// MUST be static — SmartManagement.full disposes the controller when
+  /// navigating to the next onboarding page, so an instance flag would
+  /// reset to false on the next rebuild and re-trigger setLocationFromBrowser
+  /// → setLocale → tree rebuild → infinite loop. Static survives disposal.
+  static bool hasNavigatedFromPermissions = false;
 
   final userServiceImpl = Sint.find<UserService>();
   final MediaUploadService? mediaUploadServiceImpl = Sint.find<MediaUploadService>();
@@ -109,7 +113,7 @@ class OnBoardingController extends SintController implements OnBoardingService {
 
     switch(profileType) {
       case(ProfileType.appArtist):
-      case(ProfileType.band):
+      case(ProfileType.collective):
         Sint.toNamed(AppRouteConstants.introReason);
         break;
       case(ProfileType.facilitator):
@@ -495,14 +499,20 @@ class OnBoardingController extends SintController implements OnBoardingService {
           ? AppLocale.spanish
           : AppLocale.english;
 
-      if (langCode == 'es') {
-        detectedLocale = AppLocale.spanish;
-      } else if (langCode == 'fr') {
-        detectedLocale = AppLocale.french;
-      } else if (langCode == 'de') {
-        detectedLocale = AppLocale.deutsch;
-      } else if (langCode == 'en') {
-        detectedLocale = AppLocale.english;
+      // EMXI is Spanish-only (supportedLocales = [Locale('es')]) — never
+      // switch off Spanish based on browser. Other apps may multi-locale.
+      final spanishOnly = AppConfig.instance.appInUse == AppInUse.e;
+
+      if (!spanishOnly) {
+        if (langCode == 'es') {
+          detectedLocale = AppLocale.spanish;
+        } else if (langCode == 'fr') {
+          detectedLocale = AppLocale.french;
+        } else if (langCode == 'de') {
+          detectedLocale = AppLocale.deutsch;
+        } else if (langCode == 'en') {
+          detectedLocale = AppLocale.english;
+        }
       }
 
       final hiveCtrl = Sint.find<AppHiveService>();

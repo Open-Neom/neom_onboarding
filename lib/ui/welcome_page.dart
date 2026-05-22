@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:neom_commons/ui/theme/app_color.dart';
@@ -7,14 +9,59 @@ import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/utils/constants/translations/app_translation_constants.dart';
 import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
 import 'package:neom_core/app_config.dart';
+import 'package:neom_core/domain/use_cases/user_service.dart';
+import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
 import 'package:sint/sint.dart';
 
 import 'onboarding_controller.dart';
 
-class WelcomePage extends StatelessWidget {
+class WelcomePage extends StatefulWidget {
 
   const WelcomePage({super.key});
+
+  @override
+  State<WelcomePage> createState() => _WelcomePageState();
+}
+
+class _WelcomePageState extends State<WelcomePage> {
+  Timer? _pollTimer;
+  Timer? _safetyTimer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Poll: as soon as user creation finishes (currentProfileId is populated),
+    // navigate to home. Covers the case where createUser's offAllNamed(home)
+    // gets lost in a race with the welcome-page navigation that preceded it.
+    _pollTimer = Timer.periodic(const Duration(milliseconds: 500), (t) {
+      if (!mounted) {
+        t.cancel();
+        return;
+      }
+      if (Sint.isRegistered<UserService>()) {
+        final user = Sint.find<UserService>().user;
+        if (user.currentProfileId.isNotEmpty && user.id.isNotEmpty) {
+          t.cancel();
+          Sint.offAllNamed(AppRouteConstants.home);
+        }
+      }
+    });
+
+    // Safety: even if user creation silently fails or stalls, eject after 15s
+    // to root so the user is not trapped here.
+    _safetyTimer = Timer(const Duration(seconds: 15), () {
+      if (mounted) Sint.offAllNamed(AppRouteConstants.root);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pollTimer?.cancel();
+    _safetyTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +72,7 @@ class WelcomePage extends StatelessWidget {
 
     return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
+      init: OnBoardingController(),
       builder: (_) => Scaffold(
         backgroundColor: AppColor.scaffold,
         body: Container(

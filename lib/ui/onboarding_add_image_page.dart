@@ -30,6 +30,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
 
     return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
+      init: OnBoardingController(),
       builder: (controller) => Scaffold(
         extendBodyBehindAppBar: true,
         appBar: SintAppBar(backgroundColor: Colors.transparent),
@@ -73,9 +74,9 @@ class OnBoardingAddImagePage extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 48),
-        // Welcome header
+        // Welcome header — Spanish format with uppercase brand name
         Text(
-          "${AppTranslationConstants.welcome.tr}, ${AppProperties.getAppName()}!",
+          _welcomeHeadline(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 32,
@@ -101,12 +102,12 @@ class OnBoardingAddImagePage extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColor.bondiBlue.withValues(alpha: 0.15)),
+            border: Border.all(color: AppColor.kingBlue.withValues(alpha: 0.15)),
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                AppColor.bondiBlue.withValues(alpha: 0.06),
+                AppColor.kingBlue.withValues(alpha: 0.06),
                 Colors.white.withValues(alpha: 0.02),
               ],
             ),
@@ -197,7 +198,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
         AppTheme.heightSpace20,
         _buildCircularAvatar(controller),
         const SizedBox(height: 20),
-        buildLabel(context, "${AppTranslationConstants.welcome.tr}, ${AppProperties.getAppName()}!",
+        buildLabel(context, _welcomeHeadline(),
             controller.userServiceImpl.user.photoUrl.isEmpty
               ? OnBoardingTranslationConstants.addProfileImgMsg.tr
               : controller.userServiceImpl.profile.id.isEmpty
@@ -257,7 +258,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
           image: imageProvider != null
               ? DecorationImage(image: imageProvider, fit: BoxFit.cover)
               : null,
-          border: Border.all(color: AppColor.bondiBlue.withValues(alpha: 0.5), width: 3),
+          border: Border.all(color: AppColor.kingBlue.withValues(alpha: 0.5), width: 3),
         ),
       );
     } else if (hasPhotoUrl) {
@@ -270,7 +271,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
             image: platformImageProvider(controller.userServiceImpl.user.photoUrl)!,
             fit: BoxFit.cover,
           ),
-          border: Border.all(color: AppColor.bondiBlue.withValues(alpha: 0.5), width: 3),
+          border: Border.all(color: AppColor.kingBlue.withValues(alpha: 0.5), width: 3),
         ),
       );
     } else {
@@ -318,7 +319,7 @@ class OnBoardingAddImagePage extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: hasImage ? Colors.red.shade700 : AppColor.bondiBlue,
+                  color: hasImage ? Colors.red.shade700 : AppColor.kingBlue,
                   border: Border.all(color: AppColor.scaffold, width: 3),
                 ),
                 child: IconButton(
@@ -423,11 +424,11 @@ class OnBoardingAddImagePage extends StatelessWidget {
           decoration: controller.agreeTerms.value ? BoxDecoration(
             borderRadius: BorderRadius.circular(28),
             gradient: LinearGradient(
-              colors: [AppColor.getMain(), AppColor.bondiBlue],
+              colors: [AppColor.getMain(), AppColor.kingBlue],
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColor.bondiBlue.withValues(alpha: 0.3),
+                color: AppColor.kingBlue.withValues(alpha: 0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -469,6 +470,24 @@ class OnBoardingAddImagePage extends StatelessWidget {
   bool _hasMediaFile(OnBoardingController controller) {
     if (controller.mediaUploadServiceImpl == null) return false;
     return controller.mediaUploadServiceImpl!.mediaFileExists();
+  }
+
+  /// Locale-aware welcome with brand name in uppercase.
+  /// Spanish: "¡Bienvenido a EMXI!" — French: "Bienvenue à EMXI !" —
+  /// German: "Willkommen bei EMXI!" — English: "Welcome to EMXI!"
+  String _welcomeHeadline() {
+    final brand = AppProperties.getAppName().toUpperCase();
+    final lang = Sint.locale?.languageCode ?? 'es';
+    switch (lang) {
+      case 'es':
+        return '¡Bienvenido a $brand!';
+      case 'fr':
+        return 'Bienvenue à $brand !';
+      case 'de':
+        return 'Willkommen bei $brand!';
+      default:
+        return 'Welcome to $brand!';
+    }
   }
 
   void _showTermsModal(BuildContext context, OnBoardingController controller) {
@@ -549,19 +568,11 @@ class _TermsModalState extends State<_TermsModal> {
   }
 
   String _getAssetPath() {
-    final app = AppConfig.instance.appInUse;
-    switch (app) {
-      case AppInUse.e:
-        return 'packages/neom_commons/assets/legal/terms_emxi.md';
-      case AppInUse.g:
-        return 'packages/neom_commons/assets/legal/terms_gigmeout.md';
-      case AppInUse.c:
-        return 'packages/neom_commons/assets/legal/terms_cyberneom.md';
-      case AppInUse.i:
-        return 'packages/neom_commons/assets/legal/terms_itzli.md';
-      default:
-        return 'packages/neom_commons/assets/legal/terms_emxi.md';
-    }
+    // Each host app bundles its own terms_conditions.md under assets/legal/
+    // (see Emxi/assets/legal/terms_conditions.md, Itzli/, Gigmeout/, Cyberneom/).
+    // The previous packages/neom_commons/assets/legal/terms_<app>.md path did
+    // not exist, so rootBundle returned the SPA index.html fallback (raw HTML).
+    return 'assets/legal/terms_conditions.md';
   }
 
   String _getContactEmail() {
@@ -673,7 +684,7 @@ class _TermsModalState extends State<_TermsModal> {
                       onPressed: _scrolledToEnd ? widget.onAccept : null,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: _scrolledToEnd
-                            ? AppColor.bondiBlue
+                            ? AppColor.kingBlue
                             : Colors.white.withValues(alpha: 0.1),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),

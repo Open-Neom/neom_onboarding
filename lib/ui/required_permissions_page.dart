@@ -25,9 +25,11 @@ class RequiredPermissionsPage extends StatelessWidget {
       id: AppPageIdConstants.onBoarding,
       init: OnBoardingController(),
       builder: (controller) {
-        // Web: skip geolocation, detect locale from browser and go straight to profile
-        if (kIsWeb && !controller.hasNavigatedFromPermissions) {
-          controller.hasNavigatedFromPermissions = true;
+        // Web: skip geolocation, detect locale from browser and go straight to profile.
+        // Static flag survives controller disposal (SmartManagement.full) so this
+        // only fires once per onboarding flow, not every rebuild.
+        if (kIsWeb && !OnBoardingController.hasNavigatedFromPermissions) {
+          OnBoardingController.hasNavigatedFromPermissions = true;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             controller.setLocationFromBrowser();
           });

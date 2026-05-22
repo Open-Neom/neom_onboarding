@@ -21,6 +21,7 @@ class OnBoardingSimplePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SintBuilder<OnBoardingController>(
       id: AppPageIdConstants.onBoarding,
+      init: OnBoardingController(),
       builder: (controller) => Scaffold(
         backgroundColor: AppColor.scaffold,
         body: Container(

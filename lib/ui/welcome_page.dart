@@ -13,6 +13,7 @@ import 'package:neom_core/domain/use_cases/user_service.dart';
 import 'package:neom_core/utils/constants/app_route_constants.dart';
 import 'package:neom_core/utils/enums/app_in_use.dart';
 import 'package:sint/sint.dart';
+import 'package:neom_commons/utils/auth_guard.dart';
 
 import 'onboarding_controller.dart';
 
@@ -44,7 +45,16 @@ class _WelcomePageState extends State<WelcomePage> {
         final user = Sint.find<UserService>().user;
         if (user.currentProfileId.isNotEmpty && user.id.isNotEmpty) {
           t.cancel();
-          Sint.offAllNamed(AppRouteConstants.home);
+          if (AuthGuard.pendingRedirectRoute != null) {
+            final nextRoute = AuthGuard.pendingRedirectRoute!;
+            final nextArgs = AuthGuard.pendingRedirectArgs;
+            AuthGuard.pendingRedirectRoute = null;
+            AuthGuard.pendingRedirectArgs = null;
+            AppConfig.logger.i("Redirecting to pending nextRoute from welcome page: $nextRoute");
+            Sint.offAllNamed(nextRoute, arguments: nextArgs);
+          } else {
+            Sint.offAllNamed(AppRouteConstants.home);
+          }
         }
       }
     });

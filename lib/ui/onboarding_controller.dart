@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/countries.dart';
+import 'package:neom_commons/utils/deeplink_utilities.dart';
 import 'package:neom_commons/utils/constants/app_locale_constants.dart';
 import 'package:neom_commons/utils/constants/app_page_id_constants.dart';
 import 'package:neom_commons/utils/constants/intl_countries_list.dart';
@@ -9,11 +10,15 @@ import 'package:neom_commons/utils/constants/translations/message_translation_co
 import 'package:neom_commons/utils/text_utilities.dart';
 import 'package:neom_core/app_config.dart';
 import 'package:neom_core/data/firestore/coupon_firestore.dart';
+import 'package:neom_core/data/firestore/inbox_firestore.dart';
 import 'package:neom_core/data/firestore/profile_firestore.dart';
 import 'package:neom_core/data/firestore/royalty_payout_firestore.dart';
+import 'package:neom_core/data/firestore/subscription_plan_firestore.dart';
 import 'package:neom_core/data/firestore/user_firestore.dart';
+import 'package:neom_core/data/firestore/user_subscription_firestore.dart';
 import 'package:neom_core/data/implementations/app_hive_controller.dart';
 import 'package:neom_core/domain/model/app_coupon.dart';
+import 'package:neom_core/domain/model/user_subscription.dart';
 import 'package:neom_core/domain/model/facility.dart';
 import 'package:neom_core/domain/model/place.dart';
 import 'package:neom_core/domain/use_cases/app_hive_service.dart';
@@ -34,8 +39,10 @@ import 'package:neom_core/utils/enums/place_type.dart';
 import 'package:neom_core/utils/enums/profile_type.dart';
 import 'package:neom_core/utils/enums/royalty_payout_status.dart';
 import 'package:neom_core/utils/enums/subscription_level.dart';
+import 'package:neom_core/utils/enums/subscription_status.dart';
 import 'package:neom_core/utils/enums/transaction_type.dart';
 import 'package:neom_core/utils/enums/usage_reason.dart';
+import 'package:neom_core/utils/neom_error_logger.dart';
 import 'package:neom_core/utils/neom_flow_tracker.dart';
 import 'package:neom_core/utils/validator.dart';
 import 'package:sint/sint.dart';
@@ -88,6 +95,13 @@ class OnBoardingController extends SintController implements OnBoardingService {
     super.onInit();
     controllerFullName.text = userServiceImpl.user.name;
     controllerUsername.text = userServiceImpl.user.name;
+
+    // Auto-fill an invite coupon captured from an `emxi.org/invite/{code}` link
+    // so the new user gets their free month / plan trial without typing it.
+    if (DeeplinkUtilities.pendingInviteCoupon.isNotEmpty) {
+      controllerCouponCode.text = DeeplinkUtilities.pendingInviteCoupon;
+      DeeplinkUtilities.pendingInviteCoupon = '';
+    }
 
     for (var country in countries) {
       if(Sint.locale!.countryCode == country.code){
@@ -217,6 +231,13 @@ class OnBoardingController extends SintController implements OnBoardingService {
             NeomFlowTracker.setUserId(userServiceImpl.user.id);
             NeomFlowTracker.endFlow('registration');
 
+            // Every user gets a Customer Support thread (`{profileId}_support`)
+            // from day one, so it's available to them and visible in the ERP.
+            final supportPid = userServiceImpl.profile.id;
+            if (supportPid.isNotEmpty) {
+              InboxFirestore().getOrCreateSupportRoom(supportPid);
+            }
+
             // Check for unclaimed NUPALE royalties (CF handles deposit,
             // this just notifies the user)
             _checkUnclaimedRoyalties(userServiceImpl.user.email);
@@ -293,6 +314,8 @@ class OnBoardingController extends SintController implements OnBoardingService {
     } else if(coupon.type == CouponType.oneMonthFree) {
       bankServiceImpl.addCoinsToWallet(coupon.ownerEmail, coupon.ownerAmount, transactionType: TransactionType.coupon);
       userServiceImpl.user.subscriptionId = SubscriptionLevel.freeMonth.name;
+    } else if(coupon.type == CouponType.planTrial || coupon.type == CouponType.threeMonthsPlan) {
+      await _grantPlanTrial(coupon);
     } else if(coupon.type == CouponType.coinAddition) {
       bankServiceImpl.addCoinsToWallet(userServiceImpl.user.email, coupon.amount, transactionType: TransactionType.coupon);
     }
@@ -302,6 +325,43 @@ class OnBoardingController extends SintController implements OnBoardingService {
         MessageTranslationConstants.appliedCouponCodeMsg.tr,
         snackPosition: SnackPosition.bottom);
     return true;
+  }
+
+  /// Grants a free trial of a specific subscription plan from a coupon
+  /// (`planTrial` / `threeMonthsPlan`): creates a trial UserSubscription with
+  /// the plan's level for the coupon's duration (1–12 months), so the user
+  /// starts with that plan immediately. Best-effort.
+  Future<void> _grantPlanTrial(AppCoupon coupon) async {
+    try {
+      if (coupon.planId.isEmpty) return;
+      final plans = await SubscriptionPlanFirestore().getAll();
+      final plan = plans[coupon.planId];
+      if (plan == null || plan.level == null) return;
+
+      final months = coupon.type == CouponType.threeMonthsPlan
+          ? 3
+          : (coupon.durationMonths > 0 ? coupon.durationMonths : 1);
+      final now = DateTime.now();
+      // Clamp at 12 months (a year is the max promotional period).
+      final m = months.clamp(1, 12);
+      final end = DateTime(now.year, now.month + m, now.day);
+
+      final subId = 'trial_${coupon.code}_${userServiceImpl.user.id}';
+      final subscription = UserSubscription(
+        subscriptionId: subId,
+        userId: userServiceImpl.user.id,
+        level: plan.level,
+        price: plan.price,
+        status: SubscriptionStatus.trial,
+        startDate: now.millisecondsSinceEpoch,
+        endDate: end.millisecondsSinceEpoch,
+      );
+      await UserSubscriptionFirestore().insert(subscription);
+      userServiceImpl.user.subscriptionId = subId;
+    } catch (e, st) {
+      NeomErrorLogger.recordError(e, st,
+          module: 'neom_onboarding', operation: '_grantPlanTrial');
+    }
   }
 
   Future<String> newAccountValidation() async {

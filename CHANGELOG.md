@@ -1,3 +1,14 @@
+# Changelog - neom_onboarding
+
+## Unreleased - System updates
+- Actualizaciones de estabilidad y compatibilidad.
+
+## Unreleased - Every new user gets a Customer Support room
+- On finishing registration (`finishAccount`), a `{profileId}_support` thread is created via `InboxFirestore.getOrCreateSupportRoom`, so every user has it from day one and it appears in the ERP support section.
+
+## Unreleased - Redeem plan-trial coupons (any plan, 1–12 months)
+- `handleCoupon` now redeems `planTrial` / `threeMonthsPlan` coupons: `_grantPlanTrial` resolves the coupon's plan, creates a **trial `UserSubscription`** with that plan's level and an end date of **1–12 months** (clamped) from now, and points the user at it. Previously only `oneMonthFree` and `coinAddition` were redeemed, so plan-trial coupons were marked used without granting the plan. Makes coupon-driven lead acquisition (free month of any plan) usable end-to-end.
+
 ### 2.0.0 - Error Handling & Stability Improvements
 
 This release focuses on robust error handling during account creation to prevent users from getting stuck on loading screens.

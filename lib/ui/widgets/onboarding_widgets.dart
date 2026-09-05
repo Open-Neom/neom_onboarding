@@ -8,11 +8,11 @@ import 'package:neom_commons/ui/theme/app_theme.dart';
 import 'package:neom_commons/utils/constants/intl_countries_list.dart';
 import 'package:neom_commons/utils/constants/translations/app_translation_constants.dart';
 import 'package:neom_commons/utils/constants/translations/common_translation_constants.dart';
-import 'package:neom_core/utils/constants/core_constants.dart';
 import 'package:neom_core/utils/enums/app_currency.dart';
 import 'package:sint/sint.dart';
 
 import '../../utils/constants/onboarding_translation_constants.dart';
+import '../../utils/date_of_birth_policy.dart';
 import '../onboarding_controller.dart';
 
 Widget buildPhoneField({required OnBoardingController onBoardingController}) {
@@ -71,10 +71,9 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
         DateTime? selectedDate = await showDatePicker(
           context: context,
           initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: DateTime(CoreConstants.lastYearDOB, 12, 31),
-          firstDate: DateTime(CoreConstants.firstYearDOB, 1, 1),
-          lastDate: DateTime(CoreConstants.lastYearDOB, 12, 31),
-          currentDate: dateOfBirth,
+          initialDate: DateOfBirthPolicy.initialPickerDate(dateOfBirth),
+          firstDate: DateOfBirthPolicy.earliestSelectableDate,
+          lastDate: DateOfBirthPolicy.latestSelectableDate,
         );
 
         if(selectedDate != null) {
@@ -82,9 +81,8 @@ Widget buildEntryDateField(DateTime? dateOfBirth,
         }
 
       },
-      child: Text(dateOfBirth != null
-        && dateOfBirth.isBefore(DateTime(CoreConstants.lastYearDOB))
-          ? DateFormat.yMMMMd(Sint.locale.toString()).format(dateOfBirth)
+      child: Text(DateOfBirthPolicy.isValid(dateOfBirth)
+          ? DateFormat.yMMMMd(Sint.locale.toString()).format(dateOfBirth!)
           : OnBoardingTranslationConstants.enterDOB.tr,
         style: const TextStyle(color: Colors.white, fontSize: 16),
       ),

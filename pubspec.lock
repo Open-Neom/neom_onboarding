@@ -1276,7 +1276,7 @@ packages:
       path: "../../framework/sint"
       relative: true
     source: path
-    version: "1.5.0"
+    version: "1.6.2"
   sint_sentinel:
     dependency: transitive
     description:

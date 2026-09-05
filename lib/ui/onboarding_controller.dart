@@ -48,6 +48,7 @@ import 'package:neom_core/utils/validator.dart';
 import 'package:sint/sint.dart';
 
 import '../utils/constants/onboarding_translation_constants.dart';
+import '../utils/date_of_birth_policy.dart';
 
 class OnBoardingController extends SintController implements OnBoardingService {
 
@@ -71,7 +72,6 @@ class OnBoardingController extends SintController implements OnBoardingService {
   final RxBool isLoading = false.obs;
   final RxBool agreeTerms = false.obs;
   final Rxn<DateTime> dateOfBirth = Rxn<DateTime>();
-  final DateTime minAllowedDate = DateTime(CoreConstants.lastYearDOB, 1, 1);
 
   final Rx<Country> phoneCountry = IntlPhoneConstants.availableCountries[0].obs;
 
@@ -177,10 +177,12 @@ class OnBoardingController extends SintController implements OnBoardingService {
       return false;
     }
 
-    if (dob.isBefore(minAllowedDate)) {
+    if (DateOfBirthPolicy.isValid(dob)) {
       return true;
     } else {
-      AppConfig.logger.w("Invalid DOB: Must be before 2010.");
+      AppConfig.logger.w("Invalid DOB: Must be between "
+          "${CoreConstants.firstYearDOB}-01-01 and before "
+          "${CoreConstants.lastYearDOB}-01-01.");
       return false;
     }
   }

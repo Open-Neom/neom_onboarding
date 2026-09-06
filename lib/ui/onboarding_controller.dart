@@ -201,6 +201,12 @@ class OnBoardingController extends SintController implements OnBoardingService {
 
   @override
   Future<void> finishAccount() async {
+    if (!userServiceImpl.isNewUser || userServiceImpl.user.id.isEmpty) {
+      isLoading.value = false;
+      Sint.offAllNamed(AppRouteConstants.login);
+      return;
+    }
+
     AppConfig.logger.i("Finishing and creating account");
     focusNodeAboutMe.unfocus();
     isLoading.value = true;
